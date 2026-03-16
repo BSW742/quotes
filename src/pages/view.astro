@@ -1,0 +1,585 @@
+---
+// Client quote view page
+// Access via /view?id=QUOTE_ID
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote - Bridge Point</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app"></div>
+</body>
+</html>
+
+<style is:global>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-hover: #1a1a25;
+    --border: #2a2a3a;
+    --text: #fafafa;
+    --text-muted: #8888a0;
+    --cyan: #00d4ff;
+    --purple: #7b2fff;
+    --pink: #ff006e;
+    --gradient: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .quote-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .quote-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    height: 28px;
+  }
+
+  .quote-meta {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .quote-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  /* Hero Block */
+  .block-hero {
+    background: var(--gradient);
+    padding: 60px 40px;
+    text-align: center;
+  }
+
+  .block-hero h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .block-hero p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  /* Text Block */
+  .block-text {
+    padding: 30px 40px;
+  }
+
+  .block-text p {
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* Pricing Block */
+  .block-pricing {
+    padding: 30px 40px;
+  }
+
+  .block-pricing h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .pricing-table th {
+    text-align: left;
+    padding: 10px 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing-table td {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing-table .item-name {
+    font-weight: 500;
+  }
+
+  .pricing-table .item-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .pricing-table .item-price {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .item-optional {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .item-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--cyan);
+  }
+
+  .pricing-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .pricing-total .amount {
+    color: var(--cyan);
+  }
+
+  /* Divider */
+  .block-divider {
+    padding: 20px 40px;
+  }
+
+  .block-divider hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Accept Block */
+  .block-accept {
+    padding: 50px 40px;
+    text-align: center;
+    background: var(--bg-hover);
+  }
+
+  .block-accept .terms {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .signature-area {
+    margin-bottom: 24px;
+  }
+
+  .signature-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .signature-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .signature-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .accept-btn {
+    padding: 16px 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    background: var(--gradient);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .accept-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+  }
+
+  .accept-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Accepted State */
+  .accepted-banner {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .accepted-banner h3 {
+    color: #22c55e;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .accepted-banner p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  /* Loading / Error States */
+  .loading, .error {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .error h2 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  .error p {
+    color: var(--text-muted);
+  }
+
+  /* Footer */
+  .quote-footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .quote-footer a {
+    color: var(--cyan);
+    text-decoration: none;
+  }
+</style>
+
+<script>
+  import type { Quote, Block, PricingBlock } from '../lib/types';
+  import { saveToR2 } from '../lib/r2';
+
+  const R2_BASE = 'https://pub-17ea8d32c4a94a5fbc8eb9a70e6047a8.r2.dev';
+
+  let quote: Quote | null = null;
+  let allQuotes: Quote[] = [];
+  let loading = true;
+  let error = '';
+  let signature = '';
+  let accepting = false;
+
+  // Get quote ID from URL params
+  const params = new URLSearchParams(window.location.search);
+  const quoteId = params.get('id');
+
+  function formatCurrency(amount: number, currency = 'NZD'): string {
+    return new Intl.NumberFormat('en-NZ', { style: 'currency', currency }).format(amount);
+  }
+
+  function formatDate(ts: number): string {
+    return new Date(ts).toLocaleDateString('en-NZ', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function calcTotal(): number {
+    if (!quote) return 0;
+    let total = 0;
+    quote.blocks.forEach(b => {
+      if (b.type === 'pricing') {
+        b.items.forEach(item => {
+          if (item.selected) {
+            total += item.quantity * item.unitPrice;
+          }
+        });
+      }
+    });
+    return total;
+  }
+
+  async function loadQuote() {
+    if (!quoteId) {
+      error = 'No quote ID provided';
+      loading = false;
+      render();
+      return;
+    }
+
+    try {
+      const response = await fetch(`${R2_BASE}/quotes-data.json?t=${Date.now()}`);
+      if (!response.ok) {
+        error = 'Quote not found';
+        loading = false;
+        render();
+        return;
+      }
+
+      const data = await response.json();
+      allQuotes = data.quotes || [];
+      quote = allQuotes.find((q: Quote) => q.id === quoteId) || null;
+
+      if (!quote) {
+        error = 'Quote not found';
+      } else {
+        // Track view
+        quote.viewCount++;
+        if (quote.status === 'sent') {
+          quote.status = 'viewed';
+        }
+        // Save updated view count
+        const idx = allQuotes.findIndex((q: Quote) => q.id === quoteId);
+        if (idx >= 0) {
+          allQuotes[idx] = quote;
+          await saveToR2('quotes-data.json', { quotes: allQuotes });
+        }
+      }
+    } catch (e) {
+      error = 'Failed to load quote';
+    }
+
+    loading = false;
+    render();
+  }
+
+  async function acceptQuote() {
+    if (!quote || !signature.trim() || accepting) return;
+
+    accepting = true;
+    render();
+
+    try {
+      const idx = allQuotes.findIndex((q: Quote) => q.id === quoteId);
+      if (idx >= 0) {
+        allQuotes[idx].status = 'accepted';
+        allQuotes[idx].acceptedAt = Date.now();
+        allQuotes[idx].signature = signature;
+        allQuotes[idx].total = calcTotal();
+        quote = allQuotes[idx];
+        await saveToR2('quotes-data.json', { quotes: allQuotes });
+      }
+    } catch (e) {
+      alert('Failed to accept quote. Please try again.');
+    }
+
+    accepting = false;
+    render();
+  }
+
+  function toggleOptionalItem(blockId: string, itemId: string) {
+    if (!quote) return;
+    const block = quote.blocks.find(b => b.id === blockId) as PricingBlock | undefined;
+    if (!block) return;
+    const item = block.items.find(i => i.id === itemId);
+    if (item && item.optional) {
+      item.selected = !item.selected;
+      render();
+    }
+  }
+
+  function render() {
+    const app = document.getElementById('app');
+    if (!app) return;
+
+    if (loading) {
+      app.innerHTML = `<div class="loading"><p>Loading quote...</p></div>`;
+      return;
+    }
+
+    if (error || !quote) {
+      app.innerHTML = `
+        <div class="error">
+          <h2>Quote Not Found</h2>
+          <p>This quote may have expired or been removed.</p>
+        </div>
+      `;
+      return;
+    }
+
+    app.innerHTML = `
+      <div class="quote-page">
+        <header class="quote-header">
+          <img src="https://bridgepoint.co.nz/logos/Bridge-Point_white.png" alt="Bridge Point" class="logo">
+          <div class="quote-meta">
+            <div>Quote for ${quote.clientName || 'You'}</div>
+            <div>${formatDate(quote.createdAt)}</div>
+          </div>
+        </header>
+
+        <div class="quote-content">
+          ${quote.blocks.map(b => renderBlock(b)).join('')}
+        </div>
+
+        ${quote.status === 'accepted' ? `
+          <div class="accepted-banner">
+            <h3>Quote Accepted</h3>
+            <p>Signed by ${quote.signature} on ${formatDate(quote.acceptedAt!)}</p>
+          </div>
+        ` : ''}
+
+        <footer class="quote-footer">
+          <p>Powered by <a href="https://bridgepoint.co.nz" target="_blank">Bridge Point</a></p>
+        </footer>
+      </div>
+    `;
+
+    attachListeners();
+  }
+
+  function renderBlock(block: Block): string {
+    switch (block.type) {
+      case 'hero':
+        return `
+          <div class="block-hero">
+            <h1>${block.title}</h1>
+            <p>${block.subtitle}</p>
+          </div>
+        `;
+
+      case 'text':
+        return `
+          <div class="block-text">
+            <p>${block.content}</p>
+          </div>
+        `;
+
+      case 'pricing':
+        const total = block.items.reduce((sum, i) => i.selected ? sum + i.quantity * i.unitPrice : sum, 0);
+        return `
+          <div class="block-pricing">
+            <h3>${block.title}</h3>
+            <table class="pricing-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th style="text-align:right">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${block.items.map(item => `
+                  <tr>
+                    <td>
+                      <div class="item-optional">
+                        ${item.optional && quote?.status !== 'accepted' ? `
+                          <input type="checkbox" class="item-checkbox"
+                            data-block="${block.id}" data-item="${item.id}"
+                            ${item.selected ? 'checked' : ''}>
+                        ` : ''}
+                        <div>
+                          <div class="item-name">${item.name}${item.optional ? ' (Optional)' : ''}</div>
+                          <div class="item-desc">${item.description}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>${item.quantity}</td>
+                    <td class="item-price" style="${!item.selected ? 'opacity:0.4' : ''}">${formatCurrency(item.quantity * item.unitPrice)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            ${block.showTotal ? `
+              <div class="pricing-total">
+                <span>Total</span>
+                <span class="amount">${formatCurrency(total)}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+      case 'divider':
+        return `<div class="block-divider"><hr></div>`;
+
+      case 'accept':
+        if (quote?.status === 'accepted') {
+          return `
+            <div class="block-accept">
+              <p class="terms">This quote has been accepted.</p>
+            </div>
+          `;
+        }
+        return `
+          <div class="block-accept">
+            <p class="terms">${block.terms}</p>
+            <div class="signature-area">
+              <div class="signature-label">Type your name to sign</div>
+              <input type="text" class="signature-input" id="signature" placeholder="Your Name" value="${signature}">
+            </div>
+            <button class="accept-btn" id="accept-btn" ${!signature.trim() || accepting ? 'disabled' : ''}>
+              ${accepting ? 'Accepting...' : block.buttonText}
+            </button>
+          </div>
+        `;
+
+      default:
+        return '';
+    }
+  }
+
+  function attachListeners() {
+    // Signature input
+    document.getElementById('signature')?.addEventListener('input', (e) => {
+      signature = (e.target as HTMLInputElement).value;
+      const btn = document.getElementById('accept-btn') as HTMLButtonElement;
+      if (btn) {
+        btn.disabled = !signature.trim() || accepting;
+      }
+    });
+
+    // Accept button
+    document.getElementById('accept-btn')?.addEventListener('click', acceptQuote);
+
+    // Optional item toggles
+    document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        const el = checkbox as HTMLInputElement;
+        const blockId = el.dataset.block!;
+        const itemId = el.dataset.item!;
+        toggleOptionalItem(blockId, itemId);
+      });
+    });
+  }
+
+  // Init
+  loadQuote();
+</script>

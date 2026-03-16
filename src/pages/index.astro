@@ -1,5 +1,5 @@
 ---
-// Quotes App - Ready to build
+// Quotes - A simplified Qwilr clone for Bridge Point
 ---
 
 <!DOCTYPE html>
@@ -7,39 +7,1332 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quotes</title>
+  <title>Quotes - Bridge Point</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="app">
-    <h1>Quotes App</h1>
-    <p>Ready to build.</p>
-  </div>
+  <div id="app"></div>
 </body>
 </html>
 
 <style is:global>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-hover: #1a1a25;
+    --border: #2a2a3a;
+    --text: #fafafa;
+    --text-muted: #8888a0;
+    --cyan: #00d4ff;
+    --purple: #7b2fff;
+    --pink: #ff006e;
+    --blue: #0066ff;
+    --gradient: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+  }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #0a0a0a;
-    color: #fafafa;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
+  }
+
+  /* Layout */
+  .app-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    width: 240px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    height: 32px;
+    margin-bottom: 30px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover, .nav-item.active {
+    background: var(--bg-hover);
+    color: var(--text);
+  }
+
+  .nav-item.active {
+    color: var(--cyan);
+  }
+
+  .nav-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+  }
+
+  /* Header */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--gradient);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: var(--bg-hover);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--cyan);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+  }
+
+  .btn-ghost:hover {
+    color: var(--text);
+    background: var(--bg-hover);
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  /* Quotes Table */
+  .quotes-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .quotes-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .quotes-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .quotes-table tr:hover td {
+    background: var(--bg-hover);
+  }
+
+  .quote-title {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .quote-client {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .status-draft { background: #333340; color: #888; }
+  .status-sent { background: rgba(0, 212, 255, 0.15); color: var(--cyan); }
+  .status-viewed { background: rgba(123, 47, 255, 0.15); color: var(--purple); }
+  .status-accepted { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+  .status-declined { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+  .quote-amount {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .quote-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--bg-hover);
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 auto 20px;
   }
 
-  #app {
+  .empty-icon svg {
+    width: 36px;
+    height: 36px;
+    color: var(--text-muted);
+  }
+
+  .empty-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .empty-desc {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  /* Templates Grid */
+  .templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .template-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .template-card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-2px);
+  }
+
+  .template-preview {
+    height: 160px;
+    background: var(--bg-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+  }
+
+  .template-info {
+    padding: 16px;
+  }
+
+  .template-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .template-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* Editor */
+  .editor-layout {
+    display: flex;
+    gap: 24px;
+  }
+
+  .editor-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+  }
+
+  .editor-main {
+    flex: 1;
+    max-width: 800px;
+  }
+
+  .editor-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .panel-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+
+  .block-palette {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .block-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 8px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .block-btn:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  .block-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Form */
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.9rem;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .form-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* Quote Blocks */
+  .quote-canvas {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-height: 400px;
+  }
+
+  .block-item {
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .block-item:last-child {
+    border-bottom: none;
+  }
+
+  .block-item:hover .block-toolbar {
+    opacity: 1;
+  }
+
+  .block-toolbar {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .block-toolbar button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .block-toolbar button:hover {
+    color: var(--text);
+    border-color: var(--cyan);
+  }
+
+  .block-toolbar svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Hero Block */
+  .block-hero {
+    background: var(--gradient);
+    padding: 60px 40px;
     text-align: center;
+    position: relative;
   }
 
-  h1 {
+  .block-hero h1 {
     font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-weight: 800;
+    margin-bottom: 12px;
   }
 
-  p {
-    color: #737373;
+  .block-hero p {
+    font-size: 1.1rem;
+    opacity: 0.9;
   }
+
+  /* Text Block */
+  .block-text {
+    padding: 30px 40px;
+  }
+
+  .block-text p {
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* Pricing Block */
+  .block-pricing {
+    padding: 30px 40px;
+  }
+
+  .block-pricing h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .pricing-table th {
+    text-align: left;
+    padding: 10px 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing-table td {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing-table .item-name {
+    font-weight: 500;
+  }
+
+  .pricing-table .item-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .pricing-table .item-price {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pricing-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .pricing-total .amount {
+    color: var(--cyan);
+  }
+
+  /* Divider */
+  .block-divider {
+    padding: 20px 40px;
+  }
+
+  .block-divider hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Accept Block */
+  .block-accept {
+    padding: 40px;
+    text-align: center;
+    background: var(--bg-hover);
+  }
+
+  .block-accept .terms {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .accept-btn {
+    padding: 14px 40px;
+    font-size: 1rem;
+    font-weight: 700;
+    background: var(--gradient);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .accept-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .modal-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-hover);
+    border: none;
+    border-radius: 8px;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .modal-close:hover {
+    color: var(--text);
+  }
+
+  .modal-body {
+    padding: 24px;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Utilities */
+  .text-gradient {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hidden { display: none !important; }
 </style>
+
+<script>
+  import type { Quote, Block, HeroBlock, TextBlock, PricingBlock, PricingItem, DividerBlock, AcceptBlock, Template } from '../lib/types';
+  import { loadFromR2, saveToR2 } from '../lib/r2';
+
+  // Icons
+  const icons = {
+    quotes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
+    templates: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+    link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+    eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+    type: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>',
+    image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+    dollar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+    minus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>',
+    x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    arrowUp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
+    arrowDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
+    layout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>',
+  };
+
+  // Templates
+  const templates: Template[] = [
+    {
+      id: 'blank',
+      name: 'Blank Quote',
+      description: 'Start from scratch',
+      category: 'Basic',
+      thumbnail: '',
+      blocks: []
+    },
+    {
+      id: 'service',
+      name: 'Service Proposal',
+      description: 'Professional services quote',
+      category: 'Services',
+      thumbnail: '',
+      blocks: [
+        { id: 'h1', type: 'hero', title: 'Project Proposal', subtitle: 'Prepared for [Client Name]' },
+        { id: 't1', type: 'text', content: 'Thank you for the opportunity to present this proposal. We are excited about the possibility of working together on this project.' },
+        { id: 'p1', type: 'pricing', title: 'Investment', showTotal: true, items: [
+          { id: 'i1', name: 'Discovery & Planning', description: 'Requirements gathering and project planning', quantity: 1, unitPrice: 2500, optional: false, selected: true },
+          { id: 'i2', name: 'Design & Development', description: 'Core implementation work', quantity: 1, unitPrice: 8000, optional: false, selected: true },
+          { id: 'i3', name: 'Testing & Launch', description: 'QA, deployment, and handover', quantity: 1, unitPrice: 1500, optional: false, selected: true },
+        ]},
+        { id: 'd1', type: 'divider' },
+        { id: 'a1', type: 'accept', buttonText: 'Accept Proposal', terms: 'By accepting, you agree to the terms outlined in this proposal.' }
+      ]
+    },
+    {
+      id: 'software',
+      name: 'Software Project',
+      description: 'Web or app development quote',
+      category: 'Technology',
+      thumbnail: '',
+      blocks: [
+        { id: 'h1', type: 'hero', title: 'Software Development Proposal', subtitle: 'Custom Solution for Your Business' },
+        { id: 't1', type: 'text', content: 'We propose building a custom software solution tailored to your specific needs. Our team will work closely with you throughout the development process.' },
+        { id: 'p1', type: 'pricing', title: 'Project Phases', showTotal: true, items: [
+          { id: 'i1', name: 'Phase 1: Foundation', description: 'Architecture, database design, core infrastructure', quantity: 1, unitPrice: 5000, optional: false, selected: true },
+          { id: 'i2', name: 'Phase 2: Core Features', description: 'Primary functionality development', quantity: 1, unitPrice: 12000, optional: false, selected: true },
+          { id: 'i3', name: 'Phase 3: Polish & Deploy', description: 'UI refinement, testing, production deployment', quantity: 1, unitPrice: 3000, optional: false, selected: true },
+          { id: 'i4', name: 'Ongoing Support (Monthly)', description: '10 hours of maintenance and updates', quantity: 1, unitPrice: 1500, optional: true, selected: false },
+        ]},
+        { id: 'a1', type: 'accept', buttonText: 'Approve & Begin', terms: 'A 30% deposit is required to commence work. Balance due upon completion.' }
+      ]
+    },
+    {
+      id: 'consulting',
+      name: 'Consulting Engagement',
+      description: 'Advisory and consulting services',
+      category: 'Services',
+      thumbnail: '',
+      blocks: [
+        { id: 'h1', type: 'hero', title: 'Consulting Proposal', subtitle: 'Strategic Advisory Services' },
+        { id: 't1', type: 'text', content: 'Based on our initial discussions, we have prepared a consulting engagement tailored to address your key business challenges.' },
+        { id: 'p1', type: 'pricing', title: 'Engagement Options', showTotal: true, items: [
+          { id: 'i1', name: 'Strategy Workshop (1 day)', description: 'Intensive strategy session with key stakeholders', quantity: 1, unitPrice: 3500, optional: false, selected: true },
+          { id: 'i2', name: 'Implementation Support', description: 'Weekly check-ins and guidance (4 weeks)', quantity: 4, unitPrice: 1200, optional: false, selected: true },
+          { id: 'i3', name: 'Executive Coaching', description: 'Monthly 1:1 sessions (optional add-on)', quantity: 3, unitPrice: 800, optional: true, selected: false },
+        ]},
+        { id: 'a1', type: 'accept', buttonText: 'Engage Services', terms: 'Payment terms: 50% upfront, 50% upon completion.' }
+      ]
+    }
+  ];
+
+  // State
+  let view: 'dashboard' | 'templates' | 'editor' = 'dashboard';
+  let quotes: Quote[] = [];
+  let currentQuote: Quote | null = null;
+  let loading = true;
+  let showModal = false;
+  let modalType: 'newQuote' | 'editBlock' | 'share' | 'pricing' = 'newQuote';
+  let editingBlock: Block | null = null;
+
+  // Load quotes
+  async function loadQuotes() {
+    const data = await loadFromR2<{ quotes: Quote[] }>('quotes-data.json');
+    if (data?.quotes) {
+      quotes = data.quotes;
+    }
+    loading = false;
+    render();
+  }
+
+  // Save quotes
+  async function saveQuotes() {
+    await saveToR2('quotes-data.json', { quotes });
+  }
+
+  // Generate ID
+  function genId(): string {
+    return Math.random().toString(36).substring(2, 10);
+  }
+
+  // Format currency
+  function formatCurrency(amount: number, currency = 'NZD'): string {
+    return new Intl.NumberFormat('en-NZ', { style: 'currency', currency }).format(amount);
+  }
+
+  // Calculate quote total
+  function calcTotal(blocks: Block[]): number {
+    let total = 0;
+    blocks.forEach(b => {
+      if (b.type === 'pricing') {
+        b.items.forEach(item => {
+          if (item.selected) {
+            total += item.quantity * item.unitPrice;
+          }
+        });
+      }
+    });
+    return total;
+  }
+
+  // Format date
+  function formatDate(ts: number): string {
+    return new Date(ts).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  // Create quote from template
+  function createFromTemplate(template: Template) {
+    const now = Date.now();
+    currentQuote = {
+      id: genId(),
+      title: template.name === 'Blank Quote' ? 'Untitled Quote' : template.name,
+      clientName: '',
+      clientEmail: '',
+      status: 'draft',
+      createdAt: now,
+      updatedAt: now,
+      viewCount: 0,
+      blocks: JSON.parse(JSON.stringify(template.blocks)),
+      total: 0,
+      currency: 'NZD'
+    };
+    currentQuote.total = calcTotal(currentQuote.blocks);
+    view = 'editor';
+    render();
+  }
+
+  // Save current quote
+  async function saveCurrentQuote() {
+    if (!currentQuote) return;
+    currentQuote.updatedAt = Date.now();
+    currentQuote.total = calcTotal(currentQuote.blocks);
+
+    const idx = quotes.findIndex(q => q.id === currentQuote!.id);
+    if (idx >= 0) {
+      quotes[idx] = currentQuote;
+    } else {
+      quotes.unshift(currentQuote);
+    }
+    await saveQuotes();
+    render();
+  }
+
+  // Delete quote
+  async function deleteQuote(id: string) {
+    if (!confirm('Delete this quote?')) return;
+    quotes = quotes.filter(q => q.id !== id);
+    await saveQuotes();
+    render();
+  }
+
+  // Add block
+  function addBlock(type: Block['type']) {
+    if (!currentQuote) return;
+    let block: Block;
+    const id = genId();
+
+    switch (type) {
+      case 'hero':
+        block = { id, type: 'hero', title: 'Your Title', subtitle: 'Subtitle goes here' };
+        break;
+      case 'text':
+        block = { id, type: 'text', content: 'Enter your text here...' };
+        break;
+      case 'pricing':
+        block = { id, type: 'pricing', title: 'Pricing', showTotal: true, items: [
+          { id: genId(), name: 'Item', description: 'Description', quantity: 1, unitPrice: 0, optional: false, selected: true }
+        ]};
+        break;
+      case 'divider':
+        block = { id, type: 'divider' };
+        break;
+      case 'accept':
+        block = { id, type: 'accept', buttonText: 'Accept Quote', terms: 'By accepting, you agree to the terms.' };
+        break;
+      default:
+        return;
+    }
+
+    currentQuote.blocks.push(block);
+    render();
+  }
+
+  // Remove block
+  function removeBlock(id: string) {
+    if (!currentQuote) return;
+    currentQuote.blocks = currentQuote.blocks.filter(b => b.id !== id);
+    render();
+  }
+
+  // Move block
+  function moveBlock(id: string, dir: -1 | 1) {
+    if (!currentQuote) return;
+    const idx = currentQuote.blocks.findIndex(b => b.id === id);
+    if (idx < 0) return;
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= currentQuote.blocks.length) return;
+    const blocks = [...currentQuote.blocks];
+    [blocks[idx], blocks[newIdx]] = [blocks[newIdx], blocks[idx]];
+    currentQuote.blocks = blocks;
+    render();
+  }
+
+  // Render
+  function render() {
+    const app = document.getElementById('app');
+    if (!app) return;
+
+    app.innerHTML = `
+      <div class="app-layout">
+        <nav class="sidebar">
+          <img src="https://bridgepoint.co.nz/logos/Bridge-Point_white.png" alt="Bridge Point" class="logo">
+
+          <button class="nav-item ${view === 'dashboard' ? 'active' : ''}" data-view="dashboard">
+            ${icons.quotes}
+            <span>Quotes</span>
+          </button>
+          <button class="nav-item ${view === 'templates' ? 'active' : ''}" data-view="templates">
+            ${icons.templates}
+            <span>Templates</span>
+          </button>
+        </nav>
+
+        <main class="main-content">
+          ${view === 'dashboard' ? renderDashboard() : ''}
+          ${view === 'templates' ? renderTemplates() : ''}
+          ${view === 'editor' ? renderEditor() : ''}
+        </main>
+      </div>
+
+      ${showModal ? renderModal() : ''}
+    `;
+
+    attachListeners();
+  }
+
+  function renderDashboard(): string {
+    if (loading) {
+      return '<div class="empty-state"><p>Loading...</p></div>';
+    }
+
+    if (quotes.length === 0) {
+      return `
+        <div class="page-header">
+          <h1 class="page-title">Quotes</h1>
+        </div>
+        <div class="empty-state">
+          <div class="empty-icon">${icons.quotes}</div>
+          <h2 class="empty-title">No quotes yet</h2>
+          <p class="empty-desc">Create your first quote to get started</p>
+          <button class="btn btn-primary" data-action="new-quote">
+            ${icons.plus} New Quote
+          </button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="page-header">
+        <h1 class="page-title">Quotes</h1>
+        <button class="btn btn-primary" data-action="new-quote">
+          ${icons.plus} New Quote
+        </button>
+      </div>
+
+      <table class="quotes-table">
+        <thead>
+          <tr>
+            <th>Quote</th>
+            <th>Status</th>
+            <th>Amount</th>
+            <th>Created</th>
+            <th>Views</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${quotes.map(q => `
+            <tr>
+              <td>
+                <div class="quote-title">${q.title}</div>
+                <div class="quote-client">${q.clientName || 'No client'}</div>
+              </td>
+              <td><span class="status-badge status-${q.status}">${q.status}</span></td>
+              <td class="quote-amount">${formatCurrency(q.total, q.currency)}</td>
+              <td>${formatDate(q.createdAt)}</td>
+              <td>${q.viewCount}</td>
+              <td>
+                <div class="quote-actions">
+                  <button class="btn btn-ghost btn-sm" data-action="edit" data-id="${q.id}">${icons.edit}</button>
+                  <button class="btn btn-ghost btn-sm" data-action="share" data-id="${q.id}">${icons.link}</button>
+                  <button class="btn btn-ghost btn-sm" data-action="delete" data-id="${q.id}">${icons.trash}</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function renderTemplates(): string {
+    return `
+      <div class="page-header">
+        <h1 class="page-title">Templates</h1>
+      </div>
+
+      <div class="templates-grid">
+        ${templates.map(t => `
+          <div class="template-card" data-template="${t.id}">
+            <div class="template-preview">
+              ${t.id === 'blank' ? icons.plus : icons.layout}
+            </div>
+            <div class="template-info">
+              <div class="template-name">${t.name}</div>
+              <div class="template-desc">${t.description}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function renderEditor(): string {
+    if (!currentQuote) return '';
+
+    return `
+      <div class="page-header">
+        <div>
+          <button class="btn btn-ghost" data-action="back">&larr; Back</button>
+        </div>
+        <div style="display:flex;gap:12px">
+          <button class="btn btn-secondary" data-action="preview">${icons.eye} Preview</button>
+          <button class="btn btn-primary" data-action="save">${icons.check} Save</button>
+        </div>
+      </div>
+
+      <div class="editor-layout">
+        <div class="editor-sidebar">
+          <div class="editor-panel">
+            <div class="panel-title">Quote Details</div>
+            <div class="form-group">
+              <label class="form-label">Title</label>
+              <input class="form-input" type="text" id="quote-title" value="${currentQuote.title}" placeholder="Quote title">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client Name</label>
+              <input class="form-input" type="text" id="quote-client" value="${currentQuote.clientName}" placeholder="Client name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client Email</label>
+              <input class="form-input" type="email" id="quote-email" value="${currentQuote.clientEmail}" placeholder="client@example.com">
+            </div>
+          </div>
+
+          <div class="editor-panel">
+            <div class="panel-title">Add Block</div>
+            <div class="block-palette">
+              <button class="block-btn" data-add-block="hero">${icons.layout}<span>Hero</span></button>
+              <button class="block-btn" data-add-block="text">${icons.type}<span>Text</span></button>
+              <button class="block-btn" data-add-block="pricing">${icons.dollar}<span>Pricing</span></button>
+              <button class="block-btn" data-add-block="divider">${icons.minus}<span>Divider</span></button>
+              <button class="block-btn" data-add-block="accept">${icons.check}<span>Accept</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="editor-main">
+          <div class="quote-canvas">
+            ${currentQuote.blocks.length === 0 ? `
+              <div class="empty-state">
+                <p class="empty-desc">Add blocks to build your quote</p>
+              </div>
+            ` : currentQuote.blocks.map(b => renderBlock(b)).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderBlock(block: Block): string {
+    const toolbar = `
+      <div class="block-toolbar">
+        <button data-move-up="${block.id}">${icons.arrowUp}</button>
+        <button data-move-down="${block.id}">${icons.arrowDown}</button>
+        <button data-edit-block="${block.id}">${icons.edit}</button>
+        <button data-remove-block="${block.id}">${icons.trash}</button>
+      </div>
+    `;
+
+    switch (block.type) {
+      case 'hero':
+        return `
+          <div class="block-item block-hero">
+            ${toolbar}
+            <h1 contenteditable="true" data-field="title" data-block="${block.id}">${block.title}</h1>
+            <p contenteditable="true" data-field="subtitle" data-block="${block.id}">${block.subtitle}</p>
+          </div>
+        `;
+
+      case 'text':
+        return `
+          <div class="block-item block-text">
+            ${toolbar}
+            <p contenteditable="true" data-field="content" data-block="${block.id}">${block.content}</p>
+          </div>
+        `;
+
+      case 'pricing':
+        const total = block.items.reduce((sum, i) => i.selected ? sum + i.quantity * i.unitPrice : sum, 0);
+        return `
+          <div class="block-item block-pricing">
+            ${toolbar}
+            <h3 contenteditable="true" data-field="title" data-block="${block.id}">${block.title}</h3>
+            <table class="pricing-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th style="text-align:right">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${block.items.map(item => `
+                  <tr>
+                    <td>
+                      <div class="item-name">${item.name}${item.optional ? ' (Optional)' : ''}</div>
+                      <div class="item-desc">${item.description}</div>
+                    </td>
+                    <td>${item.quantity}</td>
+                    <td class="item-price">${formatCurrency(item.quantity * item.unitPrice)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            ${block.showTotal ? `
+              <div class="pricing-total">
+                <span>Total</span>
+                <span class="amount">${formatCurrency(total)}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+      case 'divider':
+        return `
+          <div class="block-item block-divider">
+            ${toolbar}
+            <hr>
+          </div>
+        `;
+
+      case 'accept':
+        return `
+          <div class="block-item block-accept">
+            ${toolbar}
+            <p class="terms" contenteditable="true" data-field="terms" data-block="${block.id}">${block.terms}</p>
+            <button class="accept-btn">${block.buttonText}</button>
+          </div>
+        `;
+
+      default:
+        return '';
+    }
+  }
+
+  function renderModal(): string {
+    if (modalType === 'share' && currentQuote) {
+      const url = `${window.location.origin}/view?id=${currentQuote.id}`;
+      return `
+        <div class="modal-overlay" data-close-modal>
+          <div class="modal">
+            <div class="modal-header">
+              <h3 class="modal-title">Share Quote</h3>
+              <button class="modal-close" data-close-modal>${icons.x}</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="form-label">Quote Link</label>
+                <input class="form-input" type="text" value="${url}" readonly id="share-url">
+              </div>
+              <p style="font-size:0.85rem;color:var(--text-muted)">Share this link with your client. They can view and accept the quote.</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-close-modal>Close</button>
+              <button class="btn btn-primary" data-action="copy-link">Copy Link</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    return '';
+  }
+
+  function attachListeners() {
+    // Navigation
+    document.querySelectorAll('[data-view]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        view = (btn as HTMLElement).dataset.view as typeof view;
+        render();
+      });
+    });
+
+    // New quote
+    document.querySelectorAll('[data-action="new-quote"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        view = 'templates';
+        render();
+      });
+    });
+
+    // Template selection
+    document.querySelectorAll('[data-template]').forEach(card => {
+      card.addEventListener('click', () => {
+        const templateId = (card as HTMLElement).dataset.template;
+        const template = templates.find(t => t.id === templateId);
+        if (template) {
+          createFromTemplate(template);
+        }
+      });
+    });
+
+    // Edit quote
+    document.querySelectorAll('[data-action="edit"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id;
+        currentQuote = JSON.parse(JSON.stringify(quotes.find(q => q.id === id)));
+        view = 'editor';
+        render();
+      });
+    });
+
+    // Delete quote
+    document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id;
+        if (id) deleteQuote(id);
+      });
+    });
+
+    // Share
+    document.querySelectorAll('[data-action="share"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id;
+        currentQuote = quotes.find(q => q.id === id) || null;
+        if (currentQuote) {
+          modalType = 'share';
+          showModal = true;
+          render();
+        }
+      });
+    });
+
+    // Back
+    document.querySelector('[data-action="back"]')?.addEventListener('click', () => {
+      view = 'dashboard';
+      currentQuote = null;
+      render();
+    });
+
+    // Save
+    document.querySelector('[data-action="save"]')?.addEventListener('click', async () => {
+      // Update quote details from inputs
+      if (currentQuote) {
+        currentQuote.title = (document.getElementById('quote-title') as HTMLInputElement)?.value || currentQuote.title;
+        currentQuote.clientName = (document.getElementById('quote-client') as HTMLInputElement)?.value || '';
+        currentQuote.clientEmail = (document.getElementById('quote-email') as HTMLInputElement)?.value || '';
+      }
+      await saveCurrentQuote();
+      alert('Quote saved!');
+    });
+
+    // Preview
+    document.querySelector('[data-action="preview"]')?.addEventListener('click', () => {
+      if (currentQuote) {
+        window.open(`/view?id=${currentQuote.id}`, '_blank');
+      }
+    });
+
+    // Add block
+    document.querySelectorAll('[data-add-block]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = (btn as HTMLElement).dataset.addBlock as Block['type'];
+        addBlock(type);
+      });
+    });
+
+    // Remove block
+    document.querySelectorAll('[data-remove-block]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.removeBlock;
+        if (id) removeBlock(id);
+      });
+    });
+
+    // Move block
+    document.querySelectorAll('[data-move-up]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.moveUp;
+        if (id) moveBlock(id, -1);
+      });
+    });
+
+    document.querySelectorAll('[data-move-down]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.moveDown;
+        if (id) moveBlock(id, 1);
+      });
+    });
+
+    // Contenteditable updates
+    document.querySelectorAll('[contenteditable]').forEach(el => {
+      el.addEventListener('blur', () => {
+        const blockId = (el as HTMLElement).dataset.block;
+        const field = (el as HTMLElement).dataset.field;
+        if (!blockId || !field || !currentQuote) return;
+
+        const block = currentQuote.blocks.find(b => b.id === blockId);
+        if (block && field in block) {
+          (block as any)[field] = (el as HTMLElement).innerText;
+        }
+      });
+    });
+
+    // Close modal
+    document.querySelectorAll('[data-close-modal]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        if (e.target === el) {
+          showModal = false;
+          render();
+        }
+      });
+    });
+
+    // Copy link
+    document.querySelector('[data-action="copy-link"]')?.addEventListener('click', () => {
+      const input = document.getElementById('share-url') as HTMLInputElement;
+      if (input) {
+        input.select();
+        document.execCommand('copy');
+        alert('Link copied!');
+      }
+    });
+  }
+
+  // Init
+  loadQuotes();
+</script>
