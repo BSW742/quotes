@@ -17,7 +17,7 @@ export interface Quote {
   signature?: string;
 }
 
-export type BlockType = 'hero' | 'text' | 'pricing' | 'image' | 'divider' | 'accept';
+export type BlockType = 'hero' | 'section' | 'text' | 'pricing' | 'image' | 'divider' | 'accept';
 
 export interface BaseBlock {
   id: string;
@@ -29,6 +29,12 @@ export interface HeroBlock extends BaseBlock {
   title: string;
   subtitle: string;
   backgroundUrl?: string;
+}
+
+export interface SectionBlock extends BaseBlock {
+  type: 'section';
+  title: string;
+  content: string;
 }
 
 export interface TextBlock extends BaseBlock {
@@ -69,7 +75,7 @@ export interface AcceptBlock extends BaseBlock {
   terms: string;
 }
 
-export type Block = HeroBlock | TextBlock | PricingBlock | ImageBlock | DividerBlock | AcceptBlock;
+export type Block = HeroBlock | SectionBlock | TextBlock | PricingBlock | ImageBlock | DividerBlock | AcceptBlock;
 
 export interface Template {
   id: string;
