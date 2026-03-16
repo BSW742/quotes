@@ -5,6 +5,7 @@ export interface Quote {
   title: string;
   clientName: string;
   clientEmail: string;
+  clientWebsite?: string;
   status: 'draft' | 'sent' | 'viewed' | 'accepted' | 'declined';
   createdAt: number;
   updatedAt: number;

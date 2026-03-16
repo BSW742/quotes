@@ -797,6 +797,10 @@ All findings and recommendations remain confidential.` },
               <input class="form-input" type="email" id="quote-email" value="${currentQuote.clientEmail}" placeholder="client@example.com">
             </div>
             <div class="form-group">
+              <label class="form-label">Client Website</label>
+              <input class="form-input" type="url" id="quote-website" value="${currentQuote.clientWebsite || ''}" placeholder="https://example.com">
+            </div>
+            <div class="form-group">
               <label class="form-label">Status</label>
               <select class="form-input" id="quote-status">
                 <option value="draft" ${currentQuote.status === 'draft' ? 'selected' : ''}>Draft</option>
@@ -945,6 +949,7 @@ All findings and recommendations remain confidential.` },
         currentQuote.title = (document.getElementById('quote-title') as HTMLInputElement)?.value || currentQuote.title;
         currentQuote.clientName = (document.getElementById('quote-client') as HTMLInputElement)?.value || '';
         currentQuote.clientEmail = (document.getElementById('quote-email') as HTMLInputElement)?.value || '';
+        currentQuote.clientWebsite = (document.getElementById('quote-website') as HTMLInputElement)?.value || '';
         currentQuote.status = (document.getElementById('quote-status') as HTMLSelectElement)?.value as Quote['status'] || currentQuote.status;
       }
       await saveCurrentQuote();
