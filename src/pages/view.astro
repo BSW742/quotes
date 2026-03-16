@@ -527,23 +527,55 @@
       } else {
         // Fetch client brand if website provided
         if (quote.clientWebsite) {
+          // Ensure URL has protocol
+          let websiteUrl = quote.clientWebsite.trim();
+          if (!websiteUrl.startsWith('http://') && !websiteUrl.startsWith('https://')) {
+            websiteUrl = 'https://' + websiteUrl;
+          }
+
+          // Extract domain for fallback
+          let domain = '';
+          try {
+            domain = new URL(websiteUrl).hostname;
+          } catch {
+            domain = websiteUrl.replace(/^https?:\/\//, '').split('/')[0];
+          }
+
           try {
             const brandForm = new FormData();
             brandForm.append('type', 'extract-brand');
-            brandForm.append('url', quote.clientWebsite);
+            brandForm.append('url', websiteUrl);
             const brandResp = await fetch(WORKER_URL, { method: 'POST', body: brandForm });
             const brandData = await brandResp.json();
+
             if (brandData.logo || brandData.fallbackIcon) {
               clientBrand = {
                 logo: brandData.logo,
                 fallbackIcon: brandData.fallbackIcon,
                 companyName: brandData.companyName || quote.clientName,
                 themeColor: brandData.themeColor,
-                useLightMode: false // Will be determined after logo loads
+                useLightMode: false
+              };
+            } else {
+              // Extraction worked but no logo found - use favicon
+              clientBrand = {
+                logo: null,
+                fallbackIcon: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+                companyName: quote.clientName,
+                themeColor: null,
+                useLightMode: false
               };
             }
           } catch (e) {
-            console.log('Could not fetch brand info');
+            // Extraction failed - use favicon fallback
+            console.log('Brand extraction failed, using favicon fallback');
+            clientBrand = {
+              logo: null,
+              fallbackIcon: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+              companyName: quote.clientName,
+              themeColor: null,
+              useLightMode: false
+            };
           }
         }
 
