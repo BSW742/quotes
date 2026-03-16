@@ -388,9 +388,7 @@
 
 <script>
   import type { Quote, Block, PricingBlock, SectionBlock } from '../lib/types';
-  import { saveToR2 } from '../lib/r2';
-
-  const R2_BASE = 'https://pub-17ea8d32c4a94a5fbc8eb9a70e6047a8.r2.dev';
+  import { saveToR2, WORKER_URL } from '../lib/r2';
 
   let quote: Quote | null = null;
   let allQuotes: Quote[] = [];
@@ -435,7 +433,7 @@
     }
 
     try {
-      const response = await fetch(`${R2_BASE}/quotes-data.json?t=${Date.now()}`);
+      const response = await fetch(`${WORKER_URL}?file=quotes-data.json&t=${Date.now()}`);
       if (!response.ok) {
         error = 'Quote not found';
         loading = false;
