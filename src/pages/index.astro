@@ -90,6 +90,24 @@
   .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+  .theme-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+  .theme-swatch {
+    width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+    border: 2px solid transparent; transition: all 0.2s;
+  }
+  .theme-swatch:hover { transform: scale(1.1); }
+  .theme-swatch.active { border-color: var(--cyan); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--cyan); }
+  .theme-swatch.gradient { background: linear-gradient(135deg, #00d4ff, #7b2fff, #ff006e); }
+  .theme-swatch.cyan { background: linear-gradient(135deg, #00d4ff, #0099cc); }
+  .theme-swatch.purple { background: linear-gradient(135deg, #7b2fff, #5a1fcc); }
+  .theme-swatch.blue { background: linear-gradient(135deg, #0066ff, #0044cc); }
+  .theme-swatch.dark { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+  .theme-swatch.light { background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-color: var(--border); }
+
+  .ai-prompt-area { margin-bottom: 16px; }
+  .ai-prompt-area textarea { min-height: 120px; }
+  .ai-output { background: var(--bg); padding: 16px; border-radius: 8px; margin-top: 16px; white-space: pre-wrap; line-height: 1.6; max-height: 300px; overflow-y: auto; }
+
   .quotes-table { width: 100%; border-collapse: collapse; }
   .quotes-table th {
     text-align: left; padding: 12px 16px;
@@ -304,7 +322,7 @@
 </style>
 
 <script>
-  import type { Quote, Block, PricingBlock, PricingItem, Template } from '../lib/types';
+  import type { Quote, Block, PricingBlock, PricingItem, Template, HeroTheme } from '../lib/types';
   import { loadFromR2, saveToR2, WORKER_URL } from '../lib/r2';
 
   const icons = {
@@ -324,6 +342,8 @@
     arrowUp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
     arrowDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
     section: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>',
+    sparkle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"/></svg>',
+    pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M10 12v6"/><path d="M14 12v6"/><path d="M10 15h4"/></svg>',
   };
 
   // Bridge Point proposal template
@@ -474,9 +494,13 @@ All findings and recommendations remain confidential.` },
   let saving = false;
   let sending = false;
   let showModal = false;
-  let modalType: 'send' | 'share' | 'pricing' = 'send';
+  let modalType: 'send' | 'share' | 'pricing' | 'ai' = 'send';
   let editingPricingBlock: PricingBlock | null = null;
   let toastMessage = '';
+  let aiPrompt = '';
+  let aiOutput = '';
+  let aiGenerating = false;
+  let aiTargetBlockId = '';
 
   async function loadQuotes() {
     const data = await loadFromR2<{ quotes: Quote[] }>('quotes-data.json');
@@ -567,40 +591,38 @@ All findings and recommendations remain confidential.` },
       return;
     }
 
-    sending = true;
-    render();
-
     // Save first
     await saveCurrentQuote();
 
-    // Send email via worker
-    const formData = new FormData();
-    formData.append('type', 'send-quote');
-    formData.append('clientEmail', currentQuote.clientEmail);
-    formData.append('clientName', currentQuote.clientName || '');
-    formData.append('quoteTitle', currentQuote.title);
-    formData.append('quoteId', currentQuote.id);
-    formData.append('quoteTotal', formatCurrency(currentQuote.total, currentQuote.currency));
+    // Build mailto link
+    const quoteUrl = `${window.location.origin}/view?id=${currentQuote.id}`;
+    const subject = `Your Proposal: ${currentQuote.title}`;
+    const body = `Hi ${currentQuote.clientName || 'there'},
 
-    try {
-      const resp = await fetch(WORKER_URL, { method: 'POST', body: formData });
-      const data = await resp.json();
+Thank you for your interest in working with Bridge Point. I've prepared a proposal for you.
 
-      if (data.success) {
-        currentQuote.status = 'sent';
-        const idx = quotes.findIndex(q => q.id === currentQuote!.id);
-        if (idx >= 0) quotes[idx] = currentQuote;
-        await saveQuotes();
-        showToast('Quote sent!');
-        showModal = false;
-      } else {
-        alert('Failed to send: ' + (data.error || 'Unknown error'));
-      }
-    } catch (e) {
-      alert('Failed to send quote');
-    }
+Proposal Total: ${formatCurrency(currentQuote.total, currentQuote.currency)}
 
-    sending = false;
+View your proposal here:
+${quoteUrl}
+
+If you have any questions, feel free to reply to this email.
+
+Best regards,
+Ben Wilson
+Bridge Point`;
+
+    const mailtoUrl = `mailto:${currentQuote.clientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(mailtoUrl, '_blank');
+
+    // Update status
+    currentQuote.status = 'sent';
+    const idx = quotes.findIndex(q => q.id === currentQuote!.id);
+    if (idx >= 0) quotes[idx] = currentQuote;
+    await saveQuotes();
+
+    showToast('Email draft opened!');
+    showModal = false;
     render();
   }
 
@@ -775,6 +797,7 @@ All findings and recommendations remain confidential.` },
         <button class="btn btn-ghost" data-action="back">← Back</button>
         <div style="display:flex;gap:12px">
           <button class="btn btn-secondary" data-action="preview">${icons.eye} Preview</button>
+          <button class="btn btn-secondary" data-action="pdf">${icons.pdf} PDF</button>
           <button class="btn btn-secondary" data-action="copy-link">${icons.link} Copy Link</button>
           <button class="btn btn-success" data-action="send-modal">${icons.send} Send</button>
           <button class="btn btn-primary" data-action="save" ${saving ? 'disabled' : ''}>${saving ? 'Saving...' : `${icons.check} Save`}</button>
@@ -799,6 +822,24 @@ All findings and recommendations remain confidential.` },
             <div class="form-group">
               <label class="form-label">Client Website</label>
               <input class="form-input" type="url" id="quote-website" value="${currentQuote.clientWebsite || ''}" placeholder="https://example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client Logo</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input class="form-input" type="file" id="quote-logo-upload" accept="image/*" style="flex:1">
+              </div>
+              ${currentQuote.clientLogo ? `<img src="${currentQuote.clientLogo}" style="max-height:40px;margin-top:8px;border-radius:4px">` : ''}
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hero Theme</label>
+              <div class="theme-swatches">
+                <div class="theme-swatch gradient ${currentQuote.heroTheme === 'gradient' || !currentQuote.heroTheme ? 'active' : ''}" data-theme="gradient" title="Gradient"></div>
+                <div class="theme-swatch cyan ${currentQuote.heroTheme === 'cyan' ? 'active' : ''}" data-theme="cyan" title="Cyan"></div>
+                <div class="theme-swatch purple ${currentQuote.heroTheme === 'purple' ? 'active' : ''}" data-theme="purple" title="Purple"></div>
+                <div class="theme-swatch blue ${currentQuote.heroTheme === 'blue' ? 'active' : ''}" data-theme="blue" title="Blue"></div>
+                <div class="theme-swatch dark ${currentQuote.heroTheme === 'dark' ? 'active' : ''}" data-theme="dark" title="Dark"></div>
+                <div class="theme-swatch light ${currentQuote.heroTheme === 'light' ? 'active' : ''}" data-theme="light" title="Light"></div>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">Status</label>
@@ -835,6 +876,7 @@ All findings and recommendations remain confidential.` },
     const toolbar = `<div class="block-toolbar">
       <button data-move-up="${block.id}">${icons.arrowUp}</button>
       <button data-move-down="${block.id}">${icons.arrowDown}</button>
+      ${block.type === 'section' ? `<button data-ai-assist="${block.id}" title="AI Assistant">${icons.sparkle}</button>` : ''}
       ${block.type === 'pricing' ? `<button data-edit-pricing="${block.id}">${icons.edit}</button>` : ''}
       <button data-remove-block="${block.id}">${icons.trash}</button>
     </div>`;
@@ -908,6 +950,24 @@ All findings and recommendations remain confidential.` },
       </div></div>`;
     }
 
+    if (modalType === 'ai') {
+      return `<div class="modal-overlay" data-close-modal><div class="modal" style="max-width:600px">
+        <div class="modal-header"><h3 class="modal-title">${icons.sparkle} AI Assistant</h3><button class="modal-close" data-close-modal>${icons.x}</button></div>
+        <div class="modal-body">
+          <div class="ai-prompt-area">
+            <label class="form-label">What would you like in this section?</label>
+            <textarea class="form-input form-textarea" id="ai-prompt" placeholder="e.g. In simple terms and use bullet points, explain the benefits of EDR (advanced AV)">${aiPrompt}</textarea>
+          </div>
+          <button class="btn btn-primary" data-action="generate-ai" ${aiGenerating ? 'disabled' : ''}>${aiGenerating ? 'Generating...' : `${icons.sparkle} Generate`}</button>
+          ${aiOutput ? `<div class="ai-output">${aiOutput}</div>` : ''}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button class="btn btn-success" data-action="use-ai-output" ${!aiOutput ? 'disabled' : ''}>Use This Content</button>
+        </div>
+      </div></div>`;
+    }
+
     return '';
   }
 
@@ -953,6 +1013,34 @@ All findings and recommendations remain confidential.` },
         currentQuote.status = (document.getElementById('quote-status') as HTMLSelectElement)?.value as Quote['status'] || currentQuote.status;
       }
       await saveCurrentQuote();
+    });
+
+    // Logo upload handler
+    document.getElementById('quote-logo-upload')?.addEventListener('change', async (e) => {
+      const input = e.target as HTMLInputElement;
+      const file = input.files?.[0];
+      if (!file || !currentQuote) return;
+
+      // Convert logo to base64 directly (avoids CORS issues in PDF generation)
+      try {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.readAsDataURL(file);
+        });
+
+        currentQuote.clientLogo = base64;
+        // Also grab latest form values before saving
+        currentQuote.title = (document.getElementById('quote-title') as HTMLInputElement)?.value || currentQuote.title;
+        currentQuote.clientName = (document.getElementById('quote-client') as HTMLInputElement)?.value || '';
+        currentQuote.clientEmail = (document.getElementById('quote-email') as HTMLInputElement)?.value || '';
+        currentQuote.clientWebsite = (document.getElementById('quote-website') as HTMLInputElement)?.value || '';
+        await saveCurrentQuote();
+        render();
+      } catch (err) {
+        alert('Failed to upload logo');
+      }
     });
 
     document.querySelector('[data-action="preview"]')?.addEventListener('click', () => { if (currentQuote) window.open(`/view?id=${currentQuote.id}`, '_blank'); });
@@ -1031,6 +1119,84 @@ All findings and recommendations remain confidential.` },
     });
 
     document.querySelector('[data-action="save-pricing"]')?.addEventListener('click', savePricingEdit);
+
+    // Theme swatch clicks
+    document.querySelectorAll('.theme-swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        if (!currentQuote) return;
+        currentQuote.heroTheme = (swatch as HTMLElement).dataset.theme as Quote['heroTheme'];
+        render();
+      });
+    });
+
+    // PDF button
+    document.querySelector('[data-action="pdf"]')?.addEventListener('click', () => {
+      if (currentQuote) {
+        window.open(`/view?id=${currentQuote.id}&print=1`, '_blank');
+      }
+    });
+
+    // AI assist button on sections
+    document.querySelectorAll('[data-ai-assist]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        aiTargetBlockId = (btn as HTMLElement).dataset.aiAssist!;
+        aiPrompt = '';
+        aiOutput = '';
+        modalType = 'ai';
+        showModal = true;
+        render();
+      });
+    });
+
+    // AI generate button
+    document.querySelector('[data-action="generate-ai"]')?.addEventListener('click', async () => {
+      const promptEl = document.getElementById('ai-prompt') as HTMLTextAreaElement;
+      aiPrompt = promptEl?.value || '';
+      if (!aiPrompt.trim()) return;
+
+      aiGenerating = true;
+      render();
+
+      try {
+        const fullPrompt = `You are a professional business proposal writer for Bridge Point, a technology consultancy. Generate content for a proposal section based on this request:
+
+${aiPrompt}
+
+Rules:
+- Be professional but approachable
+- Use bullet points where appropriate
+- Be concise and clear
+- Focus on benefits and value
+- Don't use overly technical jargon unless requested
+- Return ONLY the content, no headers or section titles`;
+
+        const resp = await fetch(WORKER_URL + '/drafty-polish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: fullPrompt })
+        });
+        const data = await resp.json();
+        aiOutput = data.text || data.error || 'No output generated';
+      } catch (err) {
+        aiOutput = 'Failed to generate content';
+      }
+
+      aiGenerating = false;
+      render();
+    });
+
+    // Use AI output
+    document.querySelector('[data-action="use-ai-output"]')?.addEventListener('click', () => {
+      if (!currentQuote || !aiTargetBlockId || !aiOutput) return;
+      const block = currentQuote.blocks.find(b => b.id === aiTargetBlockId);
+      if (block && block.type === 'section') {
+        (block as any).content = aiOutput;
+      }
+      showModal = false;
+      aiOutput = '';
+      aiPrompt = '';
+      render();
+    });
   }
 
   loadQuotes();

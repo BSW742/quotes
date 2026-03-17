@@ -1,11 +1,15 @@
 // Quote types
 
+export type HeroTheme = 'gradient' | 'cyan' | 'purple' | 'blue' | 'dark' | 'light';
+
 export interface Quote {
   id: string;
   title: string;
   clientName: string;
   clientEmail: string;
   clientWebsite?: string;
+  clientLogo?: string;
+  heroTheme?: HeroTheme;
   status: 'draft' | 'sent' | 'viewed' | 'accepted' | 'declined';
   createdAt: number;
   updatedAt: number;
