@@ -6,7 +6,8 @@ export const R2_BASE = 'https://pub-17ea8d32c4a94a5fbc8eb9a70e6047a8.r2.dev';
 
 export async function loadFromR2<T>(filename: string): Promise<T | null> {
   try {
-    const response = await fetch(`${R2_BASE}/${filename}?t=${Date.now()}`);
+    // Load via worker endpoint to bypass R2 public access issues
+    const response = await fetch(`${WORKER_URL}?file=${filename}&t=${Date.now()}`);
     if (response.ok) {
       return await response.json();
     }

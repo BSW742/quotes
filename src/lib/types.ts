@@ -10,6 +10,7 @@ export interface Quote {
   clientWebsite?: string;
   clientLogo?: string;
   heroTheme?: HeroTheme;
+  showHeader?: boolean;
   status: 'draft' | 'sent' | 'viewed' | 'accepted' | 'declined';
   createdAt: number;
   updatedAt: number;
@@ -22,7 +23,7 @@ export interface Quote {
   signature?: string;
 }
 
-export type BlockType = 'hero' | 'section' | 'text' | 'pricing' | 'image' | 'divider' | 'accept';
+export type BlockType = 'hero' | 'section' | 'text' | 'pricing' | 'image' | 'divider' | 'accept' | 'split';
 
 export interface BaseBlock {
   id: string;
@@ -74,13 +75,20 @@ export interface DividerBlock extends BaseBlock {
   type: 'divider';
 }
 
+export interface SplitBlock extends BaseBlock {
+  type: 'split';
+  title: string;
+  content: string;
+  imageUrl?: string;
+}
+
 export interface AcceptBlock extends BaseBlock {
   type: 'accept';
   buttonText: string;
   terms: string;
 }
 
-export type Block = HeroBlock | SectionBlock | TextBlock | PricingBlock | ImageBlock | DividerBlock | AcceptBlock;
+export type Block = HeroBlock | SectionBlock | TextBlock | PricingBlock | ImageBlock | DividerBlock | AcceptBlock | SplitBlock;
 
 export interface Template {
   id: string;
