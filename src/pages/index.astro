@@ -145,6 +145,7 @@
 
   .quote-amount { font-weight: 600; font-variant-numeric: tabular-nums; }
   .quote-actions { display: flex; gap: 8px; }
+  .quote-actions .btn svg { width: 16px; height: 16px; }
 
   .empty-state { text-align: center; padding: 80px 20px; }
   .empty-icon {
@@ -885,6 +886,7 @@ Bridge Point`;
               <td>${formatDate(q.createdAt)}</td>
               <td>${q.viewCount}</td>
               <td><div class="quote-actions" onclick="event.stopPropagation()">
+                <button class="btn btn-ghost btn-sm" data-action="pdf" data-id="${q.id}" title="Download PDF">${icons.pdf}</button>
                 <button class="btn btn-ghost btn-sm" data-action="edit" data-id="${q.id}">${icons.edit}</button>
                 <button class="btn btn-ghost btn-sm" data-action="send" data-id="${q.id}">${icons.send}</button>
                 <button class="btn btn-ghost btn-sm" data-action="delete" data-id="${q.id}">${icons.trash}</button>
@@ -1171,6 +1173,12 @@ Bridge Point`;
     }));
 
     document.querySelectorAll('[data-action="delete"]').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); const id = (btn as HTMLElement).dataset.id; if (id) deleteQuote(id); }));
+
+    document.querySelectorAll('[data-action="pdf"]').forEach(btn => btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = (btn as HTMLElement).dataset.id;
+      if (id) window.open(`/view?id=${id}&print=1`, '_blank');
+    }));
 
     document.querySelector('[data-action="back"]')?.addEventListener('click', () => { view = 'dashboard'; currentQuote = null; render(); });
 
