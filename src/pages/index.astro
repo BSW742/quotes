@@ -373,11 +373,433 @@
     to { transform: translateY(0); opacity: 1; }
   }
 
+  .processing-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2000;
+  }
+  .processing-modal {
+    background: var(--card); border-radius: 16px;
+    padding: 48px 64px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .processing-modal h3 { margin: 16px 0 8px; font-size: 1.25rem; }
+  .processing-modal p { color: var(--text-muted); margin: 0; }
+  .processing-spinner {
+    width: 48px; height: 48px; margin: 0 auto;
+    border: 4px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   .hidden { display: none !important; }
+
+  /* Slideshow styles */
+  .slideshow-card-preview {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .slideshow-card-preview.theme-dark { background: linear-gradient(135deg, #0a0a0f, #1a1a2e); }
+  .slideshow-card-preview.theme-light { background: linear-gradient(135deg, #fafafa, #e9ecef); }
+  .slideshow-card-preview.theme-light h3, .slideshow-card-preview.theme-light p { color: #1a1a1a; }
+  .slideshow-card-preview.theme-gradient { background: linear-gradient(135deg, #00d4ff, #7b2fff, #ff006e); }
+  .slideshow-card-preview.theme-minimal { background: #fff; }
+  .slideshow-card-preview.theme-minimal h3, .slideshow-card-preview.theme-minimal p { color: #333; }
+  .slideshow-card-preview.theme-bold { background: #000; }
+  .slideshow-card-preview.theme-brand { background: linear-gradient(135deg, var(--purple), var(--cyan)); }
+
+  .quote-picker-list { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
+  .quote-picker-item {
+    padding: 16px; padding-right: 48px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .quote-picker-item:hover { border-color: var(--cyan); background: var(--bg-hover); }
+  .quote-picker-item:hover .quote-picker-arrow { opacity: 1; color: var(--cyan); }
+  .quote-picker-title { font-weight: 600; margin-bottom: 4px; }
+  .quote-picker-meta { font-size: 0.85rem; color: var(--text-muted); }
+  .quote-picker-arrow {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    opacity: 0.3; transition: all 0.2s;
+  }
+  .quote-picker-arrow svg { width: 18px; height: 18px; }
+
+  .creating-slides-spinner {
+    width: 48px; height: 48px; margin: 0 auto;
+    border: 3px solid var(--border);
+    border-top-color: var(--cyan);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .slides-editor-layout { display: flex; gap: 24px; }
+  .slides-sidebar { width: 280px; flex-shrink: 0; }
+  .slides-main { flex: 1; }
+
+  .slide-thumbnails { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; max-height: 400px; overflow-y: auto; }
+  .slide-thumb {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .slide-thumb:hover { border-color: var(--cyan); }
+  .slide-thumb.active { border-color: var(--cyan); background: var(--bg-hover); }
+  .slide-thumb-number {
+    width: 24px; height: 24px; background: var(--bg-hover);
+    border-radius: 4px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+  }
+  .slide-thumb-content { flex: 1; min-width: 0; }
+  .slide-thumb-type { font-size: 0.7rem; color: var(--cyan); text-transform: uppercase; }
+  .slide-thumb-headline { font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .slide-thumb-delete {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--text-muted); cursor: pointer;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .slide-thumb:hover .slide-thumb-delete { opacity: 1; }
+  .slide-thumb-delete:hover { color: #ff4444; }
+  .slide-thumb-delete svg { width: 14px; height: 14px; }
+
+  .slides-theme-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+  .slides-theme-swatch {
+    padding: 8px 12px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+  }
+  .slides-theme-swatch:hover { border-color: var(--cyan); }
+  .slides-theme-swatch.active { border-color: var(--cyan); background: var(--bg-hover); color: var(--cyan); }
+
+  .slides-logos { display: flex; flex-direction: column; gap: 12px; }
+  .slides-logo-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px; background: var(--bg); border-radius: 8px;
+  }
+  .slides-logo { height: 24px; width: auto; max-width: 80px; object-fit: contain; }
+  .slides-logo-item span { font-size: 0.8rem; color: var(--text-muted); }
+
+  .slide-editor-preview {
+    aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px; margin-bottom: 20px;
+  }
+  .slide-editor-preview.theme-dark { background: #0a0a0f; color: #fff; }
+  .slide-editor-preview.theme-light { background: #fafafa; color: #1a1a1a; }
+  .slide-editor-preview.theme-gradient { background: linear-gradient(135deg, #00d4ff, #7b2fff, #ff006e); color: #fff; }
+  .slide-editor-preview.theme-minimal { background: #fff; color: #333; font-family: Georgia, serif; }
+  .slide-editor-preview.theme-bold { background: #000; color: #fff; font-size: 120%; font-weight: 800; }
+
+  .slide-content { width: 100%; max-width: 800px; text-align: center; }
+  .slide-headline-input {
+    width: 100%; background: transparent; border: none; border-bottom: 2px dashed rgba(255,255,255,0.3);
+    color: inherit; font-size: 2rem; font-weight: 700; text-align: center;
+    padding: 8px; margin-bottom: 20px;
+  }
+  .slide-headline-input:focus { outline: none; border-color: var(--cyan); }
+  .theme-light .slide-headline-input, .theme-minimal .slide-headline-input { border-color: rgba(0,0,0,0.2); }
+  .theme-light .slide-headline-input:focus, .theme-minimal .slide-headline-input:focus { border-color: var(--purple); }
+
+  .slide-subtitle-input {
+    width: 100%; background: transparent; border: none; border-bottom: 1px dashed rgba(255,255,255,0.2);
+    color: inherit; font-size: 1.2rem; text-align: center; padding: 8px; opacity: 0.8;
+  }
+  .slide-subtitle-input:focus { outline: none; border-color: var(--cyan); }
+  .theme-light .slide-subtitle-input, .theme-minimal .slide-subtitle-input { border-color: rgba(0,0,0,0.1); }
+
+  .slide-bullets-editor { text-align: left; margin-top: 20px; }
+  .slide-bullet-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .slide-bullet-dot { font-size: 1.5rem; color: var(--cyan); }
+  .slide-bullet-input {
+    flex: 1; background: transparent; border: none; border-bottom: 1px dashed rgba(255,255,255,0.2);
+    color: inherit; font-size: 1.1rem; padding: 6px;
+  }
+  .slide-bullet-input:focus { outline: none; border-color: var(--cyan); }
+  .theme-light .slide-bullet-input, .theme-minimal .slide-bullet-input { border-color: rgba(0,0,0,0.1); }
+  .slide-bullet-delete {
+    background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer;
+    padding: 4px; border-radius: 4px;
+  }
+  .slide-bullet-delete:hover { color: #ff4444; background: rgba(255,68,68,0.1); }
+  .slide-bullet-delete svg { width: 14px; height: 14px; }
+  .theme-light .slide-bullet-delete, .theme-minimal .slide-bullet-delete { color: rgba(0,0,0,0.3); }
+
+  .slide-stats-grid { display: flex; gap: 40px; justify-content: center; margin-top: 30px; }
+  .slide-stat-item { text-align: center; }
+  .slide-stat-value {
+    background: transparent; border: none; border-bottom: 2px dashed rgba(255,255,255,0.3);
+    color: var(--cyan); font-size: 2.5rem; font-weight: 700; text-align: center;
+    width: 150px; padding: 4px;
+  }
+  .slide-stat-value:focus { outline: none; border-color: var(--cyan); }
+  .slide-stat-label {
+    background: transparent; border: none; border-bottom: 1px dashed rgba(255,255,255,0.2);
+    color: inherit; font-size: 0.9rem; text-align: center; width: 150px;
+    padding: 4px; margin-top: 8px; opacity: 0.7;
+  }
+  .slide-stat-label:focus { outline: none; border-color: var(--cyan); }
+  .theme-light .slide-stat-value, .theme-minimal .slide-stat-value { color: var(--purple); border-color: rgba(0,0,0,0.2); }
+  .theme-light .slide-stat-label, .theme-minimal .slide-stat-label { border-color: rgba(0,0,0,0.1); }
+
+  .slide-visual-area { margin-top: 20px; }
+  .slide-visual-image { max-width: 100%; max-height: 300px; border-radius: 8px; }
+  .slide-visual-placeholder {
+    padding: 60px; border: 2px dashed rgba(255,255,255,0.2);
+    border-radius: 8px; color: rgba(255,255,255,0.4);
+  }
+  .theme-light .slide-visual-placeholder, .theme-minimal .slide-visual-placeholder {
+    border-color: rgba(0,0,0,0.1); color: rgba(0,0,0,0.3);
+  }
+
+  .slide-break-visual { padding: 40px; }
+  .slide-break-line {
+    width: 100px; height: 4px; background: var(--gradient);
+    border-radius: 2px; margin: 0 auto;
+  }
+
+  .slide-type-picker { margin-top: 16px; }
+  .slide-type-picker .form-input { max-width: 200px; }
+
+  /* Slideshow fullscreen view */
+  .slideshow-container {
+    position: fixed; inset: 0; z-index: 2000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .slideshow-container.theme-dark { background: #0a0a0f; color: #fff; }
+  .slideshow-container.theme-light { background: #fafafa; color: #1a1a1a; }
+  .slideshow-container.theme-gradient { background: linear-gradient(135deg, #00d4ff, #7b2fff, #ff006e); color: #fff; }
+  .slideshow-container.theme-minimal { background: #fff; color: #333; font-family: Georgia, serif; }
+  .slideshow-container.theme-bold { background: #000; color: #fff; }
+
+  .slideshow-slide {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 60px; text-align: center; max-width: 1200px;
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .slideshow-headline {
+    font-size: 3.5rem; font-weight: 800; margin-bottom: 30px;
+    line-height: 1.2;
+  }
+  .theme-bold .slideshow-headline { font-size: 4.5rem; }
+  .slideshow-subtitle { font-size: 1.5rem; opacity: 0.8; }
+
+  .slideshow-bullets {
+    list-style: none; text-align: left; font-size: 1.5rem;
+    line-height: 2;
+  }
+  .slideshow-bullets li { position: relative; padding-left: 30px; }
+  .slideshow-bullets li::before {
+    content: '•'; position: absolute; left: 0;
+    color: var(--cyan);
+  }
+  .theme-light .slideshow-bullets li::before, .theme-minimal .slideshow-bullets li::before { color: var(--purple); }
+
+  .slideshow-image { max-width: 80%; max-height: 60vh; border-radius: 12px; margin-top: 30px; }
+
+  .slideshow-stats { display: flex; gap: 80px; margin-top: 40px; }
+  .slideshow-stat { text-align: center; }
+  .slideshow-stat-value { font-size: 4rem; font-weight: 800; color: var(--cyan); }
+  .theme-light .slideshow-stat-value, .theme-minimal .slideshow-stat-value { color: var(--purple); }
+  .slideshow-stat-label { font-size: 1.2rem; opacity: 0.7; margin-top: 8px; }
+
+  .slideshow-break { width: 150px; height: 6px; background: var(--gradient); border-radius: 3px; }
+
+  .slideshow-controls {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 24px;
+    background: rgba(0,0,0,0.5); padding: 12px 24px; border-radius: 50px;
+    backdrop-filter: blur(10px);
+  }
+  .slideshow-nav {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); border: none;
+    color: white; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .slideshow-nav:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
+  .slideshow-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+  .slideshow-nav svg { width: 20px; height: 20px; }
+
+  .slideshow-progress { text-align: center; min-width: 120px; }
+  .slideshow-progress span { font-size: 0.9rem; color: rgba(255,255,255,0.8); }
+  .slideshow-progress-bar {
+    width: 100%; height: 4px; background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin-top: 8px; overflow: hidden;
+  }
+  .slideshow-progress-fill { height: 100%; background: var(--cyan); transition: width 0.3s; }
+
+  .slideshow-exit {
+    position: fixed; top: 20px; right: 20px;
+    background: rgba(0,0,0,0.5); border: none;
+    color: white; padding: 10px 16px; border-radius: 8px;
+    cursor: pointer; font-size: 0.9rem; display: flex;
+    align-items: center; gap: 8px; backdrop-filter: blur(10px);
+    transition: all 0.2s;
+  }
+  .slideshow-exit:hover { background: rgba(0,0,0,0.7); }
+  .slideshow-exit svg { width: 16px; height: 16px; }
+
+  /* Slideshow logos */
+  .slideshow-logos {
+    position: fixed; top: 20px; left: 20px;
+    display: flex; align-items: center; gap: 16px;
+    z-index: 10;
+  }
+  .slideshow-logo {
+    height: 28px; width: auto; max-width: 120px;
+    object-fit: contain; opacity: 0.9;
+  }
+  .slideshow-logo-client {
+    padding-left: 16px;
+    border-left: 1px solid rgba(255,255,255,0.2);
+  }
+  .theme-light .slideshow-logo-client,
+  .theme-minimal .slideshow-logo-client {
+    border-left-color: rgba(0,0,0,0.1);
+  }
+
+  /* Brand theme */
+  .slideshow-container.theme-brand { color: #fff; }
+  .theme-brand .slideshow-stat-value { color: #fff; }
+  .theme-brand .slideshow-bullets li::before { color: rgba(255,255,255,0.8); }
+
+  /* Assets styles */
+  .asset-upload-panel {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; margin-bottom: 24px;
+    position: relative;
+  }
+  .asset-upload-close {
+    position: absolute; top: 12px; right: 12px;
+    background: none; border: none; color: var(--text-muted);
+    cursor: pointer; padding: 8px;
+  }
+  .asset-upload-close:hover { color: var(--text); }
+  .asset-upload-close svg { width: 18px; height: 18px; }
+
+  .asset-upload-tabs {
+    display: flex; gap: 8px; margin-bottom: 20px;
+  }
+  .asset-tab {
+    padding: 10px 16px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.9rem; transition: all 0.2s;
+  }
+  .asset-tab:hover { border-color: var(--cyan); color: var(--text); }
+  .asset-tab.active { border-color: var(--cyan); color: var(--cyan); background: var(--bg-hover); }
+  .asset-tab svg { width: 16px; height: 16px; }
+
+  .asset-upload-dropzone {
+    border: 2px dashed var(--border); border-radius: 12px;
+    padding: 48px; text-align: center;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .asset-upload-dropzone:hover,
+  .asset-upload-dropzone.dragover {
+    border-color: var(--cyan); background: rgba(0, 212, 255, 0.05);
+  }
+  .dropzone-content svg { width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px; }
+  .dropzone-content p { margin-bottom: 8px; }
+  .dropzone-link { color: var(--cyan); cursor: pointer; text-decoration: underline; }
+  .dropzone-hint { font-size: 0.8rem; color: var(--text-muted); }
+
+  .asset-url-form { max-width: 400px; }
+  .asset-url-form .form-group { margin-bottom: 16px; }
+
+  .assets-toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
+  }
+  .assets-filters { display: flex; gap: 8px; }
+  .filter-btn {
+    padding: 8px 14px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text-muted); cursor: pointer;
+    font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--cyan); color: var(--text); }
+  .filter-btn.active { border-color: var(--cyan); color: var(--cyan); background: var(--bg-hover); }
+  .filter-btn svg { width: 14px; height: 14px; }
+
+  .assets-search { flex: 1; max-width: 300px; }
+  .assets-search .form-input { width: 100%; }
+
+  .assets-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .asset-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .asset-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+
+  .asset-preview {
+    height: 140px; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .asset-preview img {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain; padding: 16px;
+  }
+  .asset-preview-url {
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+  }
+  .asset-url-icon { color: rgba(255,255,255,0.8); }
+  .asset-url-icon svg { width: 40px; height: 40px; }
+  .asset-placeholder svg { width: 40px; height: 40px; color: var(--text-muted); }
+
+  .asset-type-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(0,0,0,0.6); color: white;
+    padding: 4px 8px; border-radius: 4px;
+    font-size: 0.7rem; text-transform: uppercase;
+  }
+
+  .asset-info { padding: 14px; }
+  .asset-name { font-weight: 600; margin-bottom: 4px; }
+  .asset-client { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+  .asset-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .asset-tag {
+    background: var(--bg-hover); padding: 2px 8px;
+    border-radius: 4px; font-size: 0.75rem; color: var(--text-muted);
+  }
+
+  .asset-actions {
+    display: flex; border-top: 1px solid var(--border);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .asset-card:hover .asset-actions { opacity: 1; }
+  .asset-action-btn {
+    flex: 1; padding: 10px; background: none; border: none;
+    color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .asset-action-btn:hover { background: var(--bg-hover); color: var(--cyan); }
+  .asset-action-btn.asset-delete:hover { color: #ff4444; }
+  .asset-action-btn svg { width: 16px; height: 16px; }
+  .asset-action-btn:not(:last-child) { border-right: 1px solid var(--border); }
 </style>
 
 <script>
-  import type { Quote, Block, PricingBlock, PricingItem, Template, HeroTheme } from '../lib/types';
+  import type { Quote, Block, PricingBlock, PricingItem, Template, HeroTheme, Slideshow, Slide, SlideTheme, Asset, AssetType } from '../lib/types';
   import { loadFromR2, saveToR2, WORKER_URL } from '../lib/r2';
 
   const icons = {
@@ -403,6 +825,13 @@
     image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+    slides: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+    play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+    arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+    arrowRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+    assets: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
   };
 
   // Bridge Point proposal template
@@ -546,22 +975,35 @@ All findings and recommendations remain confidential.` },
   ];
 
   // State
-  let view: 'dashboard' | 'templates' | 'editor' = 'dashboard';
+  let view: 'dashboard' | 'templates' | 'editor' | 'slides' | 'slides-editor' | 'slides-view' | 'assets' = 'dashboard';
   let quotes: Quote[] = [];
   let currentQuote: Quote | null = null;
+  let slideshows: Slideshow[] = [];
+  let currentSlideshow: Slideshow | null = null;
+  let currentSlideIndex = 0;
+  let assets: Asset[] = [];
+  let assetFilter: 'all' | 'image' | 'logo' | 'url' = 'all';
+  let assetSearch = '';
+  let showAssetUpload = false;
+  let processingAssets = false;
+  let processingAssetsCount = 0;
   let loading = true;
   let saving = false;
   let sending = false;
   let showModal = false;
-  let modalType: 'send' | 'share' | 'pricing' | 'ai' = 'send';
+  let modalType: 'send' | 'share' | 'pricing' | 'ai' | 'quote-picker' = 'send';
   let editingPricingBlock: PricingBlock | null = null;
   let toastMessage = '';
   let aiPrompt = '';
   let aiOutput = '';
   let aiGenerating = false;
   let aiTargetBlockId = '';
+  let creatingSlidesFromQuoteId = '';
 
   const LOCAL_STORAGE_KEY = 'quotes-backup';
+  const SLIDESHOWS_STORAGE_KEY = 'slideshows-backup';
+  const ASSETS_STORAGE_KEY = 'assets-backup';
+  const BRIDGEPOINT_LOGO = 'https://bridgepoint.co.nz/logos/Bridge-Point_white.png';
 
   async function loadQuotes() {
     // Load from localStorage first (instant, prevents data loss during dev)
@@ -608,9 +1050,264 @@ All findings and recommendations remain confidential.` },
     await saveToR2('quotes-data.json', { quotes });
   }
 
+  async function loadSlides() {
+    // Load from localStorage first
+    const localData = localStorage.getItem(SLIDESHOWS_STORAGE_KEY);
+    if (localData) {
+      try {
+        const parsed = JSON.parse(localData);
+        if (parsed?.slideshows) {
+          slideshows = parsed.slideshows;
+        }
+      } catch (e) {
+        console.warn('Failed to parse local slideshows backup:', e);
+      }
+    }
+
+    // Then sync with R2
+    try {
+      const data = await loadFromR2<{ slideshows: Slideshow[] }>('slideshows-data.json');
+      if (data?.slideshows) {
+        const r2Ids = new Set(data.slideshows.map(s => s.id));
+        const localOnly = slideshows.filter(s => !r2Ids.has(s.id));
+        slideshows = [...data.slideshows, ...localOnly];
+        if (localOnly.length > 0) {
+          await saveSlideshows();
+        }
+        localStorage.setItem(SLIDESHOWS_STORAGE_KEY, JSON.stringify({ slideshows }));
+      }
+    } catch (e) {
+      console.warn('Failed to load slideshows from R2:', e);
+    }
+  }
+
+  async function saveSlideshows() {
+    localStorage.setItem(SLIDESHOWS_STORAGE_KEY, JSON.stringify({ slideshows }));
+    await saveToR2('slideshows-data.json', { slideshows });
+  }
+
+  async function loadAssets() {
+    const localData = localStorage.getItem(ASSETS_STORAGE_KEY);
+    if (localData) {
+      try {
+        const parsed = JSON.parse(localData);
+        if (parsed?.assets) {
+          assets = parsed.assets;
+        }
+      } catch (e) {
+        console.warn('Failed to parse local assets backup:', e);
+      }
+    }
+
+    try {
+      const data = await loadFromR2<{ assets: Asset[] }>('assets-data.json');
+      if (data?.assets) {
+        const r2Ids = new Set(data.assets.map(a => a.id));
+        const localOnly = assets.filter(a => !r2Ids.has(a.id));
+        assets = [...data.assets, ...localOnly];
+        if (localOnly.length > 0) {
+          await saveAssets();
+        }
+        localStorage.setItem(ASSETS_STORAGE_KEY, JSON.stringify({ assets }));
+      }
+    } catch (e) {
+      console.warn('Failed to load assets from R2:', e);
+    }
+  }
+
+  async function saveAssets() {
+    localStorage.setItem(ASSETS_STORAGE_KEY, JSON.stringify({ assets }));
+    await saveToR2('assets-data.json', { assets });
+  }
+
+  async function createAssetFromUrl(url: string, name?: string): Promise<Asset> {
+    const brandColor = await extractBrandColor(url);
+    const clientName = name || new URL(url).hostname.replace('www.', '').split('.')[0];
+
+    const asset: Asset = {
+      id: genId(),
+      type: 'url',
+      name: clientName.charAt(0).toUpperCase() + clientName.slice(1),
+      url,
+      brandColor: brandColor || undefined,
+      tags: ['website'],
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+
+    return asset;
+  }
+
+  async function createAssetFromImage(file: File, name?: string): Promise<Asset> {
+    const base64 = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+
+    // Create thumbnail (smaller version)
+    const thumbnail = await compressImage(file, 200);
+
+    const asset: Asset = {
+      id: genId(),
+      type: file.name.toLowerCase().includes('logo') ? 'logo' : 'image',
+      name: name || file.name.replace(/\.[^/.]+$/, ''),
+      imageData: base64,
+      thumbnail,
+      tags: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+
+    return asset;
+  }
+
+  // Extract brand color from website (with 3s timeout)
+  async function extractBrandColor(websiteUrl: string): Promise<string | null> {
+    if (!websiteUrl) return null;
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000);
+      const response = await fetch(`${WORKER_URL}/extract-brand?url=${encodeURIComponent(websiteUrl)}`, {
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (response.ok) {
+        const data = await response.json();
+        return data.color || null;
+      }
+    } catch (e) {
+      console.warn('Failed to extract brand color:', e);
+    }
+    return null;
+  }
+
+  async function generateSlideshow(quote: Quote): Promise<Slideshow> {
+    const slides: Slide[] = [];
+
+    // Try to extract brand color from client website
+    let brandColor: string | undefined;
+    if (quote.clientWebsite) {
+      const color = await extractBrandColor(quote.clientWebsite);
+      if (color) brandColor = color;
+    }
+
+    quote.blocks.forEach(block => {
+      switch (block.type) {
+        case 'hero':
+          slides.push({
+            id: genId(),
+            type: 'title',
+            headline: block.title,
+            bullets: block.subtitle ? [block.subtitle] : []
+          });
+          break;
+        case 'section':
+          // Extract bullet points from content
+          const lines = block.content.split('\n').filter(l => l.trim());
+          const bullets = lines
+            .filter(l => l.trim().startsWith('•') || l.trim().startsWith('-') || l.trim().startsWith('*'))
+            .map(l => l.replace(/^[\s•\-*]+/, '').trim())
+            .slice(0, 4);
+          slides.push({
+            id: genId(),
+            type: 'content',
+            headline: block.title,
+            bullets: bullets.length > 0 ? bullets : lines.slice(0, 3)
+          });
+          break;
+        case 'split':
+          slides.push({
+            id: genId(),
+            type: 'visual',
+            headline: block.title,
+            image: block.imageUrl,
+            bullets: block.content ? [block.content.split('\n')[0]] : []
+          });
+          break;
+        case 'pricing':
+          const total = block.items.reduce((sum, i) => i.selected ? sum + (i.quantity * i.unitPrice) : sum, 0);
+          const itemCount = block.items.filter(i => i.selected).length;
+          slides.push({
+            id: genId(),
+            type: 'data',
+            headline: block.title,
+            stats: [
+              { label: 'Total Investment', value: formatCurrency(total) },
+              { label: 'Items Included', value: String(itemCount) },
+            ]
+          });
+          break;
+        case 'divider':
+          slides.push({
+            id: genId(),
+            type: 'break',
+            headline: ''
+          });
+          break;
+        // Skip accept blocks
+      }
+    });
+
+    return {
+      id: genId(),
+      title: quote.title,
+      sourceQuoteId: quote.id,
+      theme: brandColor ? 'brand' : 'dark',
+      brandColor,
+      clientName: quote.clientName,
+      clientLogo: quote.clientLogo,
+      clientWebsite: quote.clientWebsite,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      slides
+    };
+  }
+
   function genId(): string {
     return Math.random().toString(36).substring(2, 10);
   }
+
+  // Global handler for asset file upload (called via inline onchange)
+  (window as any).handleAssetFiles = async function(input: HTMLInputElement) {
+    const fileList = input.files;
+    if (!fileList || fileList.length === 0) return;
+
+    // Copy files to array BEFORE any render
+    const filesToProcess: File[] = Array.from(fileList);
+
+    // Show processing modal
+    processingAssetsCount = filesToProcess.length;
+    processingAssets = true;
+    showAssetUpload = false;
+    render();
+
+    await new Promise(r => setTimeout(r, 50));
+
+    try {
+      let added = 0;
+      for (const file of filesToProcess) {
+        try {
+          const asset = await createAssetFromImage(file);
+          assets.unshift(asset);
+          added++;
+        } catch (err) {
+          console.error('Failed to create asset:', err);
+        }
+      }
+      await saveAssets();
+      processingAssets = false;
+      input.value = '';
+      showToast(`Added ${added} asset${added !== 1 ? 's' : ''}`);
+      render();
+    } catch (err) {
+      console.error('Upload error:', err);
+      processingAssets = false;
+      showToast(`Upload failed`);
+      render();
+    }
+  };
 
   function formatCurrency(amount: number, currency = 'NZD'): string {
     return new Intl.NumberFormat('en-NZ', { style: 'currency', currency }).format(amount);
@@ -841,16 +1538,31 @@ Bridge Point`;
           <img src="https://bridgepoint.co.nz/logos/Bridge-Point_white.png" alt="Bridge Point" class="logo">
           <button class="nav-item ${view === 'dashboard' ? 'active' : ''}" data-view="dashboard">${icons.quotes}<span>Quotes</span>${quotes.length > 0 ? `<span class="nav-badge">${quotes.length}</span>` : ''}</button>
           <button class="nav-item ${view === 'templates' ? 'active' : ''}" data-view="templates">${icons.templates}<span>Templates</span></button>
+          <button class="nav-item ${view === 'slides' || view === 'slides-editor' || view === 'slides-view' ? 'active' : ''}" data-view="slides">${icons.slides}<span>Slides</span>${slideshows.length > 0 ? `<span class="nav-badge">${slideshows.length}</span>` : ''}</button>
+          <button class="nav-item ${view === 'assets' ? 'active' : ''}" data-view="assets">${icons.assets}<span>Assets</span>${assets.length > 0 ? `<span class="nav-badge">${assets.length}</span>` : ''}</button>
           <button class="sync-status synced" data-action="force-sync" title="Click to re-sync from cloud">✓ Synced to cloud</button>
         </nav>
         <main class="main-content">
           ${view === 'dashboard' ? renderDashboard() : ''}
           ${view === 'templates' ? renderTemplates() : ''}
           ${view === 'editor' ? renderEditor() : ''}
+          ${view === 'slides' ? renderSlidesList() : ''}
+          ${view === 'slides-editor' ? renderSlidesEditor() : ''}
+          ${view === 'slides-view' ? renderSlidesView() : ''}
+          ${view === 'assets' ? renderAssets() : ''}
         </main>
       </div>
       ${showModal ? renderModal() : ''}
       ${toastMessage ? `<div class="toast">${toastMessage}</div>` : ''}
+      ${processingAssets ? `
+        <div class="processing-overlay">
+          <div class="processing-modal">
+            <div class="processing-spinner"></div>
+            <h3>Processing ${processingAssetsCount} file${processingAssetsCount !== 1 ? 's' : ''}...</h3>
+            <p>Creating thumbnails</p>
+          </div>
+        </div>
+      ` : ''}
     `;
     attachListeners();
   }
@@ -988,6 +1700,12 @@ Bridge Point`;
                 <span class="form-label" style="margin:0">Show header (logo & tagline)</span>
               </label>
             </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                <input type="checkbox" id="quote-logo-background" ${currentQuote.logoNeedsBackground ? 'checked' : ''}>
+                <span class="form-label" style="margin:0">Logo needs white background</span>
+              </label>
+            </div>
           </div>
           <div class="editor-panel">
             <div class="panel-title">Add Block</div>
@@ -1069,6 +1787,388 @@ Bridge Point`;
     }
   }
 
+  function renderSlidesList(): string {
+    // Show creating state
+    if (creatingSlidesFromQuoteId) {
+      const selectedQuote = quotes.find(q => q.id === creatingSlidesFromQuoteId);
+      return `
+        <div class="page-header"><h1 class="page-title">Slides</h1></div>
+        <div class="empty-state">
+          <div class="creating-slides-spinner"></div>
+          <h2 class="empty-title" style="margin-top:24px">Creating slides...</h2>
+          <p class="empty-desc">${selectedQuote?.title || ''}</p>
+        </div>
+      `;
+    }
+
+    if (slideshows.length === 0) {
+      return `
+        <div class="page-header"><h1 class="page-title">Slides</h1></div>
+        <div class="empty-state">
+          <div class="empty-icon">${icons.slides}</div>
+          <h2 class="empty-title">No slides yet</h2>
+          <p class="empty-desc">Create visual slide decks from your quotes</p>
+          <button class="btn btn-primary" data-action="create-slideshow">${icons.plus} Create from Quote</button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="page-header">
+        <h1 class="page-title">Slides</h1>
+        <button class="btn btn-primary" data-action="create-slideshow">${icons.plus} Create from Quote</button>
+      </div>
+      <div class="templates-grid">
+        ${slideshows.map(p => {
+          const sourceQuote = quotes.find(q => q.id === p.sourceQuoteId);
+          return `
+            <div class="template-card" data-edit-slideshow="${p.id}">
+              <div class="template-preview slideshow-card-preview theme-${p.theme}">
+                <h3>${p.title}</h3>
+                <p>${p.slides.length} slides</p>
+              </div>
+              <div class="template-info">
+                <div class="template-name">${p.title}</div>
+                <div class="template-desc">From: ${sourceQuote?.clientName || 'Unknown'} • ${formatDate(p.updatedAt)}</div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  function renderQuotePicker(): string {
+    if (quotes.length === 0) {
+      return `
+        <div class="modal-body">
+          <p style="color:var(--text-muted)">No quotes available. Create a quote first.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-close-modal>Cancel</button>
+        </div>
+      `;
+    }
+
+    if (creatingSlidesFromQuoteId) {
+      const selectedQuote = quotes.find(q => q.id === creatingSlidesFromQuoteId);
+      return `
+        <div class="modal-body" style="text-align:center;padding:40px">
+          <div class="creating-slides-spinner"></div>
+          <h3 style="margin-top:20px">Creating slides...</h3>
+          <p style="color:var(--text-muted);margin-top:8px">${selectedQuote?.title || ''}</p>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="modal-body">
+        <p style="margin-bottom:20px;color:var(--text-muted)">Select a quote to create slides from:</p>
+        <div class="quote-picker-list">
+          ${quotes.map(q => `
+            <div class="quote-picker-item" data-select-quote="${q.id}">
+              <div class="quote-picker-title">${q.title}</div>
+              <div class="quote-picker-meta">${q.clientName || 'No client'} • ${formatCurrency(q.total)}</div>
+              <div class="quote-picker-arrow">${icons.arrowRight}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close-modal>Cancel</button>
+      </div>
+    `;
+  }
+
+  function renderSlidesEditor(): string {
+    if (!currentSlideshow) return '';
+
+    return `
+      <div class="page-header">
+        <button class="btn btn-ghost" data-action="back-to-slides">← Back</button>
+        <div style="display:flex;gap:12px;align-items:center">
+          <button class="btn btn-secondary btn-sm" data-action="delete-slideshow" style="color:#ff4444;border-color:#ff4444">${icons.x} Delete</button>
+          <button class="btn btn-success" data-action="start-slideshow">${icons.play} Present</button>
+          <button class="btn btn-primary" data-action="save-slideshow">${saving ? 'Saving...' : `${icons.check} Save`}</button>
+        </div>
+      </div>
+      <div class="slides-editor-layout">
+        <div class="slides-sidebar">
+          <div class="editor-panel">
+            <div class="panel-title">Slides</div>
+            <div class="slide-thumbnails">
+              ${currentSlideshow.slides.map((slide, i) => `
+                <div class="slide-thumb ${i === currentSlideIndex ? 'active' : ''}" data-select-slide="${i}">
+                  <div class="slide-thumb-number">${i + 1}</div>
+                  <div class="slide-thumb-content">
+                    <div class="slide-thumb-type">${slide.type}</div>
+                    <div class="slide-thumb-headline">${slide.headline || '(empty)'}</div>
+                  </div>
+                  <button class="slide-thumb-delete" data-delete-slide="${i}">${icons.x}</button>
+                </div>
+              `).join('')}
+            </div>
+            <button class="add-item-btn" data-action="add-slide">+ Add Slide</button>
+          </div>
+          <div class="editor-panel">
+            <div class="panel-title">Theme</div>
+            <div class="slides-theme-swatches">
+              <div class="slides-theme-swatch ${currentSlideshow.theme === 'dark' ? 'active' : ''}" data-slides-theme="dark" title="Dark">Dark</div>
+              <div class="slides-theme-swatch ${currentSlideshow.theme === 'light' ? 'active' : ''}" data-slides-theme="light" title="Light">Light</div>
+              <div class="slides-theme-swatch ${currentSlideshow.theme === 'gradient' ? 'active' : ''}" data-slides-theme="gradient" title="Gradient">Gradient</div>
+              <div class="slides-theme-swatch ${currentSlideshow.theme === 'minimal' ? 'active' : ''}" data-slides-theme="minimal" title="Minimal">Minimal</div>
+              <div class="slides-theme-swatch ${currentSlideshow.theme === 'bold' ? 'active' : ''}" data-slides-theme="bold" title="Bold">Bold</div>
+              ${currentSlideshow.brandColor ? `<div class="slides-theme-swatch ${currentSlideshow.theme === 'brand' ? 'active' : ''}" data-slides-theme="brand" title="Brand" style="background:${currentSlideshow.brandColor};color:#fff">Brand</div>` : ''}
+            </div>
+          </div>
+          <div class="editor-panel">
+            <div class="panel-title">Details</div>
+            <div class="form-group">
+              <label class="form-label">Title</label>
+              <input class="form-input" type="text" id="slideshow-title" value="${currentSlideshow.title}">
+            </div>
+            ${currentSlideshow.clientName ? `<div class="form-group"><label class="form-label">Client</label><div style="color:var(--text)">${currentSlideshow.clientName}</div></div>` : ''}
+          </div>
+          <div class="editor-panel">
+            <div class="panel-title">Branding</div>
+            <div class="slides-logos">
+              <div class="slides-logo-item">
+                <img src="${BRIDGEPOINT_LOGO}" alt="Bridge Point" class="slides-logo">
+                <span>Bridge Point</span>
+              </div>
+              ${currentSlideshow.clientLogo ? `
+              <div class="slides-logo-item">
+                <img src="${currentSlideshow.clientLogo}" alt="${currentSlideshow.clientName || 'Client'}" class="slides-logo">
+                <span>${currentSlideshow.clientName || 'Client'}</span>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="slides-main">
+          ${renderSlideEditor()}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSlideEditor(): string {
+    if (!currentSlideshow || currentSlideIndex >= currentSlideshow.slides.length) return '';
+    const slide = currentSlideshow.slides[currentSlideIndex];
+
+    return `
+      <div class="slide-editor-preview theme-${currentSlideshow.theme}">
+        <div class="slide-content slide-type-${slide.type}">
+          ${slide.type === 'title' ? `
+            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
+            <input class="slide-subtitle-input" type="text" value="${slide.bullets?.[0] || ''}" data-slide-field="subtitle" placeholder="Subtitle">
+          ` : ''}
+          ${slide.type === 'content' ? `
+            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
+            <div class="slide-bullets-editor">
+              ${(slide.bullets || []).map((b, i) => `
+                <div class="slide-bullet-row">
+                  <span class="slide-bullet-dot">•</span>
+                  <input class="slide-bullet-input" type="text" value="${b}" data-bullet-index="${i}" placeholder="Bullet point">
+                  <button class="slide-bullet-delete" data-delete-bullet="${i}">${icons.x}</button>
+                </div>
+              `).join('')}
+              <button class="add-item-btn" data-action="add-bullet">+ Add Point</button>
+            </div>
+          ` : ''}
+          ${slide.type === 'visual' ? `
+            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
+            <div class="slide-visual-area">
+              ${slide.image ? `<img src="${slide.image}" class="slide-visual-image">` : '<div class="slide-visual-placeholder">No image</div>'}
+            </div>
+          ` : ''}
+          ${slide.type === 'data' ? `
+            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
+            <div class="slide-stats-grid">
+              ${(slide.stats || []).map((s, i) => `
+                <div class="slide-stat-item">
+                  <input class="slide-stat-value" type="text" value="${s.value}" data-stat-index="${i}" data-stat-field="value" placeholder="Value">
+                  <input class="slide-stat-label" type="text" value="${s.label}" data-stat-index="${i}" data-stat-field="label" placeholder="Label">
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          ${slide.type === 'break' ? `
+            <div class="slide-break-visual">
+              <div class="slide-break-line"></div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      <div class="slide-type-picker">
+        <label class="form-label">Slide Type</label>
+        <select class="form-input" id="slide-type-select">
+          <option value="title" ${slide.type === 'title' ? 'selected' : ''}>Title</option>
+          <option value="content" ${slide.type === 'content' ? 'selected' : ''}>Content</option>
+          <option value="visual" ${slide.type === 'visual' ? 'selected' : ''}>Visual</option>
+          <option value="data" ${slide.type === 'data' ? 'selected' : ''}>Data</option>
+          <option value="break" ${slide.type === 'break' ? 'selected' : ''}>Break</option>
+        </select>
+      </div>
+    `;
+  }
+
+  function renderSlidesView(): string {
+    if (!currentSlideshow || currentSlideshow.slides.length === 0) return '';
+    const slide = currentSlideshow.slides[currentSlideIndex];
+    const brandStyle = currentSlideshow.theme === 'brand' && currentSlideshow.brandColor
+      ? `style="--brand-color: ${currentSlideshow.brandColor}; background: linear-gradient(135deg, ${currentSlideshow.brandColor}, #1a1a2e)"`
+      : '';
+
+    return `
+      <div class="slideshow-container theme-${currentSlideshow.theme}" ${brandStyle}>
+        <div class="slideshow-logos">
+          <img src="${BRIDGEPOINT_LOGO}" alt="Bridge Point" class="slideshow-logo">
+          ${currentSlideshow.clientLogo ? `<img src="${currentSlideshow.clientLogo}" alt="${currentSlideshow.clientName || ''}" class="slideshow-logo slideshow-logo-client">` : ''}
+        </div>
+        <div class="slideshow-slide slide-type-${slide.type}">
+          ${slide.type === 'title' ? `
+            <h1 class="slideshow-headline">${slide.headline || ''}</h1>
+            ${slide.bullets?.[0] ? `<p class="slideshow-subtitle">${slide.bullets[0]}</p>` : ''}
+          ` : ''}
+          ${slide.type === 'content' ? `
+            <h2 class="slideshow-headline">${slide.headline || ''}</h2>
+            <ul class="slideshow-bullets">
+              ${(slide.bullets || []).map(b => `<li>${b}</li>`).join('')}
+            </ul>
+          ` : ''}
+          ${slide.type === 'visual' ? `
+            <h2 class="slideshow-headline">${slide.headline || ''}</h2>
+            ${slide.image ? `<img src="${slide.image}" class="slideshow-image">` : ''}
+          ` : ''}
+          ${slide.type === 'data' ? `
+            <h2 class="slideshow-headline">${slide.headline || ''}</h2>
+            <div class="slideshow-stats">
+              ${(slide.stats || []).map(s => `
+                <div class="slideshow-stat">
+                  <div class="slideshow-stat-value">${s.value}</div>
+                  <div class="slideshow-stat-label">${s.label}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          ${slide.type === 'break' ? `
+            <div class="slideshow-break"></div>
+          ` : ''}
+        </div>
+        <div class="slideshow-controls">
+          <button class="slideshow-nav" data-action="prev-slide" ${currentSlideIndex === 0 ? 'disabled' : ''}>${icons.arrowLeft}</button>
+          <div class="slideshow-progress">
+            <span>${currentSlideIndex + 1} / ${currentSlideshow.slides.length}</span>
+            <div class="slideshow-progress-bar">
+              <div class="slideshow-progress-fill" style="width: ${((currentSlideIndex + 1) / currentSlideshow.slides.length) * 100}%"></div>
+            </div>
+          </div>
+          <button class="slideshow-nav" data-action="next-slide" ${currentSlideIndex >= currentSlideshow.slides.length - 1 ? 'disabled' : ''}>${icons.arrowRight}</button>
+        </div>
+        <button class="slideshow-exit" data-action="exit-slideshow">${icons.x} Exit</button>
+      </div>
+    `;
+  }
+
+  function renderAssets(): string {
+    const filteredAssets = assets.filter(a => {
+      if (assetFilter !== 'all' && a.type !== assetFilter) return false;
+      if (assetSearch && !a.name.toLowerCase().includes(assetSearch.toLowerCase()) &&
+          !a.clientName?.toLowerCase().includes(assetSearch.toLowerCase()) &&
+          !a.tags.some(t => t.toLowerCase().includes(assetSearch.toLowerCase()))) return false;
+      return true;
+    });
+
+    return `
+      <div class="page-header">
+        <h1 class="page-title">Assets</h1>
+        <button class="btn btn-primary" data-action="add-asset">${icons.plus} Add Asset</button>
+      </div>
+
+      ${showAssetUpload ? `
+        <div class="asset-upload-panel">
+          <div class="asset-upload-tabs">
+            <button class="asset-tab active" data-asset-tab="upload">${icons.upload} Upload Image</button>
+            <button class="asset-tab" data-asset-tab="url">${icons.globe} Add URL</button>
+          </div>
+          <div class="asset-upload-content">
+            <div class="asset-upload-dropzone" data-asset-dropzone>
+              <input type="file" id="asset-file-input" accept="image/*" style="display:none" multiple onchange="handleAssetFiles(this)">
+              <div class="dropzone-content">
+                ${icons.upload}
+                <p>Drop images here or <span class="dropzone-link" onclick="event.stopPropagation(); document.getElementById('asset-file-input').click();">browse</span></p>
+                <span class="dropzone-hint">PNG, JPG, SVG up to 10MB</span>
+              </div>
+            </div>
+            <div class="asset-url-form" style="display:none">
+              <div class="form-group">
+                <label class="form-label">Website URL</label>
+                <input class="form-input" type="url" id="asset-url-input" placeholder="https://example.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Name (optional)</label>
+                <input class="form-input" type="text" id="asset-name-input" placeholder="Client name">
+              </div>
+              <button class="btn btn-primary" data-action="save-url-asset">${icons.plus} Add Website</button>
+            </div>
+          </div>
+          <button class="asset-upload-close" data-action="close-asset-upload">${icons.x}</button>
+        </div>
+      ` : ''}
+
+      <div class="assets-toolbar">
+        <div class="assets-filters">
+          <button class="filter-btn ${assetFilter === 'all' ? 'active' : ''}" data-asset-filter="all">All</button>
+          <button class="filter-btn ${assetFilter === 'logo' ? 'active' : ''}" data-asset-filter="logo">${icons.image} Logos</button>
+          <button class="filter-btn ${assetFilter === 'image' ? 'active' : ''}" data-asset-filter="image">${icons.image} Images</button>
+          <button class="filter-btn ${assetFilter === 'url' ? 'active' : ''}" data-asset-filter="url">${icons.globe} URLs</button>
+        </div>
+        <div class="assets-search">
+          <input class="form-input" type="text" id="asset-search" placeholder="Search assets..." value="${assetSearch}">
+        </div>
+      </div>
+
+      ${filteredAssets.length === 0 ? `
+        <div class="empty-state">
+          <div class="empty-icon">${icons.assets}</div>
+          <h2 class="empty-title">${assets.length === 0 ? 'No assets yet' : 'No matches'}</h2>
+          <p class="empty-desc">${assets.length === 0 ? 'Upload images or add website URLs to build your asset library' : 'Try a different search or filter'}</p>
+        </div>
+      ` : `
+        <div class="assets-grid">
+          ${filteredAssets.map(asset => `
+            <div class="asset-card" data-asset-id="${asset.id}">
+              <div class="asset-preview ${asset.type === 'url' ? 'asset-preview-url' : ''}" ${asset.brandColor ? `style="background-color: ${asset.brandColor}"` : ''}>
+                ${asset.thumbnail || asset.imageData ? `
+                  <img src="${asset.thumbnail || asset.imageData}" alt="${asset.name}">
+                ` : asset.type === 'url' ? `
+                  <div class="asset-url-icon">${icons.globe}</div>
+                ` : `
+                  <div class="asset-placeholder">${icons.image}</div>
+                `}
+                <div class="asset-type-badge">${asset.type}</div>
+              </div>
+              <div class="asset-info">
+                <div class="asset-name">${asset.name}</div>
+                ${asset.clientName ? `<div class="asset-client">${asset.clientName}</div>` : ''}
+                ${asset.tags.length > 0 ? `
+                  <div class="asset-tags">
+                    ${asset.tags.map(t => `<span class="asset-tag">${t}</span>`).join('')}
+                  </div>
+                ` : ''}
+              </div>
+              <div class="asset-actions">
+                <button class="asset-action-btn" data-copy-asset="${asset.id}" title="Copy">${icons.copy}</button>
+                <button class="asset-action-btn asset-delete" data-delete-asset="${asset.id}" title="Delete">${icons.x}</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `}
+    `;
+  }
+
   function renderModal(): string {
     if (modalType === 'send' && currentQuote) {
       return `<div class="modal-overlay" data-close-modal><div class="modal">
@@ -1131,6 +2231,13 @@ Bridge Point`;
       </div></div>`;
     }
 
+    if (modalType === 'quote-picker') {
+      return `<div class="modal-overlay" data-close-modal><div class="modal">
+        <div class="modal-header"><h3 class="modal-title">Create Slideshow</h3><button class="modal-close" data-close-modal>${icons.x}</button></div>
+        ${renderQuotePicker()}
+      </div></div>`;
+    }
+
     return '';
   }
 
@@ -1190,6 +2297,7 @@ Bridge Point`;
         currentQuote.clientWebsite = (document.getElementById('quote-website') as HTMLInputElement)?.value || '';
         currentQuote.status = (document.getElementById('quote-status') as HTMLSelectElement)?.value as Quote['status'] || currentQuote.status;
         currentQuote.showHeader = (document.getElementById('quote-show-header') as HTMLInputElement)?.checked ?? true;
+        currentQuote.logoNeedsBackground = (document.getElementById('quote-logo-background') as HTMLInputElement)?.checked ?? false;
       }
       await saveCurrentQuote();
     });
@@ -1526,7 +2634,431 @@ Rules:
         placeholder?.classList.remove('paste-active');
       });
     });
+
+    // Slideshow listeners
+    document.querySelector('[data-action="create-slideshow"]')?.addEventListener('click', () => {
+      modalType = 'quote-picker';
+      showModal = true;
+      render();
+    });
+
+    document.querySelectorAll('[data-select-quote]').forEach(item => {
+      item.addEventListener('click', async () => {
+        const quoteId = (item as HTMLElement).dataset.selectQuote!;
+        const quote = quotes.find(q => q.id === quoteId);
+        if (!quote) return;
+
+        // Close modal, show loading in main view
+        showModal = false;
+        creatingSlidesFromQuoteId = quoteId;
+        view = 'slides';
+        render();
+
+        try {
+          // Generate slides
+          currentSlideshow = await generateSlideshow(quote);
+          slideshows.unshift(currentSlideshow);
+          await saveSlideshows();
+
+          // Done - go to editor
+          creatingSlidesFromQuoteId = '';
+          currentSlideIndex = 0;
+          view = 'slides-editor';
+          showToast(`Created ${currentSlideshow.slides.length} slides from "${quote.title}"`);
+        } catch (err) {
+          console.error('Failed to create slides:', err);
+          creatingSlidesFromQuoteId = '';
+          showToast('Failed to create slides');
+        }
+        render();
+      });
+    });
+
+    document.querySelectorAll('[data-edit-slideshow]').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = (card as HTMLElement).dataset.editSlideshow!;
+        currentSlideshow = JSON.parse(JSON.stringify(slideshows.find(p => p.id === id)));
+        currentSlideIndex = 0;
+        view = 'slides-editor';
+        render();
+      });
+    });
+
+    document.querySelector('[data-action="back-to-slides"]')?.addEventListener('click', () => {
+      view = 'slides';
+      currentSlideshow = null;
+      render();
+    });
+
+    document.querySelector('[data-action="save-slideshow"]')?.addEventListener('click', async () => {
+      if (!currentSlideshow) return;
+      currentSlideshow.title = (document.getElementById('slideshow-title') as HTMLInputElement)?.value || currentSlideshow.title;
+      currentSlideshow.updatedAt = Date.now();
+
+      const idx = slideshows.findIndex(p => p.id === currentSlideshow!.id);
+      if (idx >= 0) {
+        slideshows[idx] = currentSlideshow;
+      }
+      await saveSlideshows();
+      showToast('Slideshow saved!');
+      render();
+    });
+
+    document.querySelector('[data-action="delete-slideshow"]')?.addEventListener('click', async () => {
+      if (!currentSlideshow) return;
+      if (!confirm('Delete these slides?')) return;
+      slideshows = slideshows.filter(p => p.id !== currentSlideshow!.id);
+      await saveSlideshows();
+      currentSlideshow = null;
+      view = 'slides';
+      showToast('Slideshow deleted');
+      render();
+    });
+
+    document.querySelectorAll('[data-select-slide]').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        currentSlideIndex = parseInt((thumb as HTMLElement).dataset.selectSlide!);
+        render();
+      });
+    });
+
+    document.querySelectorAll('[data-delete-slide]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!currentSlideshow) return;
+        const idx = parseInt((btn as HTMLElement).dataset.deleteSlide!);
+        currentSlideshow.slides.splice(idx, 1);
+        if (currentSlideIndex >= currentSlideshow.slides.length) {
+          currentSlideIndex = Math.max(0, currentSlideshow.slides.length - 1);
+        }
+        render();
+      });
+    });
+
+    document.querySelector('[data-action="add-slide"]')?.addEventListener('click', () => {
+      if (!currentSlideshow) return;
+      currentSlideshow.slides.push({
+        id: genId(),
+        type: 'content',
+        headline: 'New Slide',
+        bullets: ['Point 1', 'Point 2']
+      });
+      currentSlideIndex = currentSlideshow.slides.length - 1;
+      render();
+    });
+
+    document.querySelectorAll('[data-slides-theme]').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        if (!currentSlideshow) return;
+        currentSlideshow.theme = (swatch as HTMLElement).dataset.slidesTheme as SlideTheme;
+        render();
+      });
+    });
+
+    // Slide editor inputs
+    document.querySelectorAll('[data-slide-field]').forEach(input => {
+      input.addEventListener('input', () => {
+        if (!currentSlideshow) return;
+        const slide = currentSlideshow.slides[currentSlideIndex];
+        const field = (input as HTMLElement).dataset.slideField!;
+        if (field === 'headline') {
+          slide.headline = (input as HTMLInputElement).value;
+        } else if (field === 'subtitle') {
+          if (!slide.bullets) slide.bullets = [];
+          slide.bullets[0] = (input as HTMLInputElement).value;
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-bullet-index]').forEach(input => {
+      input.addEventListener('input', () => {
+        if (!currentSlideshow) return;
+        const slide = currentSlideshow.slides[currentSlideIndex];
+        const idx = parseInt((input as HTMLElement).dataset.bulletIndex!);
+        if (slide.bullets) {
+          slide.bullets[idx] = (input as HTMLInputElement).value;
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-delete-bullet]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!currentSlideshow) return;
+        const slide = currentSlideshow.slides[currentSlideIndex];
+        const idx = parseInt((btn as HTMLElement).dataset.deleteBullet!);
+        if (slide.bullets) {
+          slide.bullets.splice(idx, 1);
+          render();
+        }
+      });
+    });
+
+    document.querySelector('[data-action="add-bullet"]')?.addEventListener('click', () => {
+      if (!currentSlideshow) return;
+      const slide = currentSlideshow.slides[currentSlideIndex];
+      if (!slide.bullets) slide.bullets = [];
+      slide.bullets.push('New point');
+      render();
+    });
+
+    document.querySelectorAll('[data-stat-index]').forEach(input => {
+      input.addEventListener('input', () => {
+        if (!currentSlideshow) return;
+        const slide = currentSlideshow.slides[currentSlideIndex];
+        const idx = parseInt((input as HTMLElement).dataset.statIndex!);
+        const field = (input as HTMLElement).dataset.statField!;
+        if (slide.stats && slide.stats[idx]) {
+          (slide.stats[idx] as any)[field] = (input as HTMLInputElement).value;
+        }
+      });
+    });
+
+    document.getElementById('slide-type-select')?.addEventListener('change', (e) => {
+      if (!currentSlideshow) return;
+      const slide = currentSlideshow.slides[currentSlideIndex];
+      const newType = (e.target as HTMLSelectElement).value as Slide['type'];
+      slide.type = newType;
+      // Initialize defaults for new type
+      if (newType === 'content' && !slide.bullets) slide.bullets = ['Point 1'];
+      if (newType === 'data' && !slide.stats) slide.stats = [{ label: 'Label', value: '0' }];
+      render();
+    });
+
+    // Slideshow controls
+    document.querySelector('[data-action="start-slideshow"]')?.addEventListener('click', () => {
+      currentSlideIndex = 0;
+      view = 'slides-view';
+      render();
+    });
+
+    document.querySelector('[data-action="exit-slideshow"]')?.addEventListener('click', () => {
+      view = 'slides-editor';
+      render();
+    });
+
+    document.querySelector('[data-action="prev-slide"]')?.addEventListener('click', () => {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        render();
+      }
+    });
+
+    document.querySelector('[data-action="next-slide"]')?.addEventListener('click', () => {
+      if (currentSlideshow && currentSlideIndex < currentSlideshow.slides.length - 1) {
+        currentSlideIndex++;
+        render();
+      }
+    });
+
+    // Keyboard navigation for slideshow
+    if (view === 'slides-view') {
+      const handleKeydown = (e: KeyboardEvent) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+          if (currentSlideshow && currentSlideIndex < currentSlideshow.slides.length - 1) {
+            currentSlideIndex++;
+            render();
+          }
+        } else if (e.key === 'ArrowLeft') {
+          if (currentSlideIndex > 0) {
+            currentSlideIndex--;
+            render();
+          }
+        } else if (e.key === 'Escape') {
+          view = 'slides-editor';
+          render();
+        }
+      };
+      document.addEventListener('keydown', handleKeydown);
+    }
+
+    // Assets listeners
+    document.querySelector('[data-action="add-asset"]')?.addEventListener('click', () => {
+      showAssetUpload = true;
+      render();
+    });
+
+    document.querySelector('[data-action="close-asset-upload"]')?.addEventListener('click', () => {
+      showAssetUpload = false;
+      render();
+    });
+
+    document.querySelectorAll('[data-asset-tab]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabType = (tab as HTMLElement).dataset.assetTab;
+        document.querySelectorAll('.asset-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const dropzone = document.querySelector('.asset-upload-dropzone') as HTMLElement;
+        const urlForm = document.querySelector('.asset-url-form') as HTMLElement;
+        if (tabType === 'upload') {
+          dropzone.style.display = 'block';
+          urlForm.style.display = 'none';
+        } else {
+          dropzone.style.display = 'none';
+          urlForm.style.display = 'block';
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-asset-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        assetFilter = (btn as HTMLElement).dataset.assetFilter as typeof assetFilter;
+        render();
+      });
+    });
+
+    document.getElementById('asset-search')?.addEventListener('input', (e) => {
+      assetSearch = (e.target as HTMLInputElement).value;
+      render();
+    });
+
+    // File upload
+    const fileInput = document.getElementById('asset-file-input') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.addEventListener('change', async () => {
+        const fileList = fileInput.files;
+        if (!fileList || fileList.length === 0) return;
+
+        // Copy files to array BEFORE any render() calls
+        const filesToProcess: File[] = Array.from(fileList);
+
+        // Show processing modal
+        processingAssetsCount = filesToProcess.length;
+        processingAssets = true;
+        showAssetUpload = false;
+        render();
+
+        // Small delay to ensure modal renders
+        await new Promise(r => setTimeout(r, 50));
+
+        try {
+          let added = 0;
+          for (const file of filesToProcess) {
+            try {
+              const asset = await createAssetFromImage(file);
+              assets.unshift(asset);
+              added++;
+            } catch (err) {
+              console.error('Failed to create asset:', err);
+            }
+          }
+          await saveAssets();
+          processingAssets = false;
+          showToast(`Added ${added} asset${added !== 1 ? 's' : ''}`);
+          render();
+        } catch (err) {
+          console.error('Upload error:', err);
+          processingAssets = false;
+          showToast(`Upload failed: ${(err as Error).message}`);
+          render();
+        }
+      });
+    }
+
+    // Dropzone
+    const dropzone = document.querySelector('[data-asset-dropzone]');
+    if (dropzone) {
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('dragover');
+      });
+      dropzone.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        const fileList = (e as DragEvent).dataTransfer?.files;
+        if (!fileList || fileList.length === 0) return;
+
+        // Copy and filter to images only
+        const filesToProcess = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+        if (filesToProcess.length === 0) return;
+
+        // Show processing modal
+        processingAssetsCount = filesToProcess.length;
+        processingAssets = true;
+        showAssetUpload = false;
+        render();
+
+        await new Promise(r => setTimeout(r, 50));
+
+        try {
+          let added = 0;
+          for (const file of filesToProcess) {
+            try {
+              const asset = await createAssetFromImage(file);
+              assets.unshift(asset);
+              added++;
+            } catch (err) {
+              console.error('Failed to create asset:', err);
+            }
+          }
+          await saveAssets();
+          processingAssets = false;
+          showToast(`Added ${added} asset${added !== 1 ? 's' : ''}`);
+          render();
+        } catch (err) {
+          console.error('Drop upload error:', err);
+          processingAssets = false;
+          showToast(`Upload failed`);
+          render();
+        }
+      });
+      dropzone.addEventListener('click', () => {
+        document.getElementById('asset-file-input')?.click();
+      });
+    }
+
+    // URL asset
+    document.querySelector('[data-action="save-url-asset"]')?.addEventListener('click', async () => {
+      const urlInput = document.getElementById('asset-url-input') as HTMLInputElement;
+      const nameInput = document.getElementById('asset-name-input') as HTMLInputElement;
+      const url = urlInput?.value?.trim();
+      if (!url) return;
+
+      try {
+        const asset = await createAssetFromUrl(url, nameInput?.value?.trim());
+        assets.unshift(asset);
+        await saveAssets();
+        showAssetUpload = false;
+        showToast(`Added ${asset.name}`);
+        render();
+      } catch (err) {
+        showToast('Failed to add URL');
+      }
+    });
+
+    // Delete asset
+    document.querySelectorAll('[data-delete-asset]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.deleteAsset!;
+        if (!confirm('Delete this asset?')) return;
+        assets = assets.filter(a => a.id !== id);
+        await saveAssets();
+        showToast('Asset deleted');
+        render();
+      });
+    });
+
+    // Copy asset
+    document.querySelectorAll('[data-copy-asset]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.copyAsset!;
+        const asset = assets.find(a => a.id === id);
+        if (asset?.imageData) {
+          await navigator.clipboard.writeText(asset.imageData);
+          showToast('Image copied to clipboard');
+        } else if (asset?.url) {
+          await navigator.clipboard.writeText(asset.url);
+          showToast('URL copied to clipboard');
+        }
+      });
+    });
   }
 
   loadQuotes();
+  loadSlides();
+  loadAssets();
 </script>

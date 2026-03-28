@@ -9,6 +9,7 @@ export interface Quote {
   clientEmail: string;
   clientWebsite?: string;
   clientLogo?: string;
+  logoNeedsBackground?: boolean;
   heroTheme?: HeroTheme;
   showHeader?: boolean;
   status: 'draft' | 'sent' | 'viewed' | 'accepted' | 'declined';
@@ -101,4 +102,59 @@ export interface Template {
 
 export interface QuotesData {
   quotes: Quote[];
+}
+
+// Slideshow types
+
+export type SlideTheme = 'dark' | 'light' | 'gradient' | 'minimal' | 'bold' | 'brand';
+
+export type SlideType = 'title' | 'content' | 'visual' | 'data' | 'break';
+
+export interface Slide {
+  id: string;
+  type: SlideType;
+  headline?: string;
+  bullets?: string[];
+  image?: string;
+  stats?: { label: string; value: string }[];
+}
+
+export interface Slideshow {
+  id: string;
+  title: string;
+  sourceQuoteId: string;
+  theme: SlideTheme;
+  brandColor?: string;        // extracted from client website
+  clientName?: string;
+  clientLogo?: string;
+  clientWebsite?: string;
+  createdAt: number;
+  updatedAt: number;
+  slides: Slide[];
+}
+
+export interface SlideshowsData {
+  slideshows: Slideshow[];
+}
+
+// Asset types
+
+export type AssetType = 'image' | 'logo' | 'url';
+
+export interface Asset {
+  id: string;
+  type: AssetType;
+  name: string;
+  url?: string;              // For URL assets or external image URL
+  imageData?: string;        // Base64 for uploaded images
+  thumbnail?: string;        // Smaller preview for grid
+  brandColor?: string;       // Extracted from URL
+  clientName?: string;       // Associated client
+  tags: string[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface AssetsData {
+  assets: Asset[];
 }
