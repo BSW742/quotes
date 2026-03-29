@@ -71,7 +71,7 @@ export default {
           });
 
           // Return the public URL
-          const publicUrl = `https://pub-17ea8d32c4a94a5fbc8eb9a70e6047a8.r2.dev/recordings/${filename}`;
+          const publicUrl = `https://pub-42b61754c0594091a9cccd7d29b013b2.r2.dev/recordings/${filename}`;
 
           return new Response(JSON.stringify({
             success: true,
