@@ -13,6 +13,7 @@ export interface Quote {
   heroTheme?: HeroTheme;
   showHeader?: boolean;
   status: 'draft' | 'sent' | 'viewed' | 'accepted' | 'declined';
+  archived?: boolean;
   createdAt: number;
   updatedAt: number;
   expiresAt?: number;
@@ -110,13 +111,26 @@ export type SlideTheme = 'dark' | 'light' | 'gradient' | 'minimal' | 'bold' | 'b
 
 export type SlideType = 'title' | 'content' | 'visual' | 'data' | 'break';
 
+export type SlideLayout = 'default' | 'split';
+
 export interface Slide {
   id: string;
   type: SlideType;
+  layout?: SlideLayout;
+  theme?: SlideTheme;
+  showLogos?: boolean;
   headline?: string;
   bullets?: string[];
   image?: string;
   stats?: { label: string; value: string }[];
+  hasNarration?: boolean;
+  narrationPos?: NarrationPos;
+  narrationThumb?: string;
+}
+
+export interface NarrationPos {
+  left: number;
+  bottom: number;
 }
 
 export interface Slideshow {
@@ -128,6 +142,10 @@ export interface Slideshow {
   clientName?: string;
   clientLogo?: string;
   clientWebsite?: string;
+  archived?: boolean;
+  hasNarration?: boolean;     // whether this slideshow has a recorded narration
+  narrationPos?: NarrationPos; // position of the webcam bubble
+  narrationThumb?: string;    // thumbnail of narrator for preview
   createdAt: number;
   updatedAt: number;
   slides: Slide[];
@@ -157,4 +175,22 @@ export interface Asset {
 
 export interface AssetsData {
   assets: Asset[];
+}
+
+// Recording types
+
+export interface Recording {
+  id: string;
+  source: 'slides' | 'quote';
+  sourceId: string;           // slideshowId or quoteId
+  sourceTitle: string;        // slideshow or quote title
+  slideId?: string;           // only for slides
+  slideIndex?: number;        // only for slides
+  thumbnail?: string;
+  cloudUrl?: string;          // R2 URL for sharing
+  createdAt: number;
+}
+
+export interface RecordingsData {
+  recordings: Recording[];
 }

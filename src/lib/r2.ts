@@ -39,3 +39,25 @@ export async function saveToR2(filename: string, data: unknown): Promise<boolean
     return false;
   }
 }
+
+export async function uploadVideoToR2(filename: string, blob: Blob): Promise<string | null> {
+  try {
+    const formData = new FormData();
+    formData.append('video', blob, filename);
+    formData.append('type', 'recording');
+
+    const response = await fetch(WORKER_URL, {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+    if (result.success && result.url) {
+      return result.url;
+    }
+    return null;
+  } catch (e) {
+    console.error(`Failed to upload video ${filename}:`, e);
+    return null;
+  }
+}

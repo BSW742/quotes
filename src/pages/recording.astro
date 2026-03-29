@@ -1,0 +1,222 @@
+---
+// Public recording view page
+// Access via /recording?id=RECORDING_ID
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recording - Bridge Point</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app"></div>
+</body>
+</html>
+
+<style is:global>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --text: #ffffff;
+    --text-muted: #888;
+    --accent: #00d4ff;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .recording-page {
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .recording-header {
+    margin-bottom: 30px;
+  }
+
+  .recording-logo {
+    height: 32px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+
+  .recording-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .recording-meta {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #111;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .video-container video {
+    width: 100%;
+    display: block;
+  }
+
+  .loading, .error {
+    padding: 100px 20px;
+    text-align: center;
+  }
+
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .error-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+
+  .error-title {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  .error-desc {
+    color: var(--text-muted);
+  }
+</style>
+
+<script>
+  import type { Recording, RecordingsData } from '../lib/types';
+  import { WORKER_URL, R2_BASE } from '../lib/r2';
+
+  const BRIDGEPOINT_LOGO = 'https://bridgepoint.co.nz/logos/Bridge-Point_white.png';
+
+  async function loadRecording(id: string): Promise<Recording | null> {
+    try {
+      const response = await fetch(`${WORKER_URL}?file=recordings-data.json&t=${Date.now()}`);
+      if (response.ok) {
+        const data: RecordingsData = await response.json();
+        return data.recordings?.find(r => r.id === id) || null;
+      }
+    } catch (e) {
+      console.error('Failed to load recordings:', e);
+    }
+    return null;
+  }
+
+  function formatDate(timestamp: number): string {
+    return new Date(timestamp).toLocaleDateString('en-NZ', {
+      year: 'numeric', month: 'short', day: 'numeric'
+    });
+  }
+
+  function render(content: string) {
+    document.getElementById('app')!.innerHTML = content;
+  }
+
+  async function init() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (!id) {
+      render(`
+        <div class="recording-page">
+          <div class="error">
+            <div class="error-icon">🎬</div>
+            <h2 class="error-title">No recording specified</h2>
+            <p class="error-desc">Please use a valid recording link</p>
+          </div>
+        </div>
+      `);
+      return;
+    }
+
+    // Show loading
+    render(`
+      <div class="recording-page">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>Loading recording...</p>
+        </div>
+      </div>
+    `);
+
+    const recording = await loadRecording(id);
+
+    if (!recording) {
+      render(`
+        <div class="recording-page">
+          <div class="error">
+            <div class="error-icon">🎬</div>
+            <h2 class="error-title">Recording not found</h2>
+            <p class="error-desc">This recording may have been deleted</p>
+          </div>
+        </div>
+      `);
+      return;
+    }
+
+    if (!recording.cloudUrl) {
+      render(`
+        <div class="recording-page">
+          <div class="error">
+            <div class="error-icon">🔒</div>
+            <h2 class="error-title">Recording not available</h2>
+            <p class="error-desc">This recording hasn't been uploaded for sharing</p>
+          </div>
+        </div>
+      `);
+      return;
+    }
+
+    // Show the recording
+    render(`
+      <div class="recording-page">
+        <div class="recording-header">
+          <img src="${BRIDGEPOINT_LOGO}" alt="Bridge Point" class="recording-logo">
+          <h1 class="recording-title">${recording.sourceTitle}</h1>
+          <p class="recording-meta">${recording.source === 'quote' ? 'Quote' : 'Slides'} · ${formatDate(recording.createdAt)}</p>
+        </div>
+        <div class="video-container">
+          <video controls autoplay>
+            <source src="${recording.cloudUrl}" type="video/webm">
+            Your browser does not support video playback.
+          </video>
+        </div>
+      </div>
+    `);
+  }
+
+  init();
+</script>

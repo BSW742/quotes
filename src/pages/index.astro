@@ -10,6 +10,7 @@
   <title>Quotes - Bridge Point</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
   <div id="app"></div>
@@ -97,6 +98,8 @@
   .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
   .btn-secondary { background: var(--bg-hover); color: var(--text); border: 1px solid var(--border); }
   .btn-secondary:hover { border-color: var(--cyan); }
+  .btn-cyan { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); }
+  .btn-cyan:hover { background: var(--cyan); color: var(--bg); }
   .btn-success { background: var(--green); color: white; }
   .btn-ghost { background: transparent; color: var(--text-muted); }
   .btn-ghost:hover { color: var(--text); background: var(--bg-hover); }
@@ -339,6 +342,24 @@
     display: flex; justify-content: flex-end; gap: 12px;
     padding: 20px 24px; border-top: 1px solid var(--border);
   }
+  .modal-lg { max-width: 700px; }
+  .asset-picker-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px; padding: 20px;
+  }
+  .asset-picker-item {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 12px; background: var(--bg); border: 2px solid transparent;
+    border-radius: 10px; cursor: pointer; transition: all 0.2s;
+  }
+  .asset-picker-item:hover { border-color: var(--cyan); background: var(--bg-hover); }
+  .asset-picker-item img {
+    width: 80px; height: 80px; object-fit: cover; border-radius: 8px;
+  }
+  .asset-picker-item span {
+    font-size: 0.75rem; color: var(--text-muted); text-align: center;
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
 
   .pricing-editor { margin-top: 16px; }
   .pricing-item-row {
@@ -448,11 +469,38 @@
     margin-bottom: 16px; gap: 16px;
   }
   .slides-theme-bar { display: flex; align-items: center; gap: 8px; }
-  .slides-theme-bar .slides-theme-swatch {
-    padding: 6px 12px; font-size: 0.8rem;
-  }
   .toolbar-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
-  .slides-branding-bar { display: flex; align-items: center; gap: 12px; }
+  .toolbar-select {
+    padding: 6px 12px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer;
+  }
+  .toolbar-select:focus { outline: none; border-color: var(--cyan); }
+  .slides-layout-bar { display: flex; align-items: center; gap: 8px; }
+  .slides-layout-btn {
+    display: flex; align-items: center; justify-content: center;
+    padding: 6px 10px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: all 0.2s;
+  }
+  .slides-layout-btn:hover { border-color: var(--cyan); color: var(--text); }
+  .slides-layout-btn.active { border-color: var(--cyan); background: var(--cyan); color: #000; }
+  .slides-logo-toggle { display: flex; align-items: center; gap: 8px; }
+  .toolbar-logo-mini { height: 20px; width: auto; opacity: 0.7; }
+  .toggle-switch {
+    position: relative; width: 36px; height: 20px;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; inset: 0; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 20px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .toggle-slider::before {
+    content: ''; position: absolute; width: 14px; height: 14px;
+    left: 2px; top: 2px; background: var(--text-muted);
+    border-radius: 50%; transition: all 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-slider { background: var(--cyan); border-color: var(--cyan); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); background: #000; }
   .toolbar-logo {
     height: 28px; width: auto; object-fit: contain;
     background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px;
@@ -511,6 +559,44 @@
   .slide-editor-preview.theme-bold { background: #000; color: #fff; font-size: 120%; font-weight: 800; }
 
   .slide-content { width: 100%; max-width: 800px; text-align: center; }
+  .slide-content.layout-split {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    max-width: 100%; text-align: left;
+  }
+  .slide-split-left { display: flex; flex-direction: column; justify-content: center; }
+  .slide-split-left .slide-headline-input { text-align: left; font-size: 1.75rem; }
+  .slide-split-right { display: flex; align-items: center; justify-content: center; }
+  .slide-split-image-area {
+    width: 100%; aspect-ratio: 4/3; border-radius: 12px; overflow: hidden;
+    background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;
+  }
+  .slide-split-image { width: 100%; height: 100%; object-fit: cover; }
+  .slide-image-change {
+    position: absolute; bottom: 12px; right: 12px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px; background: rgba(0,0,0,0.7); color: #fff;
+    border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;
+  }
+  .slide-image-change:hover { background: rgba(0,0,0,0.9); }
+  .slide-split-image-area { position: relative; }
+  .slide-image-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+  .slide-image-upload-btn {
+    display: flex; align-items: center; gap: 8px; padding: 12px 20px;
+    background: var(--cyan); color: #000; border-radius: 8px;
+    cursor: pointer; font-weight: 600; transition: all 0.2s;
+  }
+  .slide-image-upload-btn:hover { transform: scale(1.05); }
+  .slide-caption-input {
+    width: 100%; min-height: 100px; background: transparent;
+    border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px;
+    color: inherit; font-size: 1rem; padding: 12px; resize: vertical;
+  }
+  .slide-caption-input:focus { outline: none; border-color: var(--cyan); }
+  .theme-light .slide-caption-input { border-color: rgba(0,0,0,0.1); }
+  .theme-light .slide-image-placeholder { color: rgba(0,0,0,0.3); }
   .slide-headline-input {
     width: 100%; background: transparent; border: none; border-bottom: 2px dashed rgba(255,255,255,0.3);
     color: inherit; font-size: 2rem; font-weight: 700; text-align: center;
@@ -602,6 +688,23 @@
     to { opacity: 1; transform: translateX(0); }
   }
 
+  .slideshow-split {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    text-align: left; width: 100%;
+  }
+  .slideshow-split-left {
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .slideshow-split-right {
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slideshow-split-image {
+    max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 12px;
+  }
+  .slideshow-caption {
+    font-size: 1.3rem; line-height: 1.6; opacity: 0.85; margin-top: 20px;
+  }
+
   .slideshow-headline {
     font-size: 3.5rem; font-weight: 800; margin-bottom: 30px;
     line-height: 1.2;
@@ -676,13 +779,17 @@
     height: 28px; width: auto; max-width: 120px;
     object-fit: contain; opacity: 0.9;
   }
-  .slideshow-logo-client {
+    .slideshow-logo-client {
     padding-left: 16px;
     border-left: 1px solid rgba(255,255,255,0.2);
   }
   .theme-light .slideshow-logo-client,
   .theme-minimal .slideshow-logo-client {
     border-left-color: rgba(0,0,0,0.1);
+  }
+  .theme-light .slideshow-logo-client,
+  .theme-minimal .slideshow-logo-client {
+    filter: none;
   }
 
   /* Brand theme */
@@ -812,11 +919,308 @@
   .asset-action-btn.asset-delete:hover { color: #ff4444; }
   .asset-action-btn svg { width: 16px; height: 16px; }
   .asset-action-btn:not(:last-child) { border-right: 1px solid var(--border); }
+
+  /* Archive styles */
+  .archive-section { margin-bottom: 32px; }
+  .archive-section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 1rem; font-weight: 600; margin-bottom: 12px;
+    color: var(--text-muted);
+  }
+  .archive-section-title svg { width: 18px; height: 18px; }
+  .archive-list { display: flex; flex-direction: column; gap: 8px; }
+  .archive-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 20px; background: var(--card); border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .archive-item-title { font-weight: 600; margin-bottom: 4px; }
+  .archive-item-meta { font-size: 0.85rem; color: var(--text-muted); }
+  .archive-item-actions { display: flex; gap: 8px; }
+  .card-archive-btn {
+    position: absolute; top: 8px; right: 8px;
+    width: 28px; height: 28px; padding: 0;
+    background: rgba(0,0,0,0.6); border: none; border-radius: 6px;
+    color: #fff; cursor: pointer; opacity: 0; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-archive-btn svg { width: 14px; height: 14px; }
+  .card-archive-btn:hover { background: rgba(0,0,0,0.8); }
+  .template-card:hover .card-archive-btn { opacity: 1; }
+  .template-card { position: relative; }
+
+  /* Recording Styles */
+  .webcam-bubble {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--cyan);
+    background: #000;
+    cursor: grab;
+    z-index: 1200;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .webcam-bubble.recording {
+    border-color: #dc2626;
+    animation: pulse-border 1.5s infinite;
+  }
+  .webcam-bubble.dragging { cursor: grabbing; }
+  .webcam-bubble video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+  }
+  @keyframes pulse-border {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); }
+  }
+  .recording-indicator {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 1200;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .recording-indicator.recording .recording-dot {
+    background: #dc2626;
+    animation: pulse-dot 1s infinite;
+  }
+  .recording-indicator.recording span { color: #dc2626; }
+  .recording-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--cyan);
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+  .webcam-controls {
+    position: fixed;
+    bottom: 2rem;
+    left: calc(2rem + 180px);
+    z-index: 1200;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .webcam-rec-btn {
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .webcam-rec-btn.start { background: #dc2626; color: white; }
+  .webcam-rec-btn.start:hover { background: #b91c1c; }
+  .webcam-rec-btn.stop { background: #dc2626; color: white; animation: pulse-bg 1s infinite; }
+  .webcam-rec-btn.save { background: var(--cyan); color: #000; }
+  .webcam-rec-btn.cancel { background: var(--border); color: var(--text); }
+  .webcam-rec-btn.cancel:hover { background: var(--bg-hover); }
+  @keyframes pulse-bg {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  .narration-btn {
+    background: #dc2626;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    transition: all 0.2s;
+  }
+  .narration-btn:hover { background: #b91c1c; }
+  .narration-btn.has-narration { background: var(--cyan); color: #000; }
+  .narration-playback {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--cyan);
+    background: #000;
+    cursor: grab;
+    z-index: 1100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .narration-playback video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+  }
+  .narration-playback-controls {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+  }
+  .slideshow-record-btn {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1100;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* Recordings list styles */
+  .recordings-list { display: flex; flex-direction: column; gap: 8px; }
+  .recording-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; background: var(--bg-card); border-radius: 10px;
+    border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
+  }
+  .recording-item:hover { background: var(--bg-hover); border-color: var(--accent); }
+  .recording-thumb {
+    width: 48px; height: 48px; border-radius: 50%; overflow: hidden;
+    background: var(--bg-hover); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .recording-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .recording-thumb-placeholder { color: var(--text-muted); }
+  .recording-thumb-placeholder svg { width: 20px; height: 20px; }
+  .recording-info { flex: 1; }
+  .recording-source { font-size: 0.75rem; color: var(--accent); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .recording-date { font-size: 0.875rem; color: var(--text-muted); }
+  .recording-actions { display: flex; gap: 8px; }
+  .recording-playback-modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2000;
+  }
+  .recording-playback-content { position: relative; max-width: 90vw; max-height: 90vh; }
+  .recording-playback-content video { max-width: 100%; max-height: 80vh; border-radius: 12px; }
+  .recording-playback-close {
+    position: absolute; top: -40px; right: 0;
+    background: none; border: none; color: white;
+    cursor: pointer; padding: 8px;
+  }
+  .recording-playback-close svg { width: 24px; height: 24px; }
+
+  /* Quote record view - document window style */
+  .quote-record-wrapper {
+    position: fixed; inset: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px; transition: background 0.3s;
+  }
+  .quote-record-controls {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 1100; display: flex; gap: 24px; align-items: center;
+    background: rgba(0,0,0,0.9); padding: 12px 24px; border-radius: 12px;
+  }
+  .quote-record-controls .slideshow-record-btn { position: static; }
+  .brand-picker { display: flex; gap: 12px; }
+  .brand-pick {
+    background: rgba(255,255,255,0.1); border: 2px solid transparent;
+    border-radius: 8px; padding: 10px 16px; cursor: pointer; transition: all 0.15s;
+  }
+  .brand-pick img { height: 24px; display: block; }
+  .brand-pick:hover { background: rgba(255,255,255,0.2); }
+  .brand-pick.active { border-color: var(--cyan); background: rgba(0,212,255,0.15); }
+  .titlebar-brand-logo { height: 18px; }
+  .titlebar-dots { display: flex; gap: 6px; }
+  .quote-record-titlebar {
+    background: linear-gradient(180deg, #f6f6f6, #e8e8e8);
+    padding: 10px 16px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid #d0d0d0;
+  }
+  .quote-record-window {
+    width: 100%; max-width: 900px; height: calc(100vh - 120px);
+    background: #fff; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    display: flex; flex-direction: column;
+  }
+  .titlebar-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .titlebar-dot.red { background: #ff5f57; }
+  .titlebar-dot.yellow { background: #ffbd2e; }
+  .titlebar-dot.green { background: #28ca41; }
+  .titlebar-title { flex: 1; text-align: center; font-size: 13px; color: #666; font-weight: 500; }
+  .quote-record-preview {
+    flex: 1; overflow-y: auto; background: #fafafa;
+  }
+  .quote-preview-content {
+    max-width: 800px; margin: 0 auto; padding: 20px;
+  }
+
+  /* Preview block styles - matching view.astro */
+  .preview-block-hero {
+    padding: 60px 40px 80px; text-align: center;
+    background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink)); color: white;
+  }
+  .preview-block-hero.theme-cyan { background: linear-gradient(135deg, #00d4ff, #0099cc); }
+  .preview-block-hero.theme-purple { background: linear-gradient(135deg, #7b2fff, #5a1fcc); }
+  .preview-block-hero.theme-blue { background: linear-gradient(135deg, #0066ff, #0044cc); }
+  .preview-block-hero.theme-dark { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+  .preview-block-hero.theme-light { background: linear-gradient(135deg, #f8f9fa, #e9ecef); color: #1a1a1a; }
+  .preview-client-logo-section { margin-bottom: 40px; }
+  .preview-client-logo { max-height: 80px; max-width: 200px; object-fit: contain; }
+  .preview-client-logo.logo-with-background { background: white; padding: 12px 20px; border-radius: 8px; }
+  .preview-hero-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; }
+  .preview-hero-subtitle { font-size: 1.2rem; opacity: 0.9; margin-bottom: 40px; }
+  .preview-hero-meta { display: flex; justify-content: center; gap: 48px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.2); }
+  .preview-block-hero.theme-light .preview-hero-meta { border-top-color: #ddd; }
+  .preview-meta-item .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 4px; }
+  .preview-meta-item .value { font-weight: 600; }
+
+  .preview-block-section { padding: 40px; }
+  .preview-block-section h2 { font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+  .preview-block-section p { color: #666; line-height: 1.7; white-space: pre-wrap; }
+
+  .preview-block-pricing { padding: 40px; }
+  .preview-block-pricing h3 { font-size: 1.3rem; font-weight: 700; color: #1a1a1a; margin-bottom: 20px; }
+  .preview-pricing-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+  .preview-pricing-table th { text-align: left; padding: 14px 16px; font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #eee; }
+  .preview-pricing-table td { padding: 18px 16px; border-bottom: 1px solid #eee; }
+  .preview-pricing-table tr:last-child td { border-bottom: none; }
+  .preview-item-name { font-weight: 600; color: #1a1a1a; }
+  .preview-item-desc { font-size: 0.85rem; color: #666; margin-top: 4px; }
+  .preview-pricing-total { display: flex; justify-content: space-between; padding: 24px 16px; font-size: 1.4rem; font-weight: 700; background: #f9f9f9; border-radius: 12px; margin-top: 16px; }
+
+  .preview-block-divider { padding: 20px 40px; }
+  .preview-block-divider hr { border: none; height: 1px; background: #eee; }
+
+  .preview-block-split { display: grid; grid-template-columns: 1fr 1fr; min-height: 300px; }
+  .preview-split-content { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+  .preview-split-content h2 { font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+  .preview-split-content p { color: #666; line-height: 1.7; }
+  .preview-split-image { background: #f5f5f5; }
+  .preview-split-image img { width: 100%; height: 100%; object-fit: cover; }
+
+  .preview-block-accept { padding: 60px 40px; text-align: center; background: linear-gradient(180deg, #f5f5f5, white); border-top: 1px solid #eee; }
+  .preview-terms { font-size: 0.9rem; color: #666; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+  .preview-accept-btn { padding: 18px 60px; font-size: 1.1rem; font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink)); border: none; border-radius: 12px; color: white; cursor: default; }
 </style>
 
 <script>
-  import type { Quote, Block, PricingBlock, PricingItem, Template, HeroTheme, Slideshow, Slide, SlideTheme, Asset, AssetType } from '../lib/types';
-  import { loadFromR2, saveToR2, WORKER_URL } from '../lib/r2';
+  import type { Quote, Block, PricingBlock, PricingItem, Template, HeroTheme, Slideshow, Slide, SlideTheme, Asset, AssetType, NarrationPos, Recording } from '../lib/types';
+  import { loadFromR2, saveToR2, uploadVideoToR2, WORKER_URL } from '../lib/r2';
 
   const icons = {
     quotes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
@@ -848,6 +1252,10 @@
     assets: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
     upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+    archive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',
+    unarchive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><polyline points="12 17 12 11"/><polyline points="9 14 12 11 15 14"/></svg>',
+    mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
+    play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
   };
 
   // Bridge Point proposal template
@@ -991,12 +1399,30 @@ All findings and recommendations remain confidential.` },
   ];
 
   // State
-  let view: 'dashboard' | 'templates' | 'editor' | 'slides' | 'slides-editor' | 'slides-view' | 'assets' = 'dashboard';
+  let view: 'dashboard' | 'templates' | 'editor' | 'quote-record' | 'slides' | 'slides-editor' | 'slides-view' | 'assets' | 'recordings' | 'archive' = 'dashboard';
+  let recordingSource: 'slides' | 'quote' = 'slides';
   let quotes: Quote[] = [];
   let currentQuote: Quote | null = null;
   let slideshows: Slideshow[] = [];
   let currentSlideshow: Slideshow | null = null;
   let currentSlideIndex = 0;
+  let slideshowKeyHandler: ((e: KeyboardEvent) => void) | null = null;
+
+  // Narration recording state
+  let narrationStream: MediaStream | null = null;
+  let narrationRecorder: MediaRecorder | null = null;
+  let narrationChunks: Blob[] = [];
+  let isNarrationRecording = false;
+  let narrationDB: IDBDatabase | null = null;
+  const NARRATION_DB_NAME = 'quotes-narrations';
+  const NARRATION_DB_STORE = 'videos';
+
+  // Recording limits
+  const MAX_RECORDING_SECONDS = 600; // 10 minutes
+  let recordingStartTime: number | null = null;
+  let recordingTimerInterval: number | null = null;
+
+  let recordings: Recording[] = [];
   let assets: Asset[] = [];
   let assetFilter: 'all' | 'image' | 'logo' | 'url' = 'all';
   let assetSearch = '';
@@ -1007,7 +1433,7 @@ All findings and recommendations remain confidential.` },
   let saving = false;
   let sending = false;
   let showModal = false;
-  let modalType: 'send' | 'share' | 'pricing' | 'ai' | 'quote-picker' = 'send';
+  let modalType: 'send' | 'share' | 'pricing' | 'ai' | 'quote-picker' | 'asset-picker' = 'send';
   let editingPricingBlock: PricingBlock | null = null;
   let toastMessage = '';
   let aiPrompt = '';
@@ -1019,7 +1445,17 @@ All findings and recommendations remain confidential.` },
   const LOCAL_STORAGE_KEY = 'quotes-backup';
   const SLIDESHOWS_STORAGE_KEY = 'slideshows-backup';
   const ASSETS_STORAGE_KEY = 'assets-backup';
-  const BRIDGEPOINT_LOGO = 'https://bridgepoint.co.nz/logos/Bridge-Point_white.png';
+  const RECORDINGS_STORAGE_KEY = 'recordings-backup';
+  const BRIDGEPOINT_LOGO_WHITE = 'https://bridgepoint.co.nz/logos/Bridge-Point_white.png';
+  const BRIDGEPOINT_LOGO_BLACK = 'https://bridgepoint.co.nz/logos/Bridge-Point_black.png';
+  // Recording brand config
+  const RECORDING_BRAND = {
+    name: 'Bridge Point',
+    logo: BRIDGEPOINT_LOGO_WHITE,
+    logoDark: BRIDGEPOINT_LOGO_BLACK,
+    bgColor: '#0f172a',
+    accentColor: '#00d4ff'
+  };
 
   async function loadQuotes() {
     // Load from localStorage first (instant, prevents data loss during dev)
@@ -1129,11 +1565,70 @@ All findings and recommendations remain confidential.` },
     } catch (e) {
       console.warn('Failed to load assets from R2:', e);
     }
+
+    // Add default logos if they don't exist
+    const hasBPLogoWhite = assets.some(a => a.id === 'bp-logo-white');
+    const hasBPLogoBlack = assets.some(a => a.id === 'bp-logo-black');
+    let addedDefaults = false;
+
+    if (!hasBPLogoWhite) {
+      assets.unshift({
+        id: 'bp-logo-white',
+        type: 'logo',
+        name: 'Bridge Point (White)',
+        url: BRIDGEPOINT_LOGO_WHITE,
+        thumbnail: BRIDGEPOINT_LOGO_WHITE,
+        tags: ['logo', 'bridgepoint', 'dark-bg'],
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      });
+      addedDefaults = true;
+    }
+
+    if (!hasBPLogoBlack) {
+      assets.unshift({
+        id: 'bp-logo-black',
+        type: 'logo',
+        name: 'Bridge Point (Black)',
+        url: BRIDGEPOINT_LOGO_BLACK,
+        thumbnail: BRIDGEPOINT_LOGO_BLACK,
+        tags: ['logo', 'bridgepoint', 'light-bg'],
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      });
+      addedDefaults = true;
+    }
+
+    if (addedDefaults) {
+      await saveAssets();
+    }
   }
 
   async function saveAssets() {
     localStorage.setItem(ASSETS_STORAGE_KEY, JSON.stringify({ assets }));
     await saveToR2('assets-data.json', { assets });
+  }
+
+  async function loadRecordings() {
+    const local = localStorage.getItem(RECORDINGS_STORAGE_KEY);
+    if (local) {
+      const data = JSON.parse(local);
+      recordings = data.recordings || [];
+    }
+    try {
+      const cloudData = await loadFromR2('recordings-data.json');
+      if (cloudData?.recordings) {
+        recordings = cloudData.recordings;
+        localStorage.setItem(RECORDINGS_STORAGE_KEY, JSON.stringify({ recordings }));
+      }
+    } catch (e) {
+      console.log('No cloud recordings data');
+    }
+  }
+
+  async function saveRecordings() {
+    localStorage.setItem(RECORDINGS_STORAGE_KEY, JSON.stringify({ recordings }));
+    await saveToR2('recordings-data.json', { recordings });
   }
 
   async function createAssetFromUrl(url: string, name?: string): Promise<Asset> {
@@ -1369,6 +1864,589 @@ All findings and recommendations remain confidential.` },
     });
   }
 
+  // IndexedDB for narration video storage
+  async function initNarrationDB(): Promise<IDBDatabase> {
+    if (narrationDB) return narrationDB;
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(NARRATION_DB_NAME, 1);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        narrationDB = request.result;
+        resolve(narrationDB);
+      };
+      request.onupgradeneeded = (e) => {
+        const database = (e.target as IDBOpenDBRequest).result;
+        if (!database.objectStoreNames.contains(NARRATION_DB_STORE)) {
+          database.createObjectStore(NARRATION_DB_STORE);
+        }
+      };
+    });
+  }
+
+  async function saveNarrationToDB(slideshowId: string, blob: Blob): Promise<void> {
+    const database = await initNarrationDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction(NARRATION_DB_STORE, 'readwrite');
+      const store = tx.objectStore(NARRATION_DB_STORE);
+      const request = store.put(blob, slideshowId);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function getNarrationFromDB(slideshowId: string): Promise<Blob | null> {
+    const database = await initNarrationDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction(NARRATION_DB_STORE, 'readonly');
+      const store = tx.objectStore(NARRATION_DB_STORE);
+      const request = store.get(slideshowId);
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function deleteNarrationFromDB(slideshowId: string): Promise<void> {
+    const database = await initNarrationDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction(NARRATION_DB_STORE, 'readwrite');
+      const store = tx.objectStore(NARRATION_DB_STORE);
+      const request = store.delete(slideshowId);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Make webcam bubble draggable
+  function makeDraggable(el: HTMLElement) {
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let origLeft = 0, origBottom = 0;
+
+    el.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      el.classList.add('dragging');
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = el.getBoundingClientRect();
+      origLeft = rect.left;
+      origBottom = window.innerHeight - rect.bottom;
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      el.style.left = (origLeft + dx) + 'px';
+      el.style.bottom = (origBottom - dy) + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      el.classList.remove('dragging');
+    });
+  }
+
+  // Recording state
+  let webcamStream: MediaStream | null = null;
+  let recordingCanvas: HTMLCanvasElement | null = null;
+  let recordingCtx: CanvasRenderingContext2D | null = null;
+  let recordingAnimationId: number | null = null;
+  let quoteCaptureInterval: number | null = null;
+
+  // Start narration mode - captures slides + webcam overlay
+  async function startNarrationMode() {
+    const webcamBubble = document.getElementById('webcam-bubble');
+    const webcamPreview = document.getElementById('webcam-preview') as HTMLVideoElement;
+    const webcamControls = document.getElementById('webcam-controls');
+    const webcamStart = document.getElementById('webcam-start');
+    const initialRecordBtn = document.querySelector('.slideshow-record-btn') as HTMLElement;
+
+    try {
+      // Get webcam + audio
+      webcamStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      if (webcamPreview) webcamPreview.srcObject = webcamStream;
+      if (webcamBubble) {
+        webcamBubble.style.display = 'block';
+        makeDraggable(webcamBubble);
+      }
+      if (webcamControls) webcamControls.style.display = 'flex';
+      if (initialRecordBtn) initialRecordBtn.style.display = 'none';
+      if (webcamStart) {
+        webcamStart.textContent = '● Record';
+        webcamStart.className = 'webcam-rec-btn start';
+      }
+
+      // Set up recording canvas (captures slideshow container + webcam overlay)
+      recordingCanvas = document.createElement('canvas');
+      recordingCanvas.width = 1920;
+      recordingCanvas.height = 1080;
+      recordingCtx = recordingCanvas.getContext('2d')!;
+
+      // Create the combined stream for recording
+      const canvasStream = recordingCanvas.captureStream(30);
+      // Add audio track from webcam
+      const audioTrack = webcamStream.getAudioTracks()[0];
+      if (audioTrack) {
+        canvasStream.addTrack(audioTrack);
+      }
+      narrationStream = canvasStream;
+
+      // Start drawing frames
+      startRecordingFrames();
+
+    } catch (err) {
+      alert('Could not access camera/microphone. Please allow access and try again.');
+    }
+  }
+
+  // Store captured quote preview for recording
+  let capturedQuoteCanvas: HTMLCanvasElement | null = null;
+  let isCapturingQuote = false;
+
+  // Capture the entire quote window (including title bar)
+  async function captureQuotePreview() {
+    if (isCapturingQuote || recordingSource !== 'quote') return;
+    const windowEl = document.getElementById('quote-record-window');
+    if (!windowEl) return;
+
+    isCapturingQuote = true;
+    try {
+      // @ts-ignore - html2canvas loaded via script tag
+      const canvas = await html2canvas(windowEl, {
+        scale: 1.5,
+        useCORS: true,
+        logging: false,
+        backgroundColor: null
+      });
+      capturedQuoteCanvas = canvas;
+    } catch (err) {
+      console.error('Failed to capture quote:', err);
+    }
+    isCapturingQuote = false;
+  }
+
+  // Continuously draw slideshow/quote + webcam to canvas
+  function startRecordingFrames() {
+    const webcamPreview = document.getElementById('webcam-preview') as HTMLVideoElement;
+
+    // Start periodic capture for quotes
+    if (recordingSource === 'quote') {
+      captureQuotePreview(); // Initial capture
+      quoteCaptureInterval = window.setInterval(captureQuotePreview, 200); // Capture every 200ms
+    }
+
+    function drawFrame() {
+      if (!recordingCtx || !recordingCanvas) return;
+
+      // Fill background
+      recordingCtx.fillStyle = '#fafafa';
+      recordingCtx.fillRect(0, 0, recordingCanvas.width, recordingCanvas.height);
+
+      if (recordingSource === 'quote' && capturedQuoteCanvas) {
+        // Draw brand background color
+        recordingCtx.fillStyle = RECORDING_BRAND.bgColor;
+        recordingCtx.fillRect(0, 0, recordingCanvas.width, recordingCanvas.height);
+
+        // Draw captured window, scaled to fit with padding
+        const srcW = capturedQuoteCanvas.width;
+        const srcH = capturedQuoteCanvas.height;
+        const canvasW = recordingCanvas.width;
+        const canvasH = recordingCanvas.height;
+        const padding = 60;
+
+        // Scale to fit within padded area
+        const maxW = canvasW - padding * 2;
+        const maxH = canvasH - padding * 2;
+        const scale = Math.min(maxW / srcW, maxH / srcH);
+        const drawW = srcW * scale;
+        const drawH = srcH * scale;
+        const drawX = (canvasW - drawW) / 2;
+        const drawY = (canvasH - drawH) / 2;
+
+        recordingCtx.drawImage(capturedQuoteCanvas, 0, 0, srcW, srcH, drawX, drawY, drawW, drawH);
+
+      } else if (currentSlideshow) {
+        // Draw slideshow content
+        const slide = currentSlideshow.slides[currentSlideIndex];
+        const theme = slide?.theme || 'dark';
+
+        // Draw slide background
+        if (theme === 'gradient') {
+          const gradient = recordingCtx.createLinearGradient(0, 0, recordingCanvas.width, recordingCanvas.height);
+          gradient.addColorStop(0, '#00d4ff');
+          gradient.addColorStop(0.5, '#7b2fff');
+          gradient.addColorStop(1, '#ff006e');
+          recordingCtx.fillStyle = gradient;
+        } else if (theme === 'light' || theme === 'minimal') {
+          recordingCtx.fillStyle = '#fafafa';
+        } else if (theme === 'bold') {
+          recordingCtx.fillStyle = '#000000';
+        } else {
+          recordingCtx.fillStyle = '#0a0a0f';
+        }
+        recordingCtx.fillRect(0, 0, recordingCanvas.width, recordingCanvas.height);
+
+        // Draw headline
+        if (slide?.headline) {
+          recordingCtx.fillStyle = (theme === 'light' || theme === 'minimal') ? '#1a1a1a' : '#ffffff';
+          recordingCtx.font = 'bold 72px Inter, sans-serif';
+          recordingCtx.textAlign = 'center';
+          recordingCtx.fillText(slide.headline, recordingCanvas.width / 2, recordingCanvas.height / 2 - 50);
+        }
+
+        // Draw bullets
+        if (slide?.bullets && slide.bullets.length > 0) {
+          recordingCtx.fillStyle = (theme === 'light' || theme === 'minimal') ? '#333333' : '#cccccc';
+          recordingCtx.font = '36px Inter, sans-serif';
+          recordingCtx.textAlign = 'center';
+          slide.bullets.forEach((bullet, i) => {
+            recordingCtx!.fillText('• ' + bullet, recordingCanvas!.width / 2, recordingCanvas!.height / 2 + 50 + (i * 50));
+          });
+        }
+      }
+
+      // Draw webcam bubble (bottom-right corner)
+      if (webcamPreview && webcamPreview.readyState >= 2) {
+        const bubbleSize = 200;
+        const margin = 40;
+        const x = recordingCanvas.width - bubbleSize - margin;
+        const y = recordingCanvas.height - bubbleSize - margin;
+
+        // Clip to circle
+        recordingCtx.save();
+        recordingCtx.beginPath();
+        recordingCtx.arc(x + bubbleSize/2, y + bubbleSize/2, bubbleSize/2, 0, Math.PI * 2);
+        recordingCtx.closePath();
+        recordingCtx.clip();
+
+        // Draw webcam (mirrored)
+        recordingCtx.translate(x + bubbleSize, y);
+        recordingCtx.scale(-1, 1);
+        const vw = webcamPreview.videoWidth;
+        const vh = webcamPreview.videoHeight;
+        const size = Math.min(vw, vh);
+        const sx = (vw - size) / 2;
+        const sy = (vh - size) / 2;
+        recordingCtx.drawImage(webcamPreview, sx, sy, size, size, 0, 0, bubbleSize, bubbleSize);
+        recordingCtx.restore();
+
+        // Draw cyan border
+        recordingCtx.strokeStyle = '#00d4ff';
+        recordingCtx.lineWidth = 6;
+        recordingCtx.beginPath();
+        recordingCtx.arc(x + bubbleSize/2, y + bubbleSize/2, bubbleSize/2, 0, Math.PI * 2);
+        recordingCtx.stroke();
+      }
+
+      recordingAnimationId = requestAnimationFrame(drawFrame);
+    }
+
+    drawFrame();
+  }
+
+  // Start/stop recording
+  function toggleNarrationRecording() {
+    const webcamBubble = document.getElementById('webcam-bubble');
+    const webcamStart = document.getElementById('webcam-start');
+
+    if (!isNarrationRecording) {
+      // Start recording
+      if (!narrationStream) return;
+      narrationChunks = [];
+      narrationRecorder = new MediaRecorder(narrationStream);
+      narrationRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) narrationChunks.push(e.data);
+      };
+      narrationRecorder.onstop = saveNarration;
+      narrationRecorder.start(500);
+      isNarrationRecording = true;
+      recordingStartTime = Date.now();
+      webcamBubble?.classList.add('recording');
+
+      // Start countdown timer
+      recordingTimerInterval = window.setInterval(() => {
+        if (!recordingStartTime) return;
+        const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+        const remaining = MAX_RECORDING_SECONDS - elapsed;
+
+        if (remaining <= 0) {
+          // Auto-stop at 10 minutes
+          toggleNarrationRecording();
+          showToast('Recording stopped - 10 minute limit reached');
+        } else if (webcamStart) {
+          const mins = Math.floor(remaining / 60);
+          const secs = remaining % 60;
+          webcamStart.textContent = `■ Stop (${mins}:${secs.toString().padStart(2, '0')})`;
+        }
+      }, 1000);
+
+      if (webcamStart) {
+        webcamStart.textContent = '■ Stop (10:00)';
+        webcamStart.className = 'webcam-rec-btn stop';
+      }
+    } else {
+      // Stop recording - show processing state
+      if (recordingTimerInterval) {
+        clearInterval(recordingTimerInterval);
+        recordingTimerInterval = null;
+      }
+      recordingStartTime = null;
+      webcamBubble?.classList.remove('recording');
+      if (webcamStart) {
+        webcamStart.textContent = 'Saving...';
+        webcamStart.className = 'webcam-rec-btn save';
+        webcamStart.setAttribute('disabled', 'true');
+      }
+      narrationRecorder?.stop();
+      isNarrationRecording = false;
+    }
+  }
+
+  // Save narration after recording stops (per-slide or per-quote)
+  async function saveNarration() {
+    const webcamBubble = document.getElementById('webcam-bubble');
+    const webcamPreview = document.getElementById('webcam-preview') as HTMLVideoElement;
+    const webcamStart = document.getElementById('webcam-start');
+
+    // Validate we have recording data and source
+    if (narrationChunks.length === 0) {
+      alert('No recording data captured. Please record for at least 1 second.');
+      closeNarrationMode();
+      return;
+    }
+
+    if (recordingSource === 'slides' && !currentSlideshow) {
+      closeNarrationMode();
+      return;
+    }
+
+    if (recordingSource === 'quote' && !currentQuote) {
+      closeNarrationMode();
+      return;
+    }
+
+    const mimeType = narrationRecorder?.mimeType || 'video/webm';
+    const blob = new Blob(narrationChunks, { type: mimeType });
+
+    // Create a recording ID
+    const recordingId = genId();
+
+    try {
+      // Save video blob to IndexedDB with recording ID as key (local backup)
+      await saveNarrationToDB(recordingId, blob);
+
+      // Capture thumbnail from current webcam frame
+      let thumbnail = '';
+      if (webcamPreview) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 80;
+        canvas.height = 80;
+        const ctx = canvas.getContext('2d')!;
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        const size = Math.min(webcamPreview.videoWidth, webcamPreview.videoHeight);
+        const sx = (webcamPreview.videoWidth - size) / 2;
+        const sy = (webcamPreview.videoHeight - size) / 2;
+        ctx.drawImage(webcamPreview, sx, sy, size, size, 0, 0, canvas.width, canvas.height);
+        thumbnail = canvas.toDataURL('image/jpeg', 0.7);
+      }
+
+      // Upload to R2 for sharing
+      if (webcamStart) {
+        webcamStart.textContent = 'Uploading...';
+      }
+      const filename = `recording-${recordingId}.webm`;
+      const cloudUrl = await uploadVideoToR2(filename, blob);
+
+      // Create Recording entry based on source
+      let recording: Recording;
+      if (recordingSource === 'quote' && currentQuote) {
+        recording = {
+          id: recordingId,
+          source: 'quote',
+          sourceId: currentQuote.id,
+          sourceTitle: currentQuote.title,
+          thumbnail,
+          cloudUrl: cloudUrl || undefined,
+          createdAt: Date.now()
+        };
+      } else {
+        const slide = currentSlideshow!.slides[currentSlideIndex];
+        recording = {
+          id: recordingId,
+          source: 'slides',
+          sourceId: currentSlideshow!.id,
+          sourceTitle: currentSlideshow!.title,
+          slideId: slide?.id,
+          slideIndex: currentSlideIndex,
+          thumbnail,
+          cloudUrl: cloudUrl || undefined,
+          createdAt: Date.now()
+        };
+      }
+
+      recordings.unshift(recording);
+      await saveRecordings();
+
+      if (webcamStart) {
+        webcamStart.textContent = '✓ Saved!';
+        webcamStart.className = 'webcam-rec-btn save';
+      }
+      showToast(cloudUrl ? 'Recording saved & uploaded!' : 'Recording saved locally');
+
+      setTimeout(() => {
+        closeNarrationMode();
+        // Navigate back to appropriate view
+        if (recordingSource === 'quote') {
+          view = 'editor';
+          recordingSource = 'slides'; // reset for next time
+        }
+        render();
+      }, 1500);
+    } catch (err) {
+      console.error('Failed to save narration:', err);
+      alert('Failed to save narration');
+      closeNarrationMode();
+    }
+  }
+
+  // Close narration mode
+  function closeNarrationMode() {
+    const webcamBubble = document.getElementById('webcam-bubble');
+    const webcamPreview = document.getElementById('webcam-preview') as HTMLVideoElement;
+    const webcamControls = document.getElementById('webcam-controls');
+    const initialRecordBtn = document.querySelector('.slideshow-record-btn') as HTMLElement;
+
+    // Stop animation loop
+    if (recordingAnimationId) {
+      cancelAnimationFrame(recordingAnimationId);
+      recordingAnimationId = null;
+    }
+
+    // Stop quote capture interval
+    if (quoteCaptureInterval) {
+      clearInterval(quoteCaptureInterval);
+      quoteCaptureInterval = null;
+    }
+    capturedQuoteCanvas = null;
+
+    // Stop webcam
+    if (webcamStream) {
+      webcamStream.getTracks().forEach(t => t.stop());
+      webcamStream = null;
+    }
+    narrationStream = null;
+    recordingCanvas = null;
+    recordingCtx = null;
+
+    if (webcamPreview) webcamPreview.srcObject = null;
+    if (webcamBubble) webcamBubble.style.display = 'none';
+    if (webcamControls) webcamControls.style.display = 'none';
+    if (initialRecordBtn) initialRecordBtn.style.display = 'flex';
+    isNarrationRecording = false;
+    narrationChunks = [];
+  }
+
+  // Show narration playback for current slide
+  async function showNarrationPlayback() {
+    if (!currentSlideshow) return;
+    const slide = currentSlideshow.slides[currentSlideIndex];
+    if (!slide?.hasNarration) return;
+
+    const playback = document.getElementById('narration-playback');
+    const video = document.getElementById('narration-video') as HTMLVideoElement;
+
+    try {
+      const narrationKey = `${currentSlideshow.id}-${slide.id}`;
+      const blob = await getNarrationFromDB(narrationKey);
+      if (blob && playback && video) {
+        // Apply saved position from slide
+        if (slide.narrationPos) {
+          playback.style.left = slide.narrationPos.left + 'px';
+          playback.style.bottom = slide.narrationPos.bottom + 'px';
+        }
+        playback.style.display = 'block';
+        video.src = URL.createObjectURL(blob);
+        video.play();
+        makeDraggable(playback);
+      }
+    } catch (e) {
+      console.error('Failed to load narration:', e);
+    }
+  }
+
+  // Hide narration playback
+  function hideNarrationPlayback() {
+    const playback = document.getElementById('narration-playback');
+    const video = document.getElementById('narration-video') as HTMLVideoElement;
+    if (playback) playback.style.display = 'none';
+    if (video) {
+      video.pause();
+      video.src = '';
+    }
+  }
+
+  // Restore recording state after render (called after attachListeners)
+  function restoreWebcamState() {
+    if (!webcamStream) return;
+
+    const webcamBubble = document.getElementById('webcam-bubble');
+    const webcamPreview = document.getElementById('webcam-preview') as HTMLVideoElement;
+    const webcamControls = document.getElementById('webcam-controls');
+    const webcamStart = document.getElementById('webcam-start');
+
+    if (webcamPreview && webcamStream) {
+      webcamPreview.srcObject = webcamStream;
+    }
+    if (webcamBubble) {
+      webcamBubble.style.display = 'block';
+      if (isNarrationRecording) {
+        webcamBubble.classList.add('recording');
+      }
+      makeDraggable(webcamBubble);
+    }
+    if (webcamControls) {
+      webcamControls.style.display = 'flex';
+    }
+    if (webcamStart) {
+      if (isNarrationRecording) {
+        webcamStart.textContent = '■ Stop & Save';
+        webcamStart.className = 'webcam-rec-btn stop';
+      } else {
+        webcamStart.textContent = '● Record';
+        webcamStart.className = 'webcam-rec-btn start';
+      }
+    }
+  }
+
+  // Delete narration from slideshow
+  // Delete narration for current slide
+  async function deleteNarration() {
+    if (!currentSlideshow) return;
+    const slide = currentSlideshow.slides[currentSlideIndex];
+    if (!slide) return;
+    if (!confirm('Delete the recorded narration for this slide?')) return;
+
+    try {
+      const narrationKey = `${currentSlideshow.id}-${slide.id}`;
+      await deleteNarrationFromDB(narrationKey);
+      slide.hasNarration = false;
+      slide.narrationThumb = undefined;
+      slide.narrationPos = undefined;
+      currentSlideshow.updatedAt = Date.now();
+
+      const idx = slideshows.findIndex(s => s.id === currentSlideshow!.id);
+      if (idx >= 0) slideshows[idx] = currentSlideshow;
+      await saveSlideshows();
+
+      showToast('Narration deleted');
+      render();
+    } catch (err) {
+      console.error('Failed to delete narration:', err);
+    }
+  }
+
   function showToast(msg: string) {
     toastMessage = msg;
     render();
@@ -1551,21 +2629,26 @@ Bridge Point`;
     app.innerHTML = `
       <div class="app-layout">
         <nav class="sidebar">
-          <img src="https://bridgepoint.co.nz/logos/Bridge-Point_white.png" alt="Bridge Point" class="logo">
+          <img src="${BRIDGEPOINT_LOGO_WHITE}" alt="Bridge Point" class="logo">
           <button class="nav-item ${view === 'dashboard' ? 'active' : ''}" data-view="dashboard">${icons.quotes}<span>Quotes</span>${quotes.length > 0 ? `<span class="nav-badge">${quotes.length}</span>` : ''}</button>
           <button class="nav-item ${view === 'templates' ? 'active' : ''}" data-view="templates">${icons.templates}<span>Templates</span></button>
           <button class="nav-item ${view === 'slides' || view === 'slides-editor' || view === 'slides-view' ? 'active' : ''}" data-view="slides">${icons.slides}<span>Slides</span>${slideshows.length > 0 ? `<span class="nav-badge">${slideshows.length}</span>` : ''}</button>
           <button class="nav-item ${view === 'assets' ? 'active' : ''}" data-view="assets">${icons.assets}<span>Assets</span>${assets.length > 0 ? `<span class="nav-badge">${assets.length}</span>` : ''}</button>
+          <button class="nav-item ${view === 'recordings' ? 'active' : ''}" data-view="recordings">${icons.mic}<span>Recordings</span>${recordings.length > 0 ? `<span class="nav-badge">${recordings.length}</span>` : ''}</button>
+          <button class="nav-item ${view === 'archive' ? 'active' : ''}" data-view="archive">${icons.archive}<span>Archive</span>${(quotes.filter(q => q.archived).length + slideshows.filter(s => s.archived).length) > 0 ? `<span class="nav-badge">${quotes.filter(q => q.archived).length + slideshows.filter(s => s.archived).length}</span>` : ''}</button>
           <button class="sync-status synced" data-action="force-sync" title="Click to re-sync from cloud">✓ Synced to cloud</button>
         </nav>
         <main class="main-content">
           ${view === 'dashboard' ? renderDashboard() : ''}
           ${view === 'templates' ? renderTemplates() : ''}
           ${view === 'editor' ? renderEditor() : ''}
+          ${view === 'quote-record' ? renderQuoteRecord() : ''}
           ${view === 'slides' ? renderSlidesList() : ''}
           ${view === 'slides-editor' ? renderSlidesEditor() : ''}
           ${view === 'slides-view' ? renderSlidesView() : ''}
           ${view === 'assets' ? renderAssets() : ''}
+          ${view === 'recordings' ? renderRecordings() : ''}
+          ${view === 'archive' ? renderArchive() : ''}
         </main>
       </div>
       ${showModal ? renderModal() : ''}
@@ -1581,12 +2664,15 @@ Bridge Point`;
       ` : ''}
     `;
     attachListeners();
+    restoreWebcamState();
   }
 
   function renderDashboard(): string {
     if (loading) return '<div class="empty-state"><p>Loading...</p></div>';
 
-    if (quotes.length === 0) {
+    const activeQuotes = quotes.filter(q => !q.archived);
+
+    if (activeQuotes.length === 0) {
       return `
         <div class="page-header"><h1 class="page-title">Quotes</h1></div>
         <div class="empty-state">
@@ -1606,7 +2692,7 @@ Bridge Point`;
       <table class="quotes-table">
         <thead><tr><th>Quote</th><th>Status</th><th>Amount</th><th>Created</th><th>Views</th><th></th></tr></thead>
         <tbody>
-          ${quotes.map(q => `
+          ${activeQuotes.map(q => `
             <tr data-edit-quote="${q.id}">
               <td><div class="quote-title">${q.title}</div><div class="quote-client">${q.clientName || 'No client'}</div></td>
               <td><span class="status-badge status-${q.status}">${q.status}</span></td>
@@ -1617,6 +2703,7 @@ Bridge Point`;
                 <button class="btn btn-ghost btn-sm" data-action="pdf" data-id="${q.id}" title="Download PDF">${icons.pdf}</button>
                 <button class="btn btn-ghost btn-sm" data-action="edit" data-id="${q.id}">${icons.edit}</button>
                 <button class="btn btn-ghost btn-sm" data-action="send" data-id="${q.id}">${icons.send}</button>
+                <button class="btn btn-ghost btn-sm" data-action="archive-quote" data-id="${q.id}" title="Archive">${icons.archive}</button>
                 <button class="btn btn-ghost btn-sm" data-action="delete" data-id="${q.id}">${icons.trash}</button>
               </div></td>
             </tr>
@@ -1656,6 +2743,7 @@ Bridge Point`;
           <button class="btn btn-secondary btn-sm" data-action="delete-quote" style="color:#ff4444;border-color:#ff4444" title="Delete quote">${icons.x} Delete</button>
           <button class="btn btn-secondary" data-action="duplicate">${icons.copy} Duplicate</button>
           <button class="btn btn-secondary" data-action="preview">${icons.eye} Preview</button>
+          <button class="btn btn-cyan" data-action="record-quote">${icons.mic} Record</button>
           <button class="btn btn-secondary" data-action="pdf">${icons.pdf} PDF</button>
           <button class="btn btn-secondary" data-action="copy-link">${icons.link} Copy Link</button>
           <button class="btn btn-success" data-action="send-modal">${icons.send} Send</button>
@@ -1817,7 +2905,9 @@ Bridge Point`;
       `;
     }
 
-    if (slideshows.length === 0) {
+    const activeSlideshows = slideshows.filter(s => !s.archived);
+
+    if (activeSlideshows.length === 0) {
       return `
         <div class="page-header"><h1 class="page-title">Slides</h1></div>
         <div class="empty-state">
@@ -1835,11 +2925,11 @@ Bridge Point`;
         <button class="btn btn-primary" data-action="create-slideshow">${icons.plus} Create from Quote</button>
       </div>
       <div class="templates-grid">
-        ${slideshows.map(p => {
+        ${activeSlideshows.map(p => {
           const sourceQuote = quotes.find(q => q.id === p.sourceQuoteId);
           return `
             <div class="template-card" data-edit-slideshow="${p.id}">
-              <div class="template-preview slideshow-card-preview theme-${p.theme}">
+              <div class="template-preview slideshow-card-preview theme-${p.theme || 'dark'}">
                 <h3>${p.title}</h3>
                 <p>${p.slides.length} slides</p>
               </div>
@@ -1847,6 +2937,7 @@ Bridge Point`;
                 <div class="template-name">${p.title}</div>
                 <div class="template-desc">From: ${sourceQuote?.clientName || 'Unknown'} • ${formatDate(p.updatedAt)}</div>
               </div>
+              <button class="card-archive-btn" data-action="archive-slideshow" data-id="${p.id}" onclick="event.stopPropagation()" title="Archive">${icons.archive}</button>
             </div>
           `;
         }).join('')}
@@ -1939,16 +3030,32 @@ Bridge Point`;
           <div class="slides-top-toolbar">
             <div class="slides-theme-bar">
               <span class="toolbar-label">Theme:</span>
-              <div class="slides-theme-swatch ${currentSlideshow.theme === 'dark' ? 'active' : ''}" data-slides-theme="dark">Dark</div>
-              <div class="slides-theme-swatch ${currentSlideshow.theme === 'light' ? 'active' : ''}" data-slides-theme="light">Light</div>
-              <div class="slides-theme-swatch ${currentSlideshow.theme === 'gradient' ? 'active' : ''}" data-slides-theme="gradient">Gradient</div>
-              <div class="slides-theme-swatch ${currentSlideshow.theme === 'minimal' ? 'active' : ''}" data-slides-theme="minimal">Minimal</div>
-              <div class="slides-theme-swatch ${currentSlideshow.theme === 'bold' ? 'active' : ''}" data-slides-theme="bold">Bold</div>
-              ${currentSlideshow.brandColor ? `<div class="slides-theme-swatch ${currentSlideshow.theme === 'brand' ? 'active' : ''}" data-slides-theme="brand" style="background:${currentSlideshow.brandColor};color:#fff">Brand</div>` : ''}
+              <select class="toolbar-select" id="slide-theme-select">
+                <option value="dark" ${(currentSlideshow.slides[currentSlideIndex]?.theme || 'dark') === 'dark' ? 'selected' : ''}>Dark</option>
+                <option value="light" ${currentSlideshow.slides[currentSlideIndex]?.theme === 'light' ? 'selected' : ''}>Light</option>
+                <option value="gradient" ${currentSlideshow.slides[currentSlideIndex]?.theme === 'gradient' ? 'selected' : ''}>Gradient</option>
+                <option value="minimal" ${currentSlideshow.slides[currentSlideIndex]?.theme === 'minimal' ? 'selected' : ''}>Minimal</option>
+                <option value="bold" ${currentSlideshow.slides[currentSlideIndex]?.theme === 'bold' ? 'selected' : ''}>Bold</option>
+                ${currentSlideshow.brandColor ? `<option value="brand" ${currentSlideshow.slides[currentSlideIndex]?.theme === 'brand' ? 'selected' : ''}>Brand</option>` : ''}
+              </select>
             </div>
-            <div class="slides-branding-bar">
-              <img src="${BRIDGEPOINT_LOGO}" alt="Bridge Point" class="toolbar-logo">
-              ${currentSlideshow.clientLogo ? `<img src="${currentSlideshow.clientLogo}" alt="${currentSlideshow.clientName || 'Client'}" class="toolbar-logo">` : ''}
+            <div class="slides-layout-bar">
+              <span class="toolbar-label">Layout:</span>
+              <div class="slides-layout-btn ${(currentSlideshow.slides[currentSlideIndex]?.layout || 'default') === 'default' ? 'active' : ''}" data-slide-layout="default" title="Default">
+                <svg width="20" height="14" viewBox="0 0 20 14"><rect x="1" y="1" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="4" x2="16" y2="4" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="7" x2="12" y2="7" stroke="currentColor" stroke-width="1"/><line x1="4" y1="10" x2="10" y2="10" stroke="currentColor" stroke-width="1"/></svg>
+              </div>
+              <div class="slides-layout-btn ${currentSlideshow.slides[currentSlideIndex]?.layout === 'split' ? 'active' : ''}" data-slide-layout="split" title="Text + Image">
+                <svg width="20" height="14" viewBox="0 0 20 14"><rect x="1" y="1" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="1" x2="10" y2="13" stroke="currentColor" stroke-width="1"/><line x1="3" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1"/><line x1="3" y1="7" x2="7" y2="7" stroke="currentColor" stroke-width="1"/><rect x="12" y="3" width="5" height="8" rx="0.5" fill="currentColor" opacity="0.3"/></svg>
+              </div>
+            </div>
+            <div class="slides-logo-toggle">
+              <label class="toggle-switch">
+                <input type="checkbox" id="slide-logos-toggle" ${currentSlideshow.slides[currentSlideIndex]?.showLogos !== false ? 'checked' : ''}>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toolbar-label">Logos</span>
+              <img src="${BRIDGEPOINT_LOGO_WHITE}" alt="Bridge Point" class="toolbar-logo-mini">
+              ${currentSlideshow.clientLogo ? `<img src="${currentSlideshow.clientLogo}" alt="" class="toolbar-logo-mini">` : ''}
             </div>
           </div>
           ${renderSlideEditor()}
@@ -1961,9 +3068,12 @@ Bridge Point`;
     if (!currentSlideshow || currentSlideIndex >= currentSlideshow.slides.length) return '';
     const slide = currentSlideshow.slides[currentSlideIndex];
 
+    const isSplit = slide.layout === 'split';
+
     return `
-      <div class="slide-editor-preview theme-${currentSlideshow.theme}">
-        <div class="slide-content slide-type-${slide.type}">
+      <div class="slide-editor-preview theme-${slide.theme || 'dark'}">
+        <div class="slide-content slide-type-${slide.type} ${isSplit ? 'layout-split' : ''}">
+          ${isSplit ? '<div class="slide-split-left">' : ''}
           ${slide.type === 'title' ? `
             <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
             <input class="slide-subtitle-input" type="text" value="${slide.bullets?.[0] || ''}" data-slide-field="subtitle" placeholder="Subtitle">
@@ -1981,11 +3091,15 @@ Bridge Point`;
               <button class="add-item-btn" data-action="add-bullet">+ Add Point</button>
             </div>
           ` : ''}
-          ${slide.type === 'visual' ? `
+          ${slide.type === 'visual' && !isSplit ? `
             <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
             <div class="slide-visual-area">
               ${slide.image ? `<img src="${slide.image}" class="slide-visual-image">` : '<div class="slide-visual-placeholder">No image</div>'}
             </div>
+          ` : ''}
+          ${slide.type === 'visual' && isSplit ? `
+            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
+            <textarea class="slide-caption-input" data-slide-field="caption" placeholder="Add description text...">${slide.bullets?.[0] || ''}</textarea>
           ` : ''}
           ${slide.type === 'data' ? `
             <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
@@ -2003,6 +3117,21 @@ Bridge Point`;
               <div class="slide-break-line"></div>
             </div>
           ` : ''}
+          ${isSplit ? '</div>' : ''}
+          ${isSplit ? `
+            <div class="slide-split-right">
+              <div class="slide-split-image-area">
+                ${slide.image ? `
+                  <img src="${slide.image}" class="slide-split-image">
+                  <button class="slide-image-change" data-action="pick-slide-image">${icons.image} Change</button>
+                ` : `
+                  <div class="slide-image-placeholder">
+                    <button class="slide-image-upload-btn" data-action="pick-slide-image">${icons.image} Add from Assets</button>
+                  </div>
+                `}
+              </div>
+            </div>
+          ` : ''}
         </div>
       </div>
       <div class="slide-type-picker">
@@ -2018,35 +3147,191 @@ Bridge Point`;
     `;
   }
 
+  function renderQuoteRecord(): string {
+    if (!currentQuote) return '';
+
+    return `
+      <div class="quote-record-wrapper" style="background: ${RECORDING_BRAND.bgColor}">
+        <!-- Fixed controls overlay -->
+        <div class="quote-record-controls">
+          <button class="btn btn-secondary" data-action="exit-quote-record">${icons.x} Exit</button>
+          <div class="slideshow-record-btn">
+            <button class="narration-btn" data-action="start-narration">${icons.mic} Record</button>
+          </div>
+        </div>
+
+        <!-- Document window with brand logo -->
+        <div class="quote-record-window" id="quote-record-window">
+          <div class="quote-record-titlebar">
+            <img src="${RECORDING_BRAND.logoDark}" alt="${RECORDING_BRAND.name}" class="titlebar-brand-logo">
+            <div class="titlebar-title">${currentQuote.title}</div>
+            <div class="titlebar-dots">
+              <div class="titlebar-dot red"></div>
+              <div class="titlebar-dot yellow"></div>
+              <div class="titlebar-dot green"></div>
+            </div>
+          </div>
+          <div class="quote-record-preview">
+            <div class="quote-preview-content">
+              ${currentQuote.blocks.map(b => renderPreviewBlock(b)).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Webcam bubble (fixed position) -->
+        <div class="webcam-bubble" id="webcam-bubble" style="display: none;">
+          <video id="webcam-preview" muted autoplay playsinline></video>
+        </div>
+        <div class="webcam-controls" id="webcam-controls" style="display: none;">
+          <button class="webcam-rec-btn start" id="webcam-start">● Record</button>
+          <button class="webcam-rec-btn cancel" id="webcam-cancel">Cancel</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPreviewBlock(block: Block): string {
+    if (!currentQuote) return '';
+
+    switch (block.type) {
+      case 'hero':
+        const themeClass = currentQuote.heroTheme && currentQuote.heroTheme !== 'gradient' ? `theme-${currentQuote.heroTheme}` : '';
+        const subtitle = block.subtitle.replace('[Client Name]', currentQuote.clientName || 'You');
+        return `
+          <div class="preview-block-hero ${themeClass}">
+            ${currentQuote.clientLogo ? `
+              <div class="preview-client-logo-section">
+                <img src="${currentQuote.clientLogo}" alt="${currentQuote.clientName || ''}"
+                  class="preview-client-logo${currentQuote.logoNeedsBackground ? ' logo-with-background' : ''}">
+              </div>
+            ` : ''}
+            <h1 class="preview-hero-title">${block.title}</h1>
+            <p class="preview-hero-subtitle">${subtitle}</p>
+            <div class="preview-hero-meta">
+              <div class="preview-meta-item">
+                <div class="label">Prepared For</div>
+                <div class="value">${currentQuote.clientName || 'You'}</div>
+              </div>
+              <div class="preview-meta-item">
+                <div class="label">Date</div>
+                <div class="value">${formatDate(currentQuote.createdAt)}</div>
+              </div>
+              <div class="preview-meta-item">
+                <div class="label">Total</div>
+                <div class="value">${formatCurrency(currentQuote.total, currentQuote.currency)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+
+      case 'section':
+        return `
+          <div class="preview-block-section">
+            <h2>${block.title}</h2>
+            <p>${block.content}</p>
+          </div>
+        `;
+
+      case 'pricing':
+        const total = block.items.reduce((sum, i) => i.selected ? sum + (Number(i.quantity) * Number(i.unitPrice)) : sum, 0);
+        return `
+          <div class="preview-block-pricing">
+            <h3>${block.title}</h3>
+            <table class="preview-pricing-table">
+              <thead>
+                <tr><th>Item</th><th style="text-align:right">Unit Price</th><th style="text-align:center">Qty</th><th style="text-align:right">Total</th></tr>
+              </thead>
+              <tbody>
+                ${block.items.map(item => `
+                  <tr style="${!item.selected ? 'opacity:0.4' : ''}">
+                    <td>
+                      <div class="preview-item-name">${item.name}${item.optional ? ' (Optional)' : ''}</div>
+                      <div class="preview-item-desc">${item.description}</div>
+                    </td>
+                    <td style="text-align:right">${formatCurrency(item.unitPrice)}</td>
+                    <td style="text-align:center">${item.quantity}</td>
+                    <td style="text-align:right;font-weight:600">${formatCurrency(Number(item.quantity) * Number(item.unitPrice))}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            ${block.showTotal ? `
+              <div class="preview-pricing-total">
+                <span>Total</span>
+                <span class="amount">${formatCurrency(total)}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+      case 'divider':
+        return `<div class="preview-block-divider"><hr></div>`;
+
+      case 'split':
+        return `
+          <div class="preview-block-split">
+            <div class="preview-split-content">
+              <h2>${block.title}</h2>
+              <p>${block.content}</p>
+            </div>
+            <div class="preview-split-image">
+              ${block.imageUrl ? `<img src="${block.imageUrl}" alt="">` : ''}
+            </div>
+          </div>
+        `;
+
+      case 'accept':
+        return `
+          <div class="preview-block-accept">
+            <p class="preview-terms">${block.terms}</p>
+            <button class="preview-accept-btn">${block.buttonText}</button>
+          </div>
+        `;
+
+      default:
+        return '';
+    }
+  }
+
   function renderSlidesView(): string {
     if (!currentSlideshow || currentSlideshow.slides.length === 0) return '';
     const slide = currentSlideshow.slides[currentSlideIndex];
-    const brandStyle = currentSlideshow.theme === 'brand' && currentSlideshow.brandColor
+    const slideTheme = slide.theme || 'dark';
+    const brandStyle = slideTheme === 'brand' && currentSlideshow.brandColor
       ? `style="--brand-color: ${currentSlideshow.brandColor}; background: linear-gradient(135deg, ${currentSlideshow.brandColor}, #1a1a2e)"`
       : '';
 
     return `
-      <div class="slideshow-container theme-${currentSlideshow.theme}" ${brandStyle}>
-        <div class="slideshow-logos">
-          <img src="${BRIDGEPOINT_LOGO}" alt="Bridge Point" class="slideshow-logo">
+      <div class="slideshow-container theme-${slideTheme}" ${brandStyle}>
+        ${slide.showLogos !== false ? `<div class="slideshow-logos">
+          <img src="${slideTheme === 'light' || slideTheme === 'minimal' ? BRIDGEPOINT_LOGO_BLACK : BRIDGEPOINT_LOGO_WHITE}" alt="Bridge Point" class="slideshow-logo">
           ${currentSlideshow.clientLogo ? `<img src="${currentSlideshow.clientLogo}" alt="${currentSlideshow.clientName || ''}" class="slideshow-logo slideshow-logo-client">` : ''}
-        </div>
-        <div class="slideshow-slide slide-type-${slide.type}">
-          ${slide.type === 'title' ? `
+        </div>` : ''}
+        <div class="slideshow-slide slide-type-${slide.type} ${slide.layout === 'split' ? 'slideshow-split' : ''}">
+          ${slide.layout === 'split' ? `
+            <div class="slideshow-split-left">
+              <h2 class="slideshow-headline">${slide.headline || ''}</h2>
+              ${slide.bullets?.[0] ? `<p class="slideshow-caption">${slide.bullets[0]}</p>` : ''}
+            </div>
+            <div class="slideshow-split-right">
+              ${slide.image ? `<img src="${slide.image}" class="slideshow-split-image">` : ''}
+            </div>
+          ` : ''}
+          ${slide.layout !== 'split' && slide.type === 'title' ? `
             <h1 class="slideshow-headline">${slide.headline || ''}</h1>
             ${slide.bullets?.[0] ? `<p class="slideshow-subtitle">${slide.bullets[0]}</p>` : ''}
           ` : ''}
-          ${slide.type === 'content' ? `
+          ${slide.layout !== 'split' && slide.type === 'content' ? `
             <h2 class="slideshow-headline">${slide.headline || ''}</h2>
             <ul class="slideshow-bullets">
               ${(slide.bullets || []).map(b => `<li>${b}</li>`).join('')}
             </ul>
           ` : ''}
-          ${slide.type === 'visual' ? `
+          ${slide.layout !== 'split' && slide.type === 'visual' ? `
             <h2 class="slideshow-headline">${slide.headline || ''}</h2>
             ${slide.image ? `<img src="${slide.image}" class="slideshow-image">` : ''}
           ` : ''}
-          ${slide.type === 'data' ? `
+          ${slide.layout !== 'split' && slide.type === 'data' ? `
             <h2 class="slideshow-headline">${slide.headline || ''}</h2>
             <div class="slideshow-stats">
               ${(slide.stats || []).map(s => `
@@ -2057,7 +3342,7 @@ Bridge Point`;
               `).join('')}
             </div>
           ` : ''}
-          ${slide.type === 'break' ? `
+          ${slide.layout !== 'split' && slide.type === 'break' ? `
             <div class="slideshow-break"></div>
           ` : ''}
         </div>
@@ -2072,6 +3357,20 @@ Bridge Point`;
           <button class="slideshow-nav" data-action="next-slide" ${currentSlideIndex >= currentSlideshow.slides.length - 1 ? 'disabled' : ''}>${icons.arrowRight}</button>
         </div>
         <button class="slideshow-exit" data-action="exit-slideshow">${icons.x} Exit</button>
+
+        <!-- Record button (top right) -->
+        <div class="slideshow-record-btn">
+          <button class="narration-btn" data-action="start-narration">${icons.mic} Record</button>
+        </div>
+
+        <!-- Webcam bubble (shows your face during recording) -->
+        <div class="webcam-bubble" id="webcam-bubble" style="display: none;">
+          <video id="webcam-preview" muted autoplay playsinline></video>
+        </div>
+        <div class="webcam-controls" id="webcam-controls" style="display: none;">
+          <button class="webcam-rec-btn start" id="webcam-start">● Record</button>
+          <button class="webcam-rec-btn cancel" id="webcam-cancel">Cancel</button>
+        </div>
       </div>
     `;
   }
@@ -2174,6 +3473,116 @@ Bridge Point`;
     `;
   }
 
+  function formatDateTime(ts: number): string {
+    return new Date(ts).toLocaleString('en-NZ', {
+      day: 'numeric', month: 'short', year: 'numeric',
+      hour: 'numeric', minute: '2-digit'
+    });
+  }
+
+  function renderRecordings(): string {
+    if (recordings.length === 0) {
+      return `
+        <div class="page-header"><h1 class="page-title">Recordings</h1></div>
+        <div class="empty-state">
+          <div class="empty-icon">${icons.mic}</div>
+          <h2 class="empty-title">No recordings yet</h2>
+          <p class="empty-desc">Record from Slides or Quote editor</p>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="page-header"><h1 class="page-title">Recordings</h1></div>
+      <div class="recordings-list">
+        ${recordings.map(r => `
+          <div class="recording-item" data-play-recording="${r.id}">
+            <div class="recording-thumb">
+              ${r.thumbnail ? `<img src="${r.thumbnail}" alt="">` : `<div class="recording-thumb-placeholder">${icons.mic}</div>`}
+            </div>
+            <div class="recording-info">
+              <div class="recording-source">${r.source === 'quote' ? 'Quote' : 'Slides'}</div>
+              <div class="recording-date">${formatDateTime(r.createdAt)}</div>
+            </div>
+            <div class="recording-actions" onclick="event.stopPropagation()">
+              ${r.cloudUrl ? `<button class="btn btn-secondary btn-sm" data-action="copy-recording-link" data-url="${r.cloudUrl}" data-id="${r.id}">${icons.link} Share</button>` : ''}
+              <button class="btn btn-secondary btn-sm" data-action="delete-recording" data-id="${r.id}">${icons.trash}</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Playback modal -->
+      <div class="recording-playback-modal" id="recording-playback-modal" style="display:none">
+        <div class="recording-playback-content">
+          <video id="recording-playback-video" controls></video>
+          <button class="recording-playback-close" data-action="close-recording-playback">${icons.x}</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderArchive(): string {
+    const archivedQuotes = quotes.filter(q => q.archived);
+    const archivedSlideshows = slideshows.filter(s => s.archived);
+    const hasArchived = archivedQuotes.length > 0 || archivedSlideshows.length > 0;
+
+    if (!hasArchived) {
+      return `
+        <div class="page-header"><h1 class="page-title">Archive</h1></div>
+        <div class="empty-state">
+          <div class="empty-icon">${icons.archive}</div>
+          <h2 class="empty-title">Archive is empty</h2>
+          <p class="empty-desc">Archived quotes and slides will appear here</p>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="page-header"><h1 class="page-title">Archive</h1></div>
+
+      ${archivedQuotes.length > 0 ? `
+        <div class="archive-section">
+          <h3 class="archive-section-title">${icons.quotes} Quotes (${archivedQuotes.length})</h3>
+          <div class="archive-list">
+            ${archivedQuotes.map(q => `
+              <div class="archive-item">
+                <div class="archive-item-info">
+                  <div class="archive-item-title">${q.title}</div>
+                  <div class="archive-item-meta">${q.clientName || 'No client'} • ${formatCurrency(q.total, q.currency)} • ${formatDate(q.createdAt)}</div>
+                </div>
+                <div class="archive-item-actions">
+                  <button class="btn btn-ghost btn-sm" data-action="unarchive-quote" data-id="${q.id}" title="Restore">${icons.unarchive}</button>
+                  <button class="btn btn-ghost btn-sm" data-action="delete" data-id="${q.id}" title="Delete">${icons.trash}</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      ${archivedSlideshows.length > 0 ? `
+        <div class="archive-section">
+          <h3 class="archive-section-title">${icons.slides} Slides (${archivedSlideshows.length})</h3>
+          <div class="archive-list">
+            ${archivedSlideshows.map(s => `
+              <div class="archive-item">
+                <div class="archive-item-info">
+                  <div class="archive-item-title">${s.title}</div>
+                  <div class="archive-item-meta">${s.slides.length} slides • ${formatDate(s.createdAt)}</div>
+                </div>
+                <div class="archive-item-actions">
+                  <button class="btn btn-ghost btn-sm" data-action="unarchive-slideshow" data-id="${s.id}" title="Restore">${icons.unarchive}</button>
+                  <button class="btn btn-ghost btn-sm" data-action="delete-slideshow-archived" data-id="${s.id}" title="Delete">${icons.trash}</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+    `;
+  }
+
   function renderModal(): string {
     if (modalType === 'send' && currentQuote) {
       return `<div class="modal-overlay" data-close-modal><div class="modal">
@@ -2240,6 +3649,22 @@ Bridge Point`;
       return `<div class="modal-overlay" data-close-modal><div class="modal">
         <div class="modal-header"><h3 class="modal-title">Create Slideshow</h3><button class="modal-close" data-close-modal>${icons.x}</button></div>
         ${renderQuotePicker()}
+      </div></div>`;
+    }
+
+    if (modalType === 'asset-picker') {
+      const imageAssets = assets.filter(a => a.type === 'image' || a.type === 'logo');
+      return `<div class="modal-overlay" data-close-modal><div class="modal modal-lg">
+        <div class="modal-header"><h3 class="modal-title">Select Image</h3><button class="modal-close" data-close-modal>${icons.x}</button></div>
+        <div class="asset-picker-grid">
+          ${imageAssets.length === 0 ? '<p style="color:var(--text-muted);text-align:center;padding:40px">No images in assets. Add some first.</p>' : ''}
+          ${imageAssets.map(a => `
+            <div class="asset-picker-item" data-pick-asset="${a.id}">
+              <img src="${a.thumbnail || a.imageData}" alt="${a.name}">
+              <span>${a.name}</span>
+            </div>
+          `).join('')}
+        </div>
       </div></div>`;
     }
 
@@ -2720,6 +4145,79 @@ Rules:
       render();
     });
 
+    // Archive actions
+    document.querySelectorAll('[data-action="archive-quote"]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id;
+        const quote = quotes.find(q => q.id === id);
+        if (quote) {
+          quote.archived = true;
+          quote.updatedAt = Date.now();
+          await saveQuotes();
+          showToast('Quote archived');
+          render();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-action="unarchive-quote"]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id;
+        const quote = quotes.find(q => q.id === id);
+        if (quote) {
+          quote.archived = false;
+          quote.updatedAt = Date.now();
+          await saveQuotes();
+          showToast('Quote restored');
+          render();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-action="archive-slideshow"]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id;
+        const slideshow = slideshows.find(s => s.id === id);
+        if (slideshow) {
+          slideshow.archived = true;
+          slideshow.updatedAt = Date.now();
+          await saveSlideshows();
+          showToast('Slideshow archived');
+          render();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-action="unarchive-slideshow"]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id;
+        const slideshow = slideshows.find(s => s.id === id);
+        if (slideshow) {
+          slideshow.archived = false;
+          slideshow.updatedAt = Date.now();
+          await saveSlideshows();
+          showToast('Slideshow restored');
+          render();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-action="delete-slideshow-archived"]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id;
+        if (!confirm('Permanently delete this slideshow?')) return;
+        slideshows = slideshows.filter(s => s.id !== id);
+        await saveSlideshows();
+        showToast('Slideshow deleted');
+        render();
+      });
+    });
+
     document.querySelectorAll('[data-select-slide]').forEach(thumb => {
       thumb.addEventListener('click', () => {
         currentSlideIndex = parseInt((thumb as HTMLElement).dataset.selectSlide!);
@@ -2752,11 +4250,32 @@ Rules:
       render();
     });
 
-    document.querySelectorAll('[data-slides-theme]').forEach(swatch => {
-      swatch.addEventListener('click', () => {
-        if (!currentSlideshow) return;
-        currentSlideshow.theme = (swatch as HTMLElement).dataset.slidesTheme as SlideTheme;
+    document.getElementById('slide-theme-select')?.addEventListener('change', (e) => {
+      if (!currentSlideshow) return;
+      const slide = currentSlideshow.slides[currentSlideIndex];
+      if (slide) {
+        slide.theme = (e.target as HTMLSelectElement).value as SlideTheme;
         render();
+      }
+    });
+
+    document.getElementById('slide-logos-toggle')?.addEventListener('change', (e) => {
+      if (!currentSlideshow) return;
+      const slide = currentSlideshow.slides[currentSlideIndex];
+      if (slide) {
+        slide.showLogos = (e.target as HTMLInputElement).checked;
+        render();
+      }
+    });
+
+    document.querySelectorAll('[data-slide-layout]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!currentSlideshow) return;
+        const slide = currentSlideshow.slides[currentSlideIndex];
+        if (slide) {
+          slide.layout = (btn as HTMLElement).dataset.slideLayout as 'default' | 'split';
+          render();
+        }
       });
     });
 
@@ -2829,6 +4348,27 @@ Rules:
       render();
     });
 
+    document.querySelectorAll('[data-action="pick-slide-image"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modalType = 'asset-picker';
+        showModal = true;
+        render();
+      });
+    });
+
+    document.querySelectorAll('[data-pick-asset]').forEach(item => {
+      item.addEventListener('click', () => {
+        if (!currentSlideshow) return;
+        const assetId = (item as HTMLElement).dataset.pickAsset;
+        const asset = assets.find(a => a.id === assetId);
+        if (asset && asset.imageData) {
+          currentSlideshow.slides[currentSlideIndex].image = asset.imageData;
+          showModal = false;
+          render();
+        }
+      });
+    });
+
     // Slideshow controls
     document.querySelector('[data-action="start-slideshow"]')?.addEventListener('click', () => {
       currentSlideIndex = 0;
@@ -2837,8 +4377,109 @@ Rules:
     });
 
     document.querySelector('[data-action="exit-slideshow"]')?.addEventListener('click', () => {
+      closeNarrationMode();
       view = 'slides-editor';
       render();
+    });
+
+    // Narration recording listeners
+    document.querySelector('[data-action="start-narration"]')?.addEventListener('click', async () => {
+      await startNarrationMode();
+    });
+
+    document.getElementById('webcam-start')?.addEventListener('click', () => {
+      toggleNarrationRecording();
+    });
+
+    document.getElementById('webcam-cancel')?.addEventListener('click', () => {
+      closeNarrationMode();
+    });
+
+    // Quote recording listeners
+    document.querySelector('[data-action="record-quote"]')?.addEventListener('click', () => {
+      recordingSource = 'quote';
+      view = 'quote-record';
+      render();
+    });
+
+    document.querySelector('[data-action="exit-quote-record"]')?.addEventListener('click', () => {
+      closeNarrationMode();
+      recordingSource = 'slides';
+      view = 'editor';
+      render();
+    });
+
+    // Recordings list listeners - click row to play
+    document.querySelectorAll('[data-play-recording]').forEach(row => {
+      row.addEventListener('click', async () => {
+        const id = (row as HTMLElement).dataset.playRecording;
+        const recording = recordings.find(r => r.id === id);
+        if (!recording) return;
+
+        try {
+          // Try local IndexedDB first, fallback to cloudUrl
+          let videoUrl: string | null = null;
+          const blob = await getNarrationFromDB(recording.id);
+          if (blob) {
+            videoUrl = URL.createObjectURL(blob);
+          } else if (recording.cloudUrl) {
+            videoUrl = recording.cloudUrl;
+          }
+
+          if (videoUrl) {
+            const modal = document.getElementById('recording-playback-modal');
+            const video = document.getElementById('recording-playback-video') as HTMLVideoElement;
+            if (modal && video) {
+              video.src = videoUrl;
+              modal.style.display = 'flex';
+              video.play();
+            }
+          } else {
+            showToast('Recording not available');
+          }
+        } catch (err) {
+          showToast('Failed to load recording');
+        }
+      });
+    });
+
+    // Copy recording share link
+    document.querySelectorAll('[data-action="copy-recording-link"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id;
+        const url = (btn as HTMLElement).dataset.url;
+        if (url) {
+          const shareUrl = `${window.location.origin}/recording?id=${id}`;
+          navigator.clipboard.writeText(shareUrl);
+          showToast('Link copied!');
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-action="delete-recording"]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = (btn as HTMLElement).dataset.id;
+        if (!confirm('Delete this recording?')) return;
+        try {
+          await deleteNarrationFromDB(id!);
+          recordings = recordings.filter(r => r.id !== id);
+          await saveRecordings();
+          showToast('Recording deleted');
+          render();
+        } catch (err) {
+          showToast('Failed to delete recording');
+        }
+      });
+    });
+
+    document.querySelector('[data-action="close-recording-playback"]')?.addEventListener('click', () => {
+      const modal = document.getElementById('recording-playback-modal');
+      const video = document.getElementById('recording-playback-video') as HTMLVideoElement;
+      if (modal) modal.style.display = 'none';
+      if (video) {
+        video.pause();
+        video.src = '';
+      }
     });
 
     document.querySelector('[data-action="prev-slide"]')?.addEventListener('click', () => {
@@ -2855,9 +4496,13 @@ Rules:
       }
     });
 
-    // Keyboard navigation for slideshow
+    // Keyboard navigation for slideshow - remove old handler first
+    if (slideshowKeyHandler) {
+      document.removeEventListener('keydown', slideshowKeyHandler);
+      slideshowKeyHandler = null;
+    }
     if (view === 'slides-view') {
-      const handleKeydown = (e: KeyboardEvent) => {
+      slideshowKeyHandler = (e: KeyboardEvent) => {
         if (e.key === 'ArrowRight' || e.key === ' ') {
           if (currentSlideshow && currentSlideIndex < currentSlideshow.slides.length - 1) {
             currentSlideIndex++;
@@ -2873,7 +4518,7 @@ Rules:
           render();
         }
       };
-      document.addEventListener('keydown', handleKeydown);
+      document.addEventListener('keydown', slideshowKeyHandler);
     }
 
     // Assets listeners
@@ -3066,4 +4711,5 @@ Rules:
   loadQuotes();
   loadSlides();
   loadAssets();
+  loadRecordings();
 </script>
