@@ -119,6 +119,43 @@
   .theme-swatch.blue { background: linear-gradient(135deg, #0066ff, #0044cc); }
   .theme-swatch.dark { background: linear-gradient(135deg, #1a1a2e, #16213e); }
   .theme-swatch.light { background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-color: var(--border); }
+  .theme-swatch.mint { background: linear-gradient(135deg, #00C896, #00a67d); }
+
+  /* Quote top toolbar */
+  .quote-top-toolbar {
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    padding: 12px 16px; background: var(--card); border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  .toolbar-group { display: flex; align-items: center; gap: 8px; }
+  .toolbar-logo-favicon {
+    width: 16px; height: 16px; object-fit: contain;
+    border-radius: 3px; flex-shrink: 0;
+  }
+  .toolbar-logo-favicon.logo-with-bg { background: #fff; padding: 2px; }
+  .toolbar-upload-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 4px;
+    background: var(--bg); border: 1px solid var(--border);
+    cursor: pointer; color: var(--text-muted); transition: all 0.15s;
+  }
+  .toolbar-upload-btn:hover { border-color: var(--cyan); color: var(--text); }
+  .toolbar-upload-btn svg { width: 14px; height: 14px; }
+  .theme-swatches-inline { display: flex; gap: 6px; }
+  .theme-swatch-sm {
+    width: 24px; height: 24px; border-radius: 6px; cursor: pointer;
+    border: 2px solid transparent; transition: all 0.15s;
+  }
+  .theme-swatch-sm:hover { transform: scale(1.15); }
+  .theme-swatch-sm.active { border-color: var(--cyan); box-shadow: 0 0 0 2px var(--cyan); }
+  .theme-swatch-sm.gradient { background: linear-gradient(135deg, #00d4ff, #7b2fff, #ff006e); }
+  .theme-swatch-sm.cyan { background: linear-gradient(135deg, #00d4ff, #0099cc); }
+  .theme-swatch-sm.purple { background: linear-gradient(135deg, #7b2fff, #5a1fcc); }
+  .theme-swatch-sm.blue { background: linear-gradient(135deg, #0066ff, #0044cc); }
+  .theme-swatch-sm.dark { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+  .theme-swatch-sm.light { background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-color: var(--border); }
+  .theme-swatch-sm.light.active { border-color: var(--cyan); }
+  .theme-swatch-sm.mint { background: linear-gradient(135deg, #00C896, #00a67d); }
 
   .ai-prompt-area { margin-bottom: 16px; }
   .ai-prompt-area textarea { min-height: 120px; }
@@ -146,6 +183,16 @@
   .status-accepted { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
   .status-declined { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
 
+  .status-control { display: flex; align-items: center; gap: 8px; }
+  .status-arrows { display: flex; flex-direction: column; gap: 2px; }
+  .status-arrow {
+    background: none; border: none; padding: 2px; cursor: pointer;
+    color: var(--text-muted); border-radius: 4px; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .status-arrow:hover { background: var(--bg-hover); color: var(--cyan); }
+  .status-arrow svg { width: 12px; height: 12px; }
+
   .quote-amount { font-weight: 600; font-variant-numeric: tabular-nums; }
   .quote-actions { display: flex; gap: 8px; }
   .quote-actions .btn svg { width: 16px; height: 16px; }
@@ -165,6 +212,18 @@
     overflow: hidden; cursor: pointer; transition: all 0.2s;
   }
   .template-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+  .template-card { position: relative; }
+  .template-delete {
+    position: absolute; top: 8px; right: 8px; z-index: 10;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(0,0,0,0.5); border: none;
+    color: white; cursor: pointer; opacity: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .template-delete svg { width: 14px; height: 14px; }
+  .template-delete:hover { background: #ff4444; }
+  .template-card:hover .template-delete { opacity: 1; }
   .template-preview {
     height: 180px; padding: 20px; display: flex; flex-direction: column;
     justify-content: flex-end; position: relative; overflow: hidden;
@@ -246,6 +305,7 @@
   .block-hero.theme-light { background: linear-gradient(135deg, #f8f9fa, #e9ecef); }
   .block-hero.theme-light h1 { color: var(--purple); }
   .block-hero.theme-light p { color: var(--text-muted); }
+  .block-hero.theme-mint { background: linear-gradient(135deg, #00C896, #00a67d); }
 
   .block-split { display: flex; gap: 40px; padding: 30px 40px; align-items: center; }
   .block-split-content { flex: 1; }
@@ -418,6 +478,146 @@
 
   .hidden { display: none !important; }
 
+  /* Login & Loading screens */
+  .login-screen, .loading-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    padding: 20px;
+  }
+
+  .login-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+  }
+
+  .login-card .logo {
+    height: 40px;
+    margin-bottom: 32px;
+  }
+
+  .login-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  .login-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 1rem;
+    margin-bottom: 16px;
+  }
+
+  .login-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: var(--gradient);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .login-btn:hover {
+    opacity: 0.9;
+  }
+
+  .login-error {
+    color: #ff4444;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    padding: 8px 12px;
+    background: rgba(255, 68, 68, 0.1);
+    border-radius: 6px;
+  }
+
+  .loading-screen .logo {
+    height: 48px;
+    margin-bottom: 24px;
+  }
+
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--cyan);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  .loading-screen p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .sync-error-banner {
+    background: rgba(255, 170, 0, 0.15);
+    border: 1px solid rgba(255, 170, 0, 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .sync-error-banner.critical {
+    background: rgba(255, 68, 68, 0.15);
+    border-color: rgba(255, 68, 68, 0.3);
+  }
+
+  .sync-error-banner span {
+    color: #ffaa00;
+    font-size: 0.85rem;
+  }
+
+  .sync-error-banner.critical span {
+    color: #ff4444;
+  }
+
+  .sync-error-banner button {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .sync-error-banner button:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
   /* Slideshow styles */
   .slideshow-card-preview {
     display: flex;
@@ -464,15 +664,19 @@
   .slides-main { flex: 1; display: flex; flex-direction: column; }
 
   .slides-top-toolbar {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 12px 16px; background: var(--card); border-radius: 12px;
-    margin-bottom: 16px; gap: 16px;
+    display: flex; justify-content: flex-start; align-items: center;
+    padding: 12px 16px; background: #fff; border-radius: 12px;
+    margin-bottom: 16px; gap: 20px; flex-wrap: wrap;
   }
+  .slides-top-toolbar .toolbar-label { color: #666; }
   .slides-theme-bar { display: flex; align-items: center; gap: 8px; }
   .toolbar-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
   .toolbar-select {
     padding: 6px 12px; background: var(--bg); border: 1px solid var(--border);
     border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer;
+  }
+  .slides-top-toolbar .toolbar-select {
+    background: #f5f5f5; border-color: #ddd; color: #333;
   }
   .toolbar-select:focus { outline: none; border-color: var(--cyan); }
   .slides-layout-bar { display: flex; align-items: center; gap: 8px; }
@@ -481,12 +685,15 @@
     padding: 6px 10px; background: var(--bg); border: 1px solid var(--border);
     border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: all 0.2s;
   }
+  .slides-top-toolbar .slides-layout-btn {
+    background: #f5f5f5; border-color: #ddd; color: #666;
+  }
   .slides-layout-btn:hover { border-color: var(--cyan); color: var(--text); }
   .slides-layout-btn.active { border-color: var(--cyan); background: var(--cyan); color: #000; }
-  .slides-logo-toggle { display: flex; align-items: center; gap: 8px; }
+  .slides-logo-toggle, .slides-image-toggle { display: flex; align-items: center; gap: 8px; }
   .toolbar-logo-mini { height: 20px; width: auto; opacity: 0.7; }
   .toggle-switch {
-    position: relative; width: 36px; height: 20px;
+    position: relative; width: 36px; height: 20px; flex-shrink: 0;
   }
   .toggle-switch input { opacity: 0; width: 0; height: 0; }
   .toggle-slider {
@@ -494,11 +701,15 @@
     border: 1px solid var(--border); border-radius: 20px;
     cursor: pointer; transition: all 0.2s;
   }
+  .slides-top-toolbar .toggle-slider {
+    background: #e0e0e0; border-color: #ccc;
+  }
   .toggle-slider::before {
     content: ''; position: absolute; width: 14px; height: 14px;
     left: 2px; top: 2px; background: var(--text-muted);
     border-radius: 50%; transition: all 0.2s;
   }
+  .slides-top-toolbar .toggle-slider::before { background: #999; }
   .toggle-switch input:checked + .toggle-slider { background: var(--cyan); border-color: var(--cyan); }
   .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); background: #000; }
   .toolbar-logo {
@@ -547,124 +758,92 @@
   .slides-logo { height: 24px; width: auto; max-width: 80px; object-fit: contain; }
   .slides-logo-item span { font-size: 0.8rem; color: var(--text-muted); }
 
-  .slide-editor-preview {
+  /* Slide editor - uses same classes as slideshow for accurate WYSIWYG preview */
+  .slide-editor-wrapper { display: flex; flex-direction: column; gap: 16px; }
+
+  .slideshow-preview {
     aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
-    padding: 40px; margin-bottom: 20px;
   }
-  .slide-editor-preview.theme-dark { background: #0a0a0f; color: #fff; }
-  .slide-editor-preview.theme-light { background: #fafafa; color: #1a1a1a; }
-  .slide-editor-preview.theme-gradient { background: linear-gradient(135deg, #00d4ff, #7b2fff, #ff006e); color: #fff; }
-  .slide-editor-preview.theme-minimal { background: #fff; color: #333; font-family: Georgia, serif; }
-  .slide-editor-preview.theme-bold { background: #000; color: #fff; font-size: 120%; font-weight: 800; }
+  .slideshow-preview.theme-dark { background: #0a0a0f; color: #fff; }
+  .slideshow-preview.theme-light { background: #fafafa; color: #1a1a1a; }
+  .slideshow-preview.theme-gradient { background: linear-gradient(135deg, #00d4ff, #7b2fff, #ff006e); color: #fff; }
+  .slideshow-preview.theme-minimal { background: #fff; color: #333; font-family: Georgia, serif; }
+  .slideshow-preview.theme-bold { background: #000; color: #fff; }
+  .slideshow-preview.theme-brand { background: linear-gradient(135deg, var(--brand-color, #7b2fff), #1a1a2e); color: #fff; }
 
-  .slide-content { width: 100%; max-width: 800px; text-align: center; }
-  .slide-content.layout-split {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
-    max-width: 100%; text-align: left;
+  /* Preview uses same slide structure - scaled down proportionally */
+  .slideshow-preview .slideshow-slide {
+    width: 100%; height: 100%; max-width: none;
+    padding: 24px 32px;
   }
-  .slide-split-left { display: flex; flex-direction: column; justify-content: center; }
-  .slide-split-left .slide-headline-input { text-align: left; font-size: 1.75rem; }
-  .slide-split-right { display: flex; align-items: center; justify-content: center; }
-  .slide-split-image-area {
-    width: 100%; aspect-ratio: 4/3; border-radius: 12px; overflow: hidden;
-    background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;
+  .slideshow-preview .slideshow-slide.slideshow-split {
+    padding: 32px 48px !important; gap: 32px !important;
   }
-  .slide-split-image { width: 100%; height: 100%; object-fit: cover; }
-  .slide-image-change {
-    position: absolute; bottom: 12px; right: 12px;
-    display: flex; align-items: center; gap: 6px;
-    padding: 8px 14px; background: rgba(0,0,0,0.7); color: #fff;
-    border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;
+  .slideshow-preview .slideshow-split-left.text-side,
+  .slideshow-preview .slideshow-split-right.text-side {
+    padding: 16px 28px !important;
   }
-  .slide-image-change:hover { background: rgba(0,0,0,0.9); }
-  .slide-split-image-area { position: relative; }
-  .slide-image-placeholder {
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-    color: rgba(255,255,255,0.4);
+  .slideshow-preview .slideshow-split-left.image-side,
+  .slideshow-preview .slideshow-split-right.image-side {
+    padding: 12px !important;
   }
-  .slide-image-upload-btn {
-    display: flex; align-items: center; gap: 8px; padding: 12px 20px;
-    background: var(--cyan); color: #000; border-radius: 8px;
-    cursor: pointer; font-weight: 600; transition: all 0.2s;
+  .slideshow-preview .slideshow-headline {
+    font-size: 1.1rem; margin-bottom: 10px;
   }
-  .slide-image-upload-btn:hover { transform: scale(1.05); }
-  .slide-caption-input {
-    width: 100%; min-height: 100px; background: transparent;
-    border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px;
-    color: inherit; font-size: 1rem; padding: 12px; resize: vertical;
+  .slideshow-preview .slideshow-split .slideshow-headline {
+    font-size: 0.95rem; margin-bottom: 8px; margin-left: 0;
   }
-  .slide-caption-input:focus { outline: none; border-color: var(--cyan); }
-  .theme-light .slide-caption-input { border-color: rgba(0,0,0,0.1); }
-  .theme-light .slide-image-placeholder { color: rgba(0,0,0,0.3); }
-  .slide-headline-input {
-    width: 100%; background: transparent; border: none; border-bottom: 2px dashed rgba(255,255,255,0.3);
-    color: inherit; font-size: 2rem; font-weight: 700; text-align: center;
-    padding: 8px; margin-bottom: 20px;
+  .slideshow-preview .slideshow-split .slideshow-bullets {
+    margin-left: 0;
   }
-  .slide-headline-input:focus { outline: none; border-color: var(--cyan); }
-  .theme-light .slide-headline-input, .theme-minimal .slide-headline-input { border-color: rgba(0,0,0,0.2); }
-  .theme-light .slide-headline-input:focus, .theme-minimal .slide-headline-input:focus { border-color: var(--purple); }
+  .slideshow-preview .slideshow-subtitle { font-size: 0.8rem; }
+  .slideshow-preview .slideshow-caption { font-size: 0.75rem; }
+  .slideshow-preview .slideshow-bullets { font-size: 0.75rem; margin-top: 8px; }
+  .slideshow-preview .slideshow-bullets li { padding-left: 14px; margin-bottom: 4px; }
+  .slideshow-preview .slideshow-bullets li::before { font-size: 0.9rem; }
+  .slideshow-preview .slideshow-image-only { padding: 24px; }
+  .slideshow-preview .placeholder { opacity: 0.4; font-style: italic; }
 
-  .slide-subtitle-input {
-    width: 100%; background: transparent; border: none; border-bottom: 1px dashed rgba(255,255,255,0.2);
-    color: inherit; font-size: 1.2rem; text-align: center; padding: 8px; opacity: 0.8;
+  .slide-image-placeholder-text {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%; min-height: 80px;
+    color: rgba(255,255,255,0.3); font-size: 0.85rem;
+    border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px;
+    cursor: pointer;
   }
-  .slide-subtitle-input:focus { outline: none; border-color: var(--cyan); }
-  .theme-light .slide-subtitle-input, .theme-minimal .slide-subtitle-input { border-color: rgba(0,0,0,0.1); }
-
-  .slide-bullets-editor { text-align: left; margin-top: 20px; }
-  .slide-bullet-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .slide-bullet-dot { font-size: 1.5rem; color: var(--cyan); }
-  .slide-bullet-input {
-    flex: 1; background: transparent; border: none; border-bottom: 1px dashed rgba(255,255,255,0.2);
-    color: inherit; font-size: 1.1rem; padding: 6px;
-  }
-  .slide-bullet-input:focus { outline: none; border-color: var(--cyan); }
-  .theme-light .slide-bullet-input, .theme-minimal .slide-bullet-input { border-color: rgba(0,0,0,0.1); }
-  .slide-bullet-delete {
-    background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer;
-    padding: 4px; border-radius: 4px;
-  }
-  .slide-bullet-delete:hover { color: #ff4444; background: rgba(255,68,68,0.1); }
-  .slide-bullet-delete svg { width: 14px; height: 14px; }
-  .theme-light .slide-bullet-delete, .theme-minimal .slide-bullet-delete { color: rgba(0,0,0,0.3); }
-
-  .slide-stats-grid { display: flex; gap: 40px; justify-content: center; margin-top: 30px; }
-  .slide-stat-item { text-align: center; }
-  .slide-stat-value {
-    background: transparent; border: none; border-bottom: 2px dashed rgba(255,255,255,0.3);
-    color: var(--cyan); font-size: 2.5rem; font-weight: 700; text-align: center;
-    width: 150px; padding: 4px;
-  }
-  .slide-stat-value:focus { outline: none; border-color: var(--cyan); }
-  .slide-stat-label {
-    background: transparent; border: none; border-bottom: 1px dashed rgba(255,255,255,0.2);
-    color: inherit; font-size: 0.9rem; text-align: center; width: 150px;
-    padding: 4px; margin-top: 8px; opacity: 0.7;
-  }
-  .slide-stat-label:focus { outline: none; border-color: var(--cyan); }
-  .theme-light .slide-stat-value, .theme-minimal .slide-stat-value { color: var(--purple); border-color: rgba(0,0,0,0.2); }
-  .theme-light .slide-stat-label, .theme-minimal .slide-stat-label { border-color: rgba(0,0,0,0.1); }
-
-  .slide-visual-area { margin-top: 20px; }
-  .slide-visual-image { max-width: 100%; max-height: 300px; border-radius: 8px; }
-  .slide-visual-placeholder {
-    padding: 60px; border: 2px dashed rgba(255,255,255,0.2);
-    border-radius: 8px; color: rgba(255,255,255,0.4);
-  }
-  .theme-light .slide-visual-placeholder, .theme-minimal .slide-visual-placeholder {
-    border-color: rgba(0,0,0,0.1); color: rgba(0,0,0,0.3);
+  .theme-light .slide-image-placeholder-text,
+  .theme-minimal .slide-image-placeholder-text {
+    color: rgba(0,0,0,0.3); border-color: rgba(0,0,0,0.1);
   }
 
-  .slide-break-visual { padding: 40px; }
-  .slide-break-line {
-    width: 100px; height: 4px; background: var(--gradient);
-    border-radius: 2px; margin: 0 auto;
+  .slideshow-image-only-inner {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%;
   }
 
-  .slide-type-picker { margin-top: 16px; }
-  .slide-type-picker .form-input { max-width: 200px; }
+  /* Edit panel below preview */
+  .slide-edit-panel {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .slide-edit-panel .edit-field { display: flex; flex-direction: column; gap: 6px; }
+  .slide-edit-panel .edit-field label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+  .slide-edit-panel .form-input { width: 100%; }
+  .slide-edit-panel textarea.form-input { min-height: 60px; resize: vertical; }
+
+  .edit-bullets { display: flex; flex-direction: column; gap: 8px; }
+  .edit-bullet-row { display: flex; gap: 8px; align-items: center; }
+  .edit-bullet-row .form-input { flex: 1; }
+  .btn-icon {
+    background: none; border: none; color: var(--text-muted);
+    cursor: pointer; padding: 6px; border-radius: 4px;
+  }
+  .btn-icon:hover { color: #ff4444; background: rgba(255,0,0,0.1); }
+  .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+
+  .slides-bullets-toggle { display: flex; align-items: center; gap: 8px; }
 
   /* Slideshow fullscreen view */
   .slideshow-container {
@@ -680,7 +859,8 @@
   .slideshow-slide {
     flex: 1; display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 60px; text-align: center; max-width: 1200px;
+    padding: 60px 80px; text-align: center; width: 100%;
+    max-width: 1000px; margin: 0 auto;
     animation: slideIn 0.3s ease;
   }
   @keyframes slideIn {
@@ -690,7 +870,8 @@
 
   .slideshow-split {
     display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
-    text-align: left; width: 100%;
+    text-align: left; width: 100%; height: auto;
+    max-width: 1200px; padding: 40px 60px;
   }
   .slideshow-split-left {
     display: flex; flex-direction: column; justify-content: center;
@@ -698,32 +879,75 @@
   .slideshow-split-right {
     display: flex; align-items: center; justify-content: center;
   }
+  .slideshow-split-left.text-side {
+    padding: 20px 20px 20px 20px;
+  }
+  .slideshow-split-right.text-side {
+    padding: 20px 20px 20px 20px;
+  }
   .slideshow-split-image {
-    max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 12px;
+    max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px;
+  }
+  /* Full image - larger image with minimal padding */
+  .slideshow-slide.image-full {
+    padding: 40px; max-width: none;
+  }
+  .slideshow-split.image-full {
+    gap: 40px; padding: 40px;
+  }
+  .slideshow-split.image-full .slideshow-split-right.image-side,
+  .slideshow-split.image-full .slideshow-split-left.image-side {
+    padding: 0; overflow: hidden;
+  }
+  .slideshow-split.image-full .slideshow-split-right.text-side,
+  .slideshow-split.image-full .slideshow-split-left.text-side {
+    padding: 20px 0;
+  }
+  .slideshow-split.image-full .slideshow-split-image {
+    max-width: 100%; max-height: 70vh; width: auto; height: auto;
+    object-fit: contain; border-radius: 12px;
   }
   .slideshow-caption {
     font-size: 1.3rem; line-height: 1.6; opacity: 0.85; margin-top: 20px;
   }
 
   .slideshow-headline {
-    font-size: 3.5rem; font-weight: 800; margin-bottom: 30px;
+    font-size: 3rem; font-weight: 700; margin-bottom: 24px;
     line-height: 1.2;
   }
-  .theme-bold .slideshow-headline { font-size: 4.5rem; }
-  .slideshow-subtitle { font-size: 1.5rem; opacity: 0.8; }
+  .slideshow-split .slideshow-headline {
+    font-size: 2.25rem; margin-bottom: 16px;
+  }
+  .theme-bold .slideshow-headline { font-size: 4rem; font-weight: 800; }
+  .slideshow-subtitle { font-size: 1.4rem; opacity: 0.8; line-height: 1.6; max-width: 600px; }
+  .slideshow-caption { font-size: 1.1rem; line-height: 1.7; opacity: 0.85; }
 
   .slideshow-bullets {
-    list-style: none; text-align: left; font-size: 1.5rem;
-    line-height: 2;
+    list-style: none; text-align: left; font-size: 1.25rem;
+    line-height: 1.8; margin-top: 16px;
   }
-  .slideshow-bullets li { position: relative; padding-left: 30px; }
+  .slideshow-bullets li { position: relative; padding-left: 28px; margin-bottom: 8px; }
   .slideshow-bullets li::before {
     content: '•'; position: absolute; left: 0;
-    color: var(--cyan);
+    color: var(--cyan); font-size: 1.5rem; line-height: 1;
   }
   .theme-light .slideshow-bullets li::before, .theme-minimal .slideshow-bullets li::before { color: var(--purple); }
 
   .slideshow-image { max-width: 80%; max-height: 60vh; border-radius: 12px; margin-top: 30px; }
+
+  /* Image only layout */
+  .slideshow-image-only {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%; padding: 60px;
+  }
+  .slideshow-center-image {
+    max-width: 100%; max-height: 70vh; width: auto; height: auto;
+    object-fit: contain; border-radius: 12px;
+  }
+  .slideshow-image-only.image-full { padding: 40px; }
+  .slideshow-image-only.image-full .slideshow-center-image {
+    max-width: 100%; max-height: 80vh; border-radius: 8px;
+  }
 
   .slideshow-stats { display: flex; gap: 80px; margin-top: 40px; }
   .slideshow-stat { text-align: center; }
@@ -1091,6 +1315,16 @@
   }
 
   /* Recordings list styles */
+  .recordings-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; padding: 0 4px;
+  }
+  .recordings-select-all { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.875rem; }
+  .recordings-bulk-actions { display: flex; gap: 8px; }
+  .recordings-bulk-actions .btn {
+    background: rgba(255,100,100,0.15); border-color: #ff6b6b; color: #ff6b6b;
+  }
+  .recordings-bulk-actions .btn:hover { background: rgba(255,100,100,0.25); }
   .recordings-list { display: flex; flex-direction: column; gap: 8px; }
   .recording-item {
     display: flex; align-items: center; gap: 12px;
@@ -1098,6 +1332,11 @@
     border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
   }
   .recording-item:hover { background: var(--bg-hover); border-color: var(--accent); }
+  .recording-item.selected { background: rgba(0,212,255,0.1); border-color: var(--accent); }
+  .recording-checkbox {
+    width: 18px; height: 18px; accent-color: var(--accent);
+    cursor: pointer; flex-shrink: 0;
+  }
   .recording-thumb {
     width: 48px; height: 48px; border-radius: 50%; overflow: hidden;
     background: var(--bg-hover); flex-shrink: 0;
@@ -1144,12 +1383,16 @@
   .brand-pick img { height: 24px; display: block; }
   .brand-pick:hover { background: rgba(255,255,255,0.2); }
   .brand-pick.active { border-color: var(--cyan); background: rgba(0,212,255,0.15); }
-  .titlebar-brand-logo { height: 18px; }
+  .titlebar-logos { display: flex; align-items: center; gap: 12px; flex: 1; }
+  .titlebar-brand-logo { height: 20px; }
+  .titlebar-client-logo { height: 24px; max-width: 120px; object-fit: contain; }
+  .titlebar-client-logo.logo-with-background { background: #fff; padding: 4px 8px; border-radius: 4px; }
+  .titlebar-logo-divider { color: #999; font-size: 14px; font-weight: 300; }
   .titlebar-dots { display: flex; gap: 6px; }
   .quote-record-titlebar {
-    background: linear-gradient(180deg, #f6f6f6, #e8e8e8);
-    padding: 10px 16px; display: flex; align-items: center; gap: 12px;
-    border-bottom: 1px solid #d0d0d0;
+    background: #ffffff;
+    padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid #e0e0e0;
   }
   .quote-record-window {
     width: 100%; max-width: 900px; height: calc(100vh - 120px);
@@ -1179,9 +1422,12 @@
   .preview-block-hero.theme-blue { background: linear-gradient(135deg, #0066ff, #0044cc); }
   .preview-block-hero.theme-dark { background: linear-gradient(135deg, #1a1a2e, #16213e); }
   .preview-block-hero.theme-light { background: linear-gradient(135deg, #f8f9fa, #e9ecef); color: #1a1a1a; }
+  .preview-block-hero.theme-mint { background: linear-gradient(135deg, #00C896, #00a67d); }
   .preview-client-logo-section { margin-bottom: 40px; }
   .preview-client-logo { max-height: 80px; max-width: 200px; object-fit: contain; }
   .preview-client-logo.logo-with-background { background: white; padding: 12px 20px; border-radius: 8px; }
+  .preview-client-logo-large { max-height: 120px; max-width: 300px; object-fit: contain; }
+  .preview-client-logo-large.logo-with-background { background: white; padding: 16px 28px; border-radius: 10px; }
   .preview-hero-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; }
   .preview-hero-subtitle { font-size: 1.2rem; opacity: 0.9; margin-bottom: 40px; }
   .preview-hero-meta { display: flex; justify-content: center; gap: 48px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.2); }
@@ -1220,7 +1466,7 @@
 
 <script>
   import type { Quote, Block, PricingBlock, PricingItem, Template, HeroTheme, Slideshow, Slide, SlideTheme, Asset, AssetType, NarrationPos, Recording } from '../lib/types';
-  import { loadFromR2, saveToR2, uploadVideoToR2, WORKER_URL } from '../lib/r2';
+  import { loadFromR2, saveToR2, uploadVideoToR2, WORKER_URL, type R2LoadResult } from '../lib/r2';
 
   const icons = {
     quotes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
@@ -1256,6 +1502,7 @@
     unarchive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><polyline points="12 17 12 11"/><polyline points="9 14 12 11 15 14"/></svg>',
     mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
     play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+    folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
   };
 
   // Bridge Point proposal template
@@ -1433,19 +1680,31 @@ All findings and recommendations remain confidential.` },
   let saving = false;
   let sending = false;
   let showModal = false;
-  let modalType: 'send' | 'share' | 'pricing' | 'ai' | 'quote-picker' | 'asset-picker' = 'send';
+  let modalType: 'send' | 'share' | 'pricing' | 'ai' | 'quote-picker' | 'asset-picker' | 'save-type' = 'send';
   let editingPricingBlock: PricingBlock | null = null;
   let toastMessage = '';
   let aiPrompt = '';
   let aiOutput = '';
   let aiGenerating = false;
   let aiTargetBlockId = '';
+  let assetPickerTargetBlockId = '';
   let creatingSlidesFromQuoteId = '';
+
+  // Authentication state
+  const APP_PASSWORD = 'Ben123';
+  const AUTH_KEY = 'quotes-authenticated';
+  let isAuthenticated = localStorage.getItem(AUTH_KEY) === 'true';
+  let authError = '';
+  let syncStatus: 'loading' | 'synced' | 'error' = 'loading';
+  let syncError = '';
 
   const LOCAL_STORAGE_KEY = 'quotes-backup';
   const SLIDESHOWS_STORAGE_KEY = 'slideshows-backup';
   const ASSETS_STORAGE_KEY = 'assets-backup';
   const RECORDINGS_STORAGE_KEY = 'recordings-backup';
+  const USER_TEMPLATES_KEY = 'user-templates';
+
+  let userTemplates: Template[] = JSON.parse(localStorage.getItem(USER_TEMPLATES_KEY) || '[]');
   const BRIDGEPOINT_LOGO_WHITE = 'https://bridgepoint.co.nz/logos/Bridge-Point_white.png';
   const BRIDGEPOINT_LOGO_BLACK = 'https://bridgepoint.co.nz/logos/Bridge-Point_black.png';
   // Recording brand config
@@ -1474,21 +1733,30 @@ All findings and recommendations remain confidential.` },
     }
 
     // Then sync with R2 (source of truth)
-    try {
-      const data = await loadFromR2<{ quotes: Quote[] }>('quotes-data.json');
-      if (data?.quotes) {
-        // Merge: keep local quotes that aren't in R2, add R2 quotes
-        const r2Ids = new Set(data.quotes.map(q => q.id));
-        const localOnly = quotes.filter(q => !r2Ids.has(q.id));
-        quotes = [...data.quotes, ...localOnly];
-        // Save merged data back
-        if (localOnly.length > 0) {
-          await saveQuotes();
-        }
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ quotes }));
+    const result = await loadFromR2<{ quotes: Quote[] }>('quotes-data.json');
+
+    if (result.status === 'success' && result.data?.quotes) {
+      // Merge: keep local quotes that aren't in R2, add R2 quotes
+      const r2Ids = new Set(result.data.quotes.map(q => q.id));
+      const localOnly = quotes.filter(q => !r2Ids.has(q.id));
+      quotes = [...result.data.quotes, ...localOnly];
+      // Save merged data back
+      if (localOnly.length > 0) {
+        await saveQuotes();
       }
-    } catch (e) {
-      console.warn('Failed to load from R2, using local backup:', e);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ quotes }));
+      syncStatus = 'synced';
+      syncError = '';
+    } else if (result.status === 'empty') {
+      // R2 is empty - use local data if available, otherwise empty state
+      syncStatus = 'synced';
+      syncError = '';
+    } else if (result.status === 'error') {
+      // Network error - keep local data, show error
+      syncStatus = 'error';
+      syncError = result.message;
+      console.warn('Failed to load from R2, using local backup:', result.message);
+      showToast('Could not connect to cloud - using offline data');
     }
 
     loading = false;
@@ -1517,19 +1785,17 @@ All findings and recommendations remain confidential.` },
     }
 
     // Then sync with R2
-    try {
-      const data = await loadFromR2<{ slideshows: Slideshow[] }>('slideshows-data.json');
-      if (data?.slideshows) {
-        const r2Ids = new Set(data.slideshows.map(s => s.id));
-        const localOnly = slideshows.filter(s => !r2Ids.has(s.id));
-        slideshows = [...data.slideshows, ...localOnly];
-        if (localOnly.length > 0) {
-          await saveSlideshows();
-        }
-        localStorage.setItem(SLIDESHOWS_STORAGE_KEY, JSON.stringify({ slideshows }));
+    const result = await loadFromR2<{ slideshows: Slideshow[] }>('slideshows-data.json');
+    if (result.status === 'success' && result.data?.slideshows) {
+      const r2Ids = new Set(result.data.slideshows.map(s => s.id));
+      const localOnly = slideshows.filter(s => !r2Ids.has(s.id));
+      slideshows = [...result.data.slideshows, ...localOnly];
+      if (localOnly.length > 0) {
+        await saveSlideshows();
       }
-    } catch (e) {
-      console.warn('Failed to load slideshows from R2:', e);
+      localStorage.setItem(SLIDESHOWS_STORAGE_KEY, JSON.stringify({ slideshows }));
+    } else if (result.status === 'error') {
+      console.warn('Failed to load slideshows from R2:', result.message);
     }
   }
 
@@ -1551,19 +1817,17 @@ All findings and recommendations remain confidential.` },
       }
     }
 
-    try {
-      const data = await loadFromR2<{ assets: Asset[] }>('assets-data.json');
-      if (data?.assets) {
-        const r2Ids = new Set(data.assets.map(a => a.id));
-        const localOnly = assets.filter(a => !r2Ids.has(a.id));
-        assets = [...data.assets, ...localOnly];
-        if (localOnly.length > 0) {
-          await saveAssets();
-        }
-        localStorage.setItem(ASSETS_STORAGE_KEY, JSON.stringify({ assets }));
+    const result = await loadFromR2<{ assets: Asset[] }>('assets-data.json');
+    if (result.status === 'success' && result.data?.assets) {
+      const r2Ids = new Set(result.data.assets.map(a => a.id));
+      const localOnly = assets.filter(a => !r2Ids.has(a.id));
+      assets = [...result.data.assets, ...localOnly];
+      if (localOnly.length > 0) {
+        await saveAssets();
       }
-    } catch (e) {
-      console.warn('Failed to load assets from R2:', e);
+      localStorage.setItem(ASSETS_STORAGE_KEY, JSON.stringify({ assets }));
+    } else if (result.status === 'error') {
+      console.warn('Failed to load assets from R2:', result.message);
     }
 
     // Add default logos if they don't exist
@@ -1615,14 +1879,12 @@ All findings and recommendations remain confidential.` },
       const data = JSON.parse(local);
       recordings = data.recordings || [];
     }
-    try {
-      const cloudData = await loadFromR2('recordings-data.json');
-      if (cloudData?.recordings) {
-        recordings = cloudData.recordings;
-        localStorage.setItem(RECORDINGS_STORAGE_KEY, JSON.stringify({ recordings }));
-      }
-    } catch (e) {
-      console.log('No cloud recordings data');
+    const result = await loadFromR2<{ recordings: Recording[] }>('recordings-data.json');
+    if (result.status === 'success' && result.data?.recordings) {
+      recordings = result.data.recordings;
+      localStorage.setItem(RECORDINGS_STORAGE_KEY, JSON.stringify({ recordings }));
+    } else if (result.status === 'error') {
+      console.log('Could not load recordings from cloud:', result.message);
     }
   }
 
@@ -2622,9 +2884,88 @@ Bridge Point`;
     render();
   }
 
+  function renderLoginScreen(): string {
+    return `
+      <div class="login-screen">
+        <div class="login-card">
+          <img src="${BRIDGEPOINT_LOGO_WHITE}" alt="Bridge Point" class="logo">
+          <h2>Welcome back</h2>
+          <p>Enter your password to continue</p>
+          ${authError ? `<div class="login-error">${authError}</div>` : ''}
+          <input type="password" class="login-input" id="login-password" placeholder="Password" autofocus>
+          <button class="login-btn" id="login-submit">Sign In</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderLoadingScreen(): string {
+    return `
+      <div class="loading-screen">
+        <img src="${BRIDGEPOINT_LOGO_WHITE}" alt="Bridge Point" class="logo">
+        <div class="loading-spinner"></div>
+        <p>Getting your data...</p>
+      </div>
+    `;
+  }
+
+  function attachLoginListeners() {
+    const passwordInput = document.getElementById('login-password') as HTMLInputElement;
+    const submitBtn = document.getElementById('login-submit');
+
+    const handleLogin = () => {
+      const password = passwordInput?.value || '';
+      if (password === APP_PASSWORD) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        isAuthenticated = true;
+        authError = '';
+        loading = true;
+        render();
+        initializeApp();
+      } else {
+        authError = 'Incorrect password';
+        render();
+        // Re-focus password input after render
+        setTimeout(() => {
+          const input = document.getElementById('login-password') as HTMLInputElement;
+          input?.focus();
+          input?.select();
+        }, 0);
+      }
+    };
+
+    submitBtn?.addEventListener('click', handleLogin);
+    passwordInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+  }
+
+  function initializeApp() {
+    loadQuotes();
+    loadSlides();
+    loadAssets();
+    loadRecordings();
+  }
+
   function render() {
     const app = document.getElementById('app');
     if (!app) return;
+
+    // Show login screen if not authenticated
+    if (!isAuthenticated) {
+      app.innerHTML = renderLoginScreen();
+      attachLoginListeners();
+      return;
+    }
+
+    // Show loading screen while fetching initial data
+    if (loading && quotes.length === 0) {
+      app.innerHTML = renderLoadingScreen();
+      return;
+    }
+
+    const syncStatusClass = syncStatus === 'error' ? 'error' : 'synced';
+    const syncStatusText = syncStatus === 'error' ? '⚠ Sync error' : '✓ Synced to cloud';
 
     app.innerHTML = `
       <div class="app-layout">
@@ -2636,9 +2977,16 @@ Bridge Point`;
           <button class="nav-item ${view === 'assets' ? 'active' : ''}" data-view="assets">${icons.assets}<span>Assets</span>${assets.length > 0 ? `<span class="nav-badge">${assets.length}</span>` : ''}</button>
           <button class="nav-item ${view === 'recordings' ? 'active' : ''}" data-view="recordings">${icons.mic}<span>Recordings</span>${recordings.length > 0 ? `<span class="nav-badge">${recordings.length}</span>` : ''}</button>
           <button class="nav-item ${view === 'archive' ? 'active' : ''}" data-view="archive">${icons.archive}<span>Archive</span>${(quotes.filter(q => q.archived).length + slideshows.filter(s => s.archived).length) > 0 ? `<span class="nav-badge">${quotes.filter(q => q.archived).length + slideshows.filter(s => s.archived).length}</span>` : ''}</button>
-          <button class="sync-status synced" data-action="force-sync" title="Click to re-sync from cloud">✓ Synced to cloud</button>
+          <button class="nav-item" data-action="logout">${icons.x}<span>Log Out</span></button>
+          <button class="sync-status ${syncStatusClass}" data-action="force-sync" title="Click to re-sync from cloud">${syncStatusText}</button>
         </nav>
         <main class="main-content">
+          ${syncStatus === 'error' ? `
+            <div class="sync-error-banner">
+              <span>Could not connect to cloud: ${syncError || 'Network error'}. Using offline data.</span>
+              <button data-action="retry-sync">Retry</button>
+            </div>
+          ` : ''}
           ${view === 'dashboard' ? renderDashboard() : ''}
           ${view === 'templates' ? renderTemplates() : ''}
           ${view === 'editor' ? renderEditor() : ''}
@@ -2695,7 +3043,15 @@ Bridge Point`;
           ${activeQuotes.map(q => `
             <tr data-edit-quote="${q.id}">
               <td><div class="quote-title">${q.title}</div><div class="quote-client">${q.clientName || 'No client'}</div></td>
-              <td><span class="status-badge status-${q.status}">${q.status}</span></td>
+              <td onclick="event.stopPropagation()">
+                <div class="status-control">
+                  <span class="status-badge status-${q.status}">${q.status}</span>
+                  <div class="status-arrows">
+                    <button class="status-arrow" data-status-up="${q.id}" title="Next status">${icons.arrowUp}</button>
+                    <button class="status-arrow" data-status-down="${q.id}" title="Previous status">${icons.arrowDown}</button>
+                  </div>
+                </div>
+              </td>
               <td class="quote-amount">${formatCurrency(q.total, q.currency)}</td>
               <td>${formatDate(q.createdAt)}</td>
               <td>${q.viewCount}</td>
@@ -2714,8 +3070,28 @@ Bridge Point`;
   }
 
   function renderTemplates(): string {
+    const allTemplates = [...templates, ...userTemplates];
     return `
       <div class="page-header"><h1 class="page-title">Templates</h1></div>
+      ${userTemplates.length > 0 ? `
+        <h3 style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px">My Templates</h3>
+        <div class="templates-grid" style="margin-bottom:32px">
+          ${userTemplates.map((t, i) => `
+            <div class="template-card" data-template="${t.id}">
+              <button class="template-delete" data-delete-template="${t.id}" onclick="event.stopPropagation()">${icons.x}</button>
+              <div class="template-preview" style="background:linear-gradient(135deg, var(--cyan), var(--purple))">
+                <h3>${t.name}</h3>
+                <p>${t.description}</p>
+              </div>
+              <div class="template-info">
+                <div class="template-name">${t.name}</div>
+                <div class="template-desc">${t.category}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <h3 style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px">Built-in Templates</h3>
+      ` : ''}
       <div class="templates-grid">
         ${templates.map((t, i) => `
           <div class="template-card" data-template="${t.id}">
@@ -2763,52 +3139,8 @@ Bridge Point`;
               <input class="form-input" type="text" id="quote-client" value="${currentQuote.clientName}" placeholder="Client name">
             </div>
             <div class="form-group">
-              <label class="form-label">Client Email</label>
-              <input class="form-input" type="email" id="quote-email" value="${currentQuote.clientEmail}" placeholder="client@example.com">
-            </div>
-            <div class="form-group">
               <label class="form-label">Client Website</label>
               <input class="form-input" type="url" id="quote-website" value="${currentQuote.clientWebsite || ''}" placeholder="https://example.com">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Client Logo</label>
-              <div style="display:flex;gap:8px;align-items:center">
-                <input class="form-input" type="file" id="quote-logo-upload" accept="image/*" style="flex:1">
-              </div>
-              ${currentQuote.clientLogo ? `<img src="${currentQuote.clientLogo}" style="max-height:40px;margin-top:8px;border-radius:4px">` : ''}
-            </div>
-            <div class="form-group">
-              <label class="form-label">Hero Theme</label>
-              <div class="theme-swatches">
-                <div class="theme-swatch gradient ${currentQuote.heroTheme === 'gradient' || !currentQuote.heroTheme ? 'active' : ''}" data-theme="gradient" title="Gradient"></div>
-                <div class="theme-swatch cyan ${currentQuote.heroTheme === 'cyan' ? 'active' : ''}" data-theme="cyan" title="Cyan"></div>
-                <div class="theme-swatch purple ${currentQuote.heroTheme === 'purple' ? 'active' : ''}" data-theme="purple" title="Purple"></div>
-                <div class="theme-swatch blue ${currentQuote.heroTheme === 'blue' ? 'active' : ''}" data-theme="blue" title="Blue"></div>
-                <div class="theme-swatch dark ${currentQuote.heroTheme === 'dark' ? 'active' : ''}" data-theme="dark" title="Dark"></div>
-                <div class="theme-swatch light ${currentQuote.heroTheme === 'light' ? 'active' : ''}" data-theme="light" title="Light"></div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Status</label>
-              <select class="form-input" id="quote-status">
-                <option value="draft" ${currentQuote.status === 'draft' ? 'selected' : ''}>Draft</option>
-                <option value="sent" ${currentQuote.status === 'sent' ? 'selected' : ''}>Sent</option>
-                <option value="viewed" ${currentQuote.status === 'viewed' ? 'selected' : ''}>Viewed</option>
-                <option value="accepted" ${currentQuote.status === 'accepted' ? 'selected' : ''}>Accepted</option>
-                <option value="declined" ${currentQuote.status === 'declined' ? 'selected' : ''}>Declined</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                <input type="checkbox" id="quote-show-header" ${currentQuote.showHeader !== false ? 'checked' : ''}>
-                <span class="form-label" style="margin:0">Show header (logo & tagline)</span>
-              </label>
-            </div>
-            <div class="form-group">
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                <input type="checkbox" id="quote-logo-background" ${currentQuote.logoNeedsBackground ? 'checked' : ''}>
-                <span class="form-label" style="margin:0">Logo needs white background</span>
-              </label>
             </div>
           </div>
           <div class="editor-panel">
@@ -2824,6 +3156,41 @@ Bridge Point`;
           </div>
         </div>
         <div class="editor-main">
+          <div class="quote-top-toolbar">
+            <div class="toolbar-group">
+              <span class="toolbar-label">Theme:</span>
+              <div class="theme-swatches-inline">
+                <div class="theme-swatch-sm gradient ${currentQuote.heroTheme === 'gradient' || !currentQuote.heroTheme ? 'active' : ''}" data-theme="gradient" title="Gradient"></div>
+                <div class="theme-swatch-sm cyan ${currentQuote.heroTheme === 'cyan' ? 'active' : ''}" data-theme="cyan" title="Cyan"></div>
+                <div class="theme-swatch-sm purple ${currentQuote.heroTheme === 'purple' ? 'active' : ''}" data-theme="purple" title="Purple"></div>
+                <div class="theme-swatch-sm blue ${currentQuote.heroTheme === 'blue' ? 'active' : ''}" data-theme="blue" title="Blue"></div>
+                <div class="theme-swatch-sm dark ${currentQuote.heroTheme === 'dark' ? 'active' : ''}" data-theme="dark" title="Dark"></div>
+                <div class="theme-swatch-sm light ${currentQuote.heroTheme === 'light' ? 'active' : ''}" data-theme="light" title="Light"></div>
+                <div class="theme-swatch-sm mint ${currentQuote.heroTheme === 'mint' ? 'active' : ''}" data-theme="mint" title="Mint"></div>
+              </div>
+            </div>
+            <div class="toolbar-group">
+              <label class="toggle-switch">
+                <input type="checkbox" id="quote-header-toggle" ${currentQuote.showHeader !== false ? 'checked' : ''}>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toolbar-label">Header</span>
+            </div>
+            <div class="toolbar-group">
+              <span class="toolbar-label">Logo:</span>
+              ${currentQuote.clientLogo ? `
+                <img src="${currentQuote.clientLogo}" alt="" class="toolbar-logo-favicon${currentQuote.logoNeedsBackground ? ' logo-with-bg' : ''}">
+                <label class="toggle-switch" title="White background">
+                  <input type="checkbox" id="quote-logo-bg-toggle" ${currentQuote.logoNeedsBackground ? 'checked' : ''}>
+                  <span class="toggle-slider"></span>
+                </label>
+              ` : ''}
+              <label class="toolbar-upload-btn" title="Upload logo">
+                <input type="file" id="quote-logo-upload" accept="image/*" style="display:none">
+                ${currentQuote.clientLogo ? icons.edit : icons.plus}
+              </label>
+            </div>
+          </div>
           <div class="quote-canvas">
             ${currentQuote.blocks.length === 0 ? '<div class="empty-state"><p class="empty-desc">Add blocks to build your proposal</p></div>' : currentQuote.blocks.map(b => renderBlock(b)).join('')}
           </div>
@@ -2880,7 +3247,9 @@ Bridge Point`;
                   <div class="image-actions-row">
                     <label class="image-action-btn"><input type="file" accept="image/*" data-split-image="${block.id}" hidden>${icons.image} Upload</label>
                     <span class="image-divider">or</span>
-                    <span class="image-paste-hint">paste image here</span>
+                    <button class="image-action-btn" data-pick-asset="${block.id}">${icons.folder} Assets</button>
+                    <span class="image-divider">or</span>
+                    <span class="image-paste-hint">paste</span>
                   </div>
                 </div>`}
           </div>
@@ -3044,10 +3413,34 @@ Bridge Point`;
               <div class="slides-layout-btn ${(currentSlideshow.slides[currentSlideIndex]?.layout || 'default') === 'default' ? 'active' : ''}" data-slide-layout="default" title="Default">
                 <svg width="20" height="14" viewBox="0 0 20 14"><rect x="1" y="1" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="4" x2="16" y2="4" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="7" x2="12" y2="7" stroke="currentColor" stroke-width="1"/><line x1="4" y1="10" x2="10" y2="10" stroke="currentColor" stroke-width="1"/></svg>
               </div>
+              <div class="slides-layout-btn ${currentSlideshow.slides[currentSlideIndex]?.layout === 'split-left' ? 'active' : ''}" data-slide-layout="split-left" title="Image + Text">
+                <svg width="20" height="14" viewBox="0 0 20 14"><rect x="1" y="1" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="1" x2="10" y2="13" stroke="currentColor" stroke-width="1"/><rect x="3" y="3" width="5" height="8" rx="0.5" fill="currentColor" opacity="0.3"/><line x1="12" y1="4" x2="17" y2="4" stroke="currentColor" stroke-width="1"/><line x1="12" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="1"/></svg>
+              </div>
               <div class="slides-layout-btn ${currentSlideshow.slides[currentSlideIndex]?.layout === 'split' ? 'active' : ''}" data-slide-layout="split" title="Text + Image">
                 <svg width="20" height="14" viewBox="0 0 20 14"><rect x="1" y="1" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="1" x2="10" y2="13" stroke="currentColor" stroke-width="1"/><line x1="3" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1"/><line x1="3" y1="7" x2="7" y2="7" stroke="currentColor" stroke-width="1"/><rect x="12" y="3" width="5" height="8" rx="0.5" fill="currentColor" opacity="0.3"/></svg>
               </div>
+              <div class="slides-layout-btn ${currentSlideshow.slides[currentSlideIndex]?.layout === 'image' ? 'active' : ''}" data-slide-layout="image" title="Image Only">
+                <svg width="20" height="14" viewBox="0 0 20 14"><rect x="1" y="1" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="3" width="12" height="8" rx="0.5" fill="currentColor" opacity="0.3"/></svg>
+              </div>
             </div>
+            ${(currentSlideshow.slides[currentSlideIndex]?.layout === 'split' || currentSlideshow.slides[currentSlideIndex]?.layout === 'split-left' || currentSlideshow.slides[currentSlideIndex]?.layout === 'image') ? `
+            <div class="slides-image-toggle">
+              <label class="toggle-switch">
+                <input type="checkbox" id="slide-image-full-toggle" ${currentSlideshow.slides[currentSlideIndex]?.imageFull ? 'checked' : ''}>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toolbar-label">Full image</span>
+            </div>
+            ` : ''}
+            ${currentSlideshow.slides[currentSlideIndex]?.layout !== 'image' ? `
+            <div class="slides-bullets-toggle">
+              <label class="toggle-switch">
+                <input type="checkbox" id="slide-bullets-toggle" ${currentSlideshow.slides[currentSlideIndex]?.useBullets ? 'checked' : ''}>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toolbar-label">Bullets</span>
+            </div>
+            ` : ''}
             <div class="slides-logo-toggle">
               <label class="toggle-switch">
                 <input type="checkbox" id="slide-logos-toggle" ${currentSlideshow.slides[currentSlideIndex]?.showLogos !== false ? 'checked' : ''}>
@@ -3068,81 +3461,96 @@ Bridge Point`;
     if (!currentSlideshow || currentSlideIndex >= currentSlideshow.slides.length) return '';
     const slide = currentSlideshow.slides[currentSlideIndex];
 
-    const isSplit = slide.layout === 'split';
+    const isSplit = slide.layout === 'split' || slide.layout === 'split-left';
+    const isSplitLeft = slide.layout === 'split-left';
+    const isImageLayout = slide.layout === 'image';
 
+    // Use SAME structure as slideshow for accurate preview
     return `
-      <div class="slide-editor-preview theme-${slide.theme || 'dark'}">
-        <div class="slide-content slide-type-${slide.type} ${isSplit ? 'layout-split' : ''}">
-          ${isSplit ? '<div class="slide-split-left">' : ''}
-          ${slide.type === 'title' ? `
-            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
-            <input class="slide-subtitle-input" type="text" value="${slide.bullets?.[0] || ''}" data-slide-field="subtitle" placeholder="Subtitle">
-          ` : ''}
-          ${slide.type === 'content' ? `
-            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
-            <div class="slide-bullets-editor">
-              ${(slide.bullets || []).map((b, i) => `
-                <div class="slide-bullet-row">
-                  <span class="slide-bullet-dot">•</span>
-                  <input class="slide-bullet-input" type="text" value="${b}" data-bullet-index="${i}" placeholder="Bullet point">
-                  <button class="slide-bullet-delete" data-delete-bullet="${i}">${icons.x}</button>
-                </div>
-              `).join('')}
-              <button class="add-item-btn" data-action="add-bullet">+ Add Point</button>
-            </div>
-          ` : ''}
-          ${slide.type === 'visual' && !isSplit ? `
-            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
-            <div class="slide-visual-area">
-              ${slide.image ? `<img src="${slide.image}" class="slide-visual-image">` : '<div class="slide-visual-placeholder">No image</div>'}
-            </div>
-          ` : ''}
-          ${slide.type === 'visual' && isSplit ? `
-            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
-            <textarea class="slide-caption-input" data-slide-field="caption" placeholder="Add description text...">${slide.bullets?.[0] || ''}</textarea>
-          ` : ''}
-          ${slide.type === 'data' ? `
-            <input class="slide-headline-input" type="text" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Headline">
-            <div class="slide-stats-grid">
-              ${(slide.stats || []).map((s, i) => `
-                <div class="slide-stat-item">
-                  <input class="slide-stat-value" type="text" value="${s.value}" data-stat-index="${i}" data-stat-field="value" placeholder="Value">
-                  <input class="slide-stat-label" type="text" value="${s.label}" data-stat-index="${i}" data-stat-field="label" placeholder="Label">
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
-          ${slide.type === 'break' ? `
-            <div class="slide-break-visual">
-              <div class="slide-break-line"></div>
-            </div>
-          ` : ''}
-          ${isSplit ? '</div>' : ''}
-          ${isSplit ? `
-            <div class="slide-split-right">
-              <div class="slide-split-image-area">
-                ${slide.image ? `
-                  <img src="${slide.image}" class="slide-split-image">
-                  <button class="slide-image-change" data-action="pick-slide-image">${icons.image} Change</button>
+      <div class="slide-editor-wrapper">
+        <div class="slideshow-preview theme-${slide.theme || 'dark'}">
+          <div class="slideshow-slide ${isSplit ? 'slideshow-split' : ''} ${isImageLayout ? 'slideshow-image-only' : ''} ${slide.imageFull ? 'image-full' : ''}">
+            ${isImageLayout ? `
+              <div class="slideshow-image-only-inner">
+                ${slide.image ? `<img src="${slide.image}" class="slideshow-center-image" data-action="pick-slide-image" style="cursor:pointer">` : '<div class="slide-image-placeholder-text" data-action="pick-slide-image">Click to add image</div>'}
+              </div>
+            ` : ''}
+            ${isSplitLeft ? `
+              <div class="slideshow-split-left image-side">
+                ${slide.image ? `<img src="${slide.image}" class="slideshow-split-image" data-action="pick-slide-image" style="cursor:pointer">` : '<div class="slide-image-placeholder-text" data-action="pick-slide-image">Click to add image</div>'}
+              </div>
+              <div class="slideshow-split-right text-side">
+                <h2 class="slideshow-headline editable" data-field="headline">${slide.headline || '<span class="placeholder">Add headline</span>'}</h2>
+                ${slide.useBullets ? `
+                  <ul class="slideshow-bullets editable" data-field="bullets">
+                    ${(slide.bullets || []).filter(b => b).map(b => `<li>${b}</li>`).join('') || '<li class="placeholder">Add bullet points</li>'}
+                  </ul>
                 ` : `
-                  <div class="slide-image-placeholder">
-                    <button class="slide-image-upload-btn" data-action="pick-slide-image">${icons.image} Add from Assets</button>
-                  </div>
+                  <p class="slideshow-caption editable" data-field="caption">${slide.bullets?.[0] || '<span class="placeholder">Add text</span>'}</p>
                 `}
               </div>
+            ` : ''}
+            ${isSplit && !isSplitLeft ? `
+              <div class="slideshow-split-left text-side">
+                <h2 class="slideshow-headline editable" data-field="headline">${slide.headline || '<span class="placeholder">Add headline</span>'}</h2>
+                ${slide.useBullets ? `
+                  <ul class="slideshow-bullets editable" data-field="bullets">
+                    ${(slide.bullets || []).filter(b => b).map(b => `<li>${b}</li>`).join('') || '<li class="placeholder">Add bullet points</li>'}
+                  </ul>
+                ` : `
+                  <p class="slideshow-caption editable" data-field="caption">${slide.bullets?.[0] || '<span class="placeholder">Add text</span>'}</p>
+                `}
+              </div>
+              <div class="slideshow-split-right image-side">
+                ${slide.image ? `<img src="${slide.image}" class="slideshow-split-image" data-action="pick-slide-image" style="cursor:pointer">` : '<div class="slide-image-placeholder-text" data-action="pick-slide-image">Click to add image</div>'}
+              </div>
+            ` : ''}
+            ${!isSplit && !isImageLayout ? `
+              <h1 class="slideshow-headline editable" data-field="headline">${slide.headline || '<span class="placeholder">Add headline</span>'}</h1>
+              ${slide.useBullets ? `
+                <ul class="slideshow-bullets editable" data-field="bullets">
+                  ${(slide.bullets || []).filter(b => b).map(b => `<li>${b}</li>`).join('') || '<li class="placeholder">Add bullet points</li>'}
+                </ul>
+              ` : `
+                <p class="slideshow-subtitle editable" data-field="caption">${slide.bullets?.[0] || '<span class="placeholder">Add subtitle</span>'}</p>
+              `}
+            ` : ''}
+          </div>
+        </div>
+        <!-- Editing panel below preview -->
+        <div class="slide-edit-panel">
+          <div class="edit-field">
+            <label>Headline</label>
+            <input type="text" class="form-input" value="${slide.headline || ''}" data-slide-field="headline" placeholder="Enter headline">
+          </div>
+          ${!isImageLayout ? `
+            ${slide.useBullets ? `
+              <div class="edit-field">
+                <label>Bullet Points</label>
+                <div class="edit-bullets">
+                  ${(slide.bullets || []).map((b, i) => `
+                    <div class="edit-bullet-row">
+                      <input type="text" class="form-input" value="${b}" data-bullet-index="${i}" placeholder="Bullet point">
+                      <button class="btn-icon" data-delete-bullet="${i}">${icons.x}</button>
+                    </div>
+                  `).join('')}
+                  <button class="btn btn-sm" data-action="add-bullet">${icons.plus} Add Point</button>
+                </div>
+              </div>
+            ` : `
+              <div class="edit-field">
+                <label>Text</label>
+                <textarea class="form-input" data-slide-field="caption" placeholder="Enter text">${slide.bullets?.[0] || ''}</textarea>
+              </div>
+            `}
+          ` : ''}
+          ${(isSplit || isImageLayout) ? `
+            <div class="edit-field">
+              <label>Image</label>
+              <button class="btn btn-secondary" data-action="pick-slide-image">${icons.image} ${slide.image ? 'Change Image' : 'Add Image'}</button>
             </div>
           ` : ''}
         </div>
-      </div>
-      <div class="slide-type-picker">
-        <label class="form-label">Slide Type</label>
-        <select class="form-input" id="slide-type-select">
-          <option value="title" ${slide.type === 'title' ? 'selected' : ''}>Title</option>
-          <option value="content" ${slide.type === 'content' ? 'selected' : ''}>Content</option>
-          <option value="visual" ${slide.type === 'visual' ? 'selected' : ''}>Visual</option>
-          <option value="data" ${slide.type === 'data' ? 'selected' : ''}>Data</option>
-          <option value="break" ${slide.type === 'break' ? 'selected' : ''}>Break</option>
-        </select>
       </div>
     `;
   }
@@ -3160,11 +3568,15 @@ Bridge Point`;
           </div>
         </div>
 
-        <!-- Document window with brand logo -->
+        <!-- Document window with brand logos -->
         <div class="quote-record-window" id="quote-record-window">
           <div class="quote-record-titlebar">
-            <img src="${RECORDING_BRAND.logoDark}" alt="${RECORDING_BRAND.name}" class="titlebar-brand-logo">
-            <div class="titlebar-title">${currentQuote.title}</div>
+            <div class="titlebar-logos">
+              <img src="${RECORDING_BRAND.logoDark}" alt="${RECORDING_BRAND.name}" class="titlebar-brand-logo">
+              ${currentQuote.clientLogo ? `
+                <img src="${currentQuote.clientLogo}" alt="${currentQuote.clientName || ''}" class="titlebar-client-logo${currentQuote.logoNeedsBackground ? ' logo-with-background' : ''}">
+              ` : ''}
+            </div>
             <div class="titlebar-dots">
               <div class="titlebar-dot red"></div>
               <div class="titlebar-dot yellow"></div>
@@ -3202,7 +3614,7 @@ Bridge Point`;
             ${currentQuote.clientLogo ? `
               <div class="preview-client-logo-section">
                 <img src="${currentQuote.clientLogo}" alt="${currentQuote.clientName || ''}"
-                  class="preview-client-logo${currentQuote.logoNeedsBackground ? ' logo-with-background' : ''}">
+                  class="preview-client-logo-large${currentQuote.logoNeedsBackground ? ' logo-with-background' : ''}">
               </div>
             ` : ''}
             <h1 class="preview-hero-title">${block.title}</h1>
@@ -3215,10 +3627,6 @@ Bridge Point`;
               <div class="preview-meta-item">
                 <div class="label">Date</div>
                 <div class="value">${formatDate(currentQuote.createdAt)}</div>
-              </div>
-              <div class="preview-meta-item">
-                <div class="label">Total</div>
-                <div class="value">${formatCurrency(currentQuote.total, currentQuote.currency)}</div>
               </div>
             </div>
           </div>
@@ -3307,43 +3715,49 @@ Bridge Point`;
           <img src="${slideTheme === 'light' || slideTheme === 'minimal' ? BRIDGEPOINT_LOGO_BLACK : BRIDGEPOINT_LOGO_WHITE}" alt="Bridge Point" class="slideshow-logo">
           ${currentSlideshow.clientLogo ? `<img src="${currentSlideshow.clientLogo}" alt="${currentSlideshow.clientName || ''}" class="slideshow-logo slideshow-logo-client">` : ''}
         </div>` : ''}
-        <div class="slideshow-slide slide-type-${slide.type} ${slide.layout === 'split' ? 'slideshow-split' : ''}">
-          ${slide.layout === 'split' ? `
-            <div class="slideshow-split-left">
-              <h2 class="slideshow-headline">${slide.headline || ''}</h2>
-              ${slide.bullets?.[0] ? `<p class="slideshow-caption">${slide.bullets[0]}</p>` : ''}
+        <div class="slideshow-slide slide-type-${slide.type} ${(slide.layout === 'split' || slide.layout === 'split-left') ? 'slideshow-split' : ''} ${slide.layout === 'image' ? 'slideshow-image-only' : ''} ${slide.imageFull ? 'image-full' : ''}">
+          ${slide.layout === 'image' ? `
+            ${slide.image ? `<img src="${slide.image}" class="slideshow-center-image" data-action="pick-slide-image" style="cursor:pointer">` : ''}
+          ` : ''}
+          ${slide.layout === 'split-left' ? `
+            <div class="slideshow-split-left image-side">
+              ${slide.image ? `<img src="${slide.image}" class="slideshow-split-image">` : ''}
             </div>
-            <div class="slideshow-split-right">
+            <div class="slideshow-split-right text-side">
+              <h2 class="slideshow-headline">${slide.headline || ''}</h2>
+              ${slide.useBullets ? `
+                <ul class="slideshow-bullets">
+                  ${(slide.bullets || []).filter(b => b).map(b => `<li>${b}</li>`).join('')}
+                </ul>
+              ` : `
+                ${slide.bullets?.[0] ? `<p class="slideshow-caption">${slide.bullets[0]}</p>` : ''}
+              `}
+            </div>
+          ` : ''}
+          ${slide.layout === 'split' ? `
+            <div class="slideshow-split-left text-side">
+              <h2 class="slideshow-headline">${slide.headline || ''}</h2>
+              ${slide.useBullets ? `
+                <ul class="slideshow-bullets">
+                  ${(slide.bullets || []).filter(b => b).map(b => `<li>${b}</li>`).join('')}
+                </ul>
+              ` : `
+                ${slide.bullets?.[0] ? `<p class="slideshow-caption">${slide.bullets[0]}</p>` : ''}
+              `}
+            </div>
+            <div class="slideshow-split-right image-side">
               ${slide.image ? `<img src="${slide.image}" class="slideshow-split-image">` : ''}
             </div>
           ` : ''}
-          ${slide.layout !== 'split' && slide.type === 'title' ? `
+          ${slide.layout !== 'split' && slide.layout !== 'split-left' && slide.layout !== 'image' ? `
             <h1 class="slideshow-headline">${slide.headline || ''}</h1>
-            ${slide.bullets?.[0] ? `<p class="slideshow-subtitle">${slide.bullets[0]}</p>` : ''}
-          ` : ''}
-          ${slide.layout !== 'split' && slide.type === 'content' ? `
-            <h2 class="slideshow-headline">${slide.headline || ''}</h2>
-            <ul class="slideshow-bullets">
-              ${(slide.bullets || []).map(b => `<li>${b}</li>`).join('')}
-            </ul>
-          ` : ''}
-          ${slide.layout !== 'split' && slide.type === 'visual' ? `
-            <h2 class="slideshow-headline">${slide.headline || ''}</h2>
-            ${slide.image ? `<img src="${slide.image}" class="slideshow-image">` : ''}
-          ` : ''}
-          ${slide.layout !== 'split' && slide.type === 'data' ? `
-            <h2 class="slideshow-headline">${slide.headline || ''}</h2>
-            <div class="slideshow-stats">
-              ${(slide.stats || []).map(s => `
-                <div class="slideshow-stat">
-                  <div class="slideshow-stat-value">${s.value}</div>
-                  <div class="slideshow-stat-label">${s.label}</div>
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
-          ${slide.layout !== 'split' && slide.type === 'break' ? `
-            <div class="slideshow-break"></div>
+            ${slide.useBullets ? `
+              <ul class="slideshow-bullets">
+                ${(slide.bullets || []).filter(b => b).map(b => `<li>${b}</li>`).join('')}
+              </ul>
+            ` : `
+              ${slide.bullets?.[0] ? `<p class="slideshow-subtitle">${slide.bullets[0]}</p>` : ''}
+            `}
           ` : ''}
         </div>
         <div class="slideshow-controls">
@@ -3494,14 +3908,24 @@ Bridge Point`;
 
     return `
       <div class="page-header"><h1 class="page-title">Recordings</h1></div>
+      <div class="recordings-header">
+        <label class="recordings-select-all">
+          <input type="checkbox" id="recordings-select-all" class="recording-checkbox">
+          Select all
+        </label>
+        <div class="recordings-bulk-actions" id="recordings-bulk-actions" style="display:none">
+          <button class="btn btn-secondary btn-sm" data-action="delete-selected-recordings">${icons.trash} Delete selected</button>
+        </div>
+      </div>
       <div class="recordings-list">
         ${recordings.map(r => `
-          <div class="recording-item" data-play-recording="${r.id}">
-            <div class="recording-thumb">
+          <div class="recording-item" data-recording-id="${r.id}">
+            <input type="checkbox" class="recording-checkbox recording-select" data-id="${r.id}" onclick="event.stopPropagation()">
+            <div class="recording-thumb" data-play-recording="${r.id}">
               ${r.thumbnail ? `<img src="${r.thumbnail}" alt="">` : `<div class="recording-thumb-placeholder">${icons.mic}</div>`}
             </div>
-            <div class="recording-info">
-              <div class="recording-source">${r.source === 'quote' ? 'Quote' : 'Slides'}</div>
+            <div class="recording-info" data-play-recording="${r.id}">
+              <div class="recording-source">${r.source === 'quote' ? 'Quote' : 'Slides'}: ${r.sourceTitle}</div>
               <div class="recording-date">${formatDateTime(r.createdAt)}</div>
             </div>
             <div class="recording-actions" onclick="event.stopPropagation()">
@@ -3668,6 +4092,23 @@ Bridge Point`;
       </div></div>`;
     }
 
+    if (modalType === 'save-type') {
+      return `<div class="modal-overlay" data-close-modal><div class="modal" style="max-width:400px">
+        <div class="modal-header"><h3 class="modal-title">Save As</h3><button class="modal-close" data-close-modal>${icons.x}</button></div>
+        <div class="modal-body" style="padding:24px">
+          <p style="color:var(--text-muted);margin-bottom:20px">How would you like to save this?</p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <button class="btn btn-primary" data-action="save-as-quote" style="width:100%;justify-content:center">
+              ${icons.quotes} Save as Quote
+            </button>
+            <button class="btn btn-secondary" data-action="save-as-template" style="width:100%;justify-content:center">
+              ${icons.templates} Save as Template
+            </button>
+          </div>
+        </div>
+      </div></div>`;
+    }
+
     return '';
   }
 
@@ -3679,11 +4120,45 @@ Bridge Point`;
       localStorage.removeItem(LOCAL_STORAGE_KEY);
       quotes = [];
       loading = true;
+      syncStatus = 'loading';
       render();
       await loadQuotes();
-      showToast('Synced from cloud');
+      if (syncStatus === 'synced') {
+        showToast('Synced from cloud');
+      }
     });
-    document.querySelectorAll('[data-template]').forEach(card => card.addEventListener('click', () => { const t = templates.find(t => t.id === (card as HTMLElement).dataset.template); if (t) createFromTemplate(t); }));
+
+    document.querySelector('[data-action="retry-sync"]')?.addEventListener('click', async () => {
+      syncStatus = 'loading';
+      syncError = '';
+      render();
+      await loadQuotes();
+      if (syncStatus === 'synced') {
+        showToast('Synced successfully');
+      }
+    });
+
+    document.querySelector('[data-action="logout"]')?.addEventListener('click', () => {
+      localStorage.removeItem(AUTH_KEY);
+      isAuthenticated = false;
+      render();
+    });
+    document.querySelectorAll('[data-template]').forEach(card => card.addEventListener('click', () => {
+      const id = (card as HTMLElement).dataset.template;
+      const t = templates.find(t => t.id === id) || userTemplates.find(t => t.id === id);
+      if (t) createFromTemplate(t);
+    }));
+
+    document.querySelectorAll('[data-delete-template]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.deleteTemplate;
+        if (!confirm('Delete this template?')) return;
+        userTemplates = userTemplates.filter(t => t.id !== id);
+        localStorage.setItem(USER_TEMPLATES_KEY, JSON.stringify(userTemplates));
+        showToast('Template deleted');
+        render();
+      });
+    });
 
     document.querySelectorAll('[data-edit-quote]').forEach(row => row.addEventListener('click', () => {
       const id = (row as HTMLElement).dataset.editQuote;
@@ -3723,11 +4198,18 @@ Bridge Point`;
       if (currentQuote) {
         currentQuote.title = (document.getElementById('quote-title') as HTMLInputElement)?.value || currentQuote.title;
         currentQuote.clientName = (document.getElementById('quote-client') as HTMLInputElement)?.value || '';
-        currentQuote.clientEmail = (document.getElementById('quote-email') as HTMLInputElement)?.value || '';
         currentQuote.clientWebsite = (document.getElementById('quote-website') as HTMLInputElement)?.value || '';
-        currentQuote.status = (document.getElementById('quote-status') as HTMLSelectElement)?.value as Quote['status'] || currentQuote.status;
-        currentQuote.showHeader = (document.getElementById('quote-show-header') as HTMLInputElement)?.checked ?? true;
-        currentQuote.logoNeedsBackground = (document.getElementById('quote-logo-background') as HTMLInputElement)?.checked ?? false;
+        currentQuote.showHeader = (document.getElementById('quote-header-toggle') as HTMLInputElement)?.checked ?? true;
+        currentQuote.logoNeedsBackground = (document.getElementById('quote-logo-bg-toggle') as HTMLInputElement)?.checked ?? false;
+
+        // Check if this is a new quote (not yet in the quotes array)
+        const isNew = !quotes.some(q => q.id === currentQuote!.id);
+        if (isNew) {
+          modalType = 'save-type';
+          showModal = true;
+          render();
+          return;
+        }
       }
       await saveCurrentQuote();
     });
@@ -3762,7 +4244,6 @@ Bridge Point`;
         // Also grab latest form values before saving
         currentQuote.title = (document.getElementById('quote-title') as HTMLInputElement)?.value || currentQuote.title;
         currentQuote.clientName = (document.getElementById('quote-client') as HTMLInputElement)?.value || '';
-        currentQuote.clientEmail = (document.getElementById('quote-email') as HTMLInputElement)?.value || '';
         currentQuote.clientWebsite = (document.getElementById('quote-website') as HTMLInputElement)?.value || '';
         await saveCurrentQuote();
         render();
@@ -3827,7 +4308,6 @@ Bridge Point`;
       if (currentQuote) {
         currentQuote.title = (document.getElementById('quote-title') as HTMLInputElement)?.value || currentQuote.title;
         currentQuote.clientName = (document.getElementById('quote-client') as HTMLInputElement)?.value || '';
-        currentQuote.clientEmail = (document.getElementById('quote-email') as HTMLInputElement)?.value || '';
       }
       modalType = 'send';
       showModal = true;
@@ -3860,6 +4340,31 @@ Bridge Point`;
 
     document.querySelectorAll('[data-close-modal]').forEach(el => {
       el.addEventListener('click', (e) => { if (e.target === el) { showModal = false; editingPricingBlock = null; render(); } });
+    });
+
+    // Save type modal handlers
+    document.querySelector('[data-action="save-as-quote"]')?.addEventListener('click', async () => {
+      showModal = false;
+      await saveCurrentQuote();
+    });
+
+    document.querySelector('[data-action="save-as-template"]')?.addEventListener('click', async () => {
+      if (!currentQuote) return;
+      const template: Template = {
+        id: 'user-' + Date.now().toString(36),
+        name: currentQuote.title || 'Custom Template',
+        description: currentQuote.clientName ? `Created from ${currentQuote.clientName} quote` : 'Custom template',
+        category: 'My Templates',
+        thumbnail: '',
+        blocks: JSON.parse(JSON.stringify(currentQuote.blocks))
+      };
+      userTemplates.push(template);
+      localStorage.setItem(USER_TEMPLATES_KEY, JSON.stringify(userTemplates));
+      showModal = false;
+      showToast('Saved as template');
+      view = 'dashboard';
+      currentQuote = null;
+      render();
     });
 
     // Pricing editor
@@ -3901,13 +4406,27 @@ Bridge Point`;
 
     document.querySelector('[data-action="save-pricing"]')?.addEventListener('click', savePricingEdit);
 
-    // Theme swatch clicks
-    document.querySelectorAll('.theme-swatch').forEach(swatch => {
+    // Theme swatch clicks (both sidebar and toolbar)
+    document.querySelectorAll('.theme-swatch, .theme-swatch-sm').forEach(swatch => {
       swatch.addEventListener('click', () => {
         if (!currentQuote) return;
         currentQuote.heroTheme = (swatch as HTMLElement).dataset.theme as Quote['heroTheme'];
         render();
       });
+    });
+
+    // Toolbar header toggle
+    document.getElementById('quote-header-toggle')?.addEventListener('change', (e) => {
+      if (!currentQuote) return;
+      currentQuote.showHeader = (e.target as HTMLInputElement).checked;
+      render();
+    });
+
+    // Toolbar logo background toggle
+    document.getElementById('quote-logo-bg-toggle')?.addEventListener('change', (e) => {
+      if (!currentQuote) return;
+      currentQuote.logoNeedsBackground = (e.target as HTMLInputElement).checked;
+      render();
     });
 
     // PDF button
@@ -4176,6 +4695,40 @@ Rules:
       });
     });
 
+    // Status arrows on list view
+    const statusOrder: Quote['status'][] = ['draft', 'sent', 'viewed', 'accepted', 'declined'];
+    document.querySelectorAll('[data-status-up]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = (btn as HTMLElement).dataset.statusUp;
+        const quote = quotes.find(q => q.id === id);
+        if (quote) {
+          const currentIndex = statusOrder.indexOf(quote.status);
+          if (currentIndex < statusOrder.length - 1) {
+            quote.status = statusOrder[currentIndex + 1];
+            quote.updatedAt = Date.now();
+            await saveQuotes();
+            render();
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-status-down]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = (btn as HTMLElement).dataset.statusDown;
+        const quote = quotes.find(q => q.id === id);
+        if (quote) {
+          const currentIndex = statusOrder.indexOf(quote.status);
+          if (currentIndex > 0) {
+            quote.status = statusOrder[currentIndex - 1];
+            quote.updatedAt = Date.now();
+            await saveQuotes();
+            render();
+          }
+        }
+      });
+    });
+
     document.querySelectorAll('[data-action="archive-slideshow"]').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         e.stopPropagation();
@@ -4268,18 +4821,27 @@ Rules:
       }
     });
 
+    document.getElementById('slide-image-full-toggle')?.addEventListener('change', (e) => {
+      if (!currentSlideshow) return;
+      const slide = currentSlideshow.slides[currentSlideIndex];
+      if (slide) {
+        slide.imageFull = (e.target as HTMLInputElement).checked;
+        render();
+      }
+    });
+
     document.querySelectorAll('[data-slide-layout]').forEach(btn => {
       btn.addEventListener('click', () => {
         if (!currentSlideshow) return;
         const slide = currentSlideshow.slides[currentSlideIndex];
         if (slide) {
-          slide.layout = (btn as HTMLElement).dataset.slideLayout as 'default' | 'split';
+          slide.layout = (btn as HTMLElement).dataset.slideLayout as 'default' | 'split' | 'split-left' | 'image';
           render();
         }
       });
     });
 
-    // Slide editor inputs
+    // Slide editor inputs - update data and re-render preview on blur
     document.querySelectorAll('[data-slide-field]').forEach(input => {
       input.addEventListener('input', () => {
         if (!currentSlideshow) return;
@@ -4287,11 +4849,12 @@ Rules:
         const field = (input as HTMLElement).dataset.slideField!;
         if (field === 'headline') {
           slide.headline = (input as HTMLInputElement).value;
-        } else if (field === 'subtitle') {
+        } else if (field === 'subtitle' || field === 'caption') {
           if (!slide.bullets) slide.bullets = [];
           slide.bullets[0] = (input as HTMLInputElement).value;
         }
       });
+      input.addEventListener('blur', () => render());
     });
 
     document.querySelectorAll('[data-bullet-index]').forEach(input => {
@@ -4303,6 +4866,7 @@ Rules:
           slide.bullets[idx] = (input as HTMLInputElement).value;
         }
       });
+      input.addEventListener('blur', () => render());
     });
 
     document.querySelectorAll('[data-delete-bullet]').forEach(btn => {
@@ -4337,35 +4901,60 @@ Rules:
       });
     });
 
-    document.getElementById('slide-type-select')?.addEventListener('change', (e) => {
+    document.getElementById('slide-bullets-toggle')?.addEventListener('change', (e) => {
       if (!currentSlideshow) return;
       const slide = currentSlideshow.slides[currentSlideIndex];
-      const newType = (e.target as HTMLSelectElement).value as Slide['type'];
-      slide.type = newType;
-      // Initialize defaults for new type
-      if (newType === 'content' && !slide.bullets) slide.bullets = ['Point 1'];
-      if (newType === 'data' && !slide.stats) slide.stats = [{ label: 'Label', value: '0' }];
-      render();
+      if (slide) {
+        slide.useBullets = (e.target as HTMLInputElement).checked;
+        // Initialize bullets array if switching to bullets mode
+        if (slide.useBullets && (!slide.bullets || slide.bullets.length === 0)) {
+          slide.bullets = [''];
+        }
+        render();
+      }
     });
 
     document.querySelectorAll('[data-action="pick-slide-image"]').forEach(btn => {
       btn.addEventListener('click', () => {
+        assetPickerTargetBlockId = '';
         modalType = 'asset-picker';
         showModal = true;
         render();
       });
     });
 
-    document.querySelectorAll('[data-pick-asset]').forEach(item => {
+    // Asset picker for split blocks in quotes
+    document.querySelectorAll('button[data-pick-asset]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        assetPickerTargetBlockId = (btn as HTMLElement).dataset.pickAsset!;
+        modalType = 'asset-picker';
+        showModal = true;
+        render();
+      });
+    });
+
+    // Asset selection from picker modal
+    document.querySelectorAll('.asset-picker-item[data-pick-asset]').forEach(item => {
       item.addEventListener('click', () => {
-        if (!currentSlideshow) return;
         const assetId = (item as HTMLElement).dataset.pickAsset;
         const asset = assets.find(a => a.id === assetId);
-        if (asset && asset.imageData) {
-          currentSlideshow.slides[currentSlideIndex].image = asset.imageData;
-          showModal = false;
-          render();
+        if (!asset || !asset.imageData) return;
+
+        // If targeting a split block in a quote
+        if (assetPickerTargetBlockId && currentQuote) {
+          const block = currentQuote.blocks.find(b => b.id === assetPickerTargetBlockId) as SplitBlock | undefined;
+          if (block && block.type === 'split') {
+            block.imageUrl = asset.imageData;
+          }
         }
+        // If targeting a slide
+        else if (currentSlideshow) {
+          currentSlideshow.slides[currentSlideIndex].image = asset.imageData;
+        }
+
+        assetPickerTargetBlockId = '';
+        showModal = false;
+        render();
       });
     });
 
@@ -4479,6 +5068,60 @@ Rules:
       if (video) {
         video.pause();
         video.src = '';
+      }
+    });
+
+    // Recording multi-select handlers
+    const selectAllCheckbox = document.getElementById('recordings-select-all') as HTMLInputElement;
+    const bulkActions = document.getElementById('recordings-bulk-actions');
+    const recordingCheckboxes = document.querySelectorAll('.recording-select') as NodeListOf<HTMLInputElement>;
+
+    function updateBulkActionsVisibility() {
+      const anySelected = Array.from(recordingCheckboxes).some(cb => cb.checked);
+      if (bulkActions) bulkActions.style.display = anySelected ? 'flex' : 'none';
+    }
+
+    selectAllCheckbox?.addEventListener('change', () => {
+      const checked = selectAllCheckbox.checked;
+      recordingCheckboxes.forEach(cb => {
+        cb.checked = checked;
+        const row = cb.closest('.recording-item');
+        if (row) row.classList.toggle('selected', checked);
+      });
+      updateBulkActionsVisibility();
+    });
+
+    recordingCheckboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const row = cb.closest('.recording-item');
+        if (row) row.classList.toggle('selected', cb.checked);
+        // Update select-all state
+        const allChecked = Array.from(recordingCheckboxes).every(c => c.checked);
+        const someChecked = Array.from(recordingCheckboxes).some(c => c.checked);
+        if (selectAllCheckbox) {
+          selectAllCheckbox.checked = allChecked;
+          selectAllCheckbox.indeterminate = someChecked && !allChecked;
+        }
+        updateBulkActionsVisibility();
+      });
+    });
+
+    document.querySelector('[data-action="delete-selected-recordings"]')?.addEventListener('click', async () => {
+      const selectedIds = Array.from(recordingCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.dataset.id!);
+      if (selectedIds.length === 0) return;
+      if (!confirm(`Delete ${selectedIds.length} recording${selectedIds.length > 1 ? 's' : ''}?`)) return;
+      try {
+        for (const id of selectedIds) {
+          await deleteNarrationFromDB(id);
+        }
+        recordings = recordings.filter(r => !selectedIds.includes(r.id));
+        await saveRecordings();
+        showToast(`${selectedIds.length} recording${selectedIds.length > 1 ? 's' : ''} deleted`);
+        render();
+      } catch (err) {
+        showToast('Failed to delete recordings');
       }
     });
 
@@ -4708,8 +5351,10 @@ Rules:
     });
   }
 
-  loadQuotes();
-  loadSlides();
-  loadAssets();
-  loadRecordings();
+  // Start the app
+  if (isAuthenticated) {
+    initializeApp();
+  } else {
+    render();
+  }
 </script>
