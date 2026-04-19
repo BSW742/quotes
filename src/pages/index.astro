@@ -1764,9 +1764,28 @@ All findings and recommendations remain confidential.` },
   }
 
   async function saveQuotes() {
-    // Save to localStorage immediately (backup)
+    // Load latest from R2 to merge (prevents multi-tab data loss)
+    const cloudData = await loadFromR2<{ quotes: Quote[] }>('quotes-data.json');
+
+    let mergedQuotes = quotes;
+    if (cloudData.status === 'success' && cloudData.data?.quotes) {
+      const localIds = new Set(quotes.map(q => q.id));
+      const cloudOnly = cloudData.data.quotes.filter(q => !localIds.has(q.id));
+
+      // Warn if cloud has quotes we don't have locally
+      if (cloudOnly.length > 0) {
+        const proceed = confirm(
+          `Cloud has ${cloudOnly.length} quote(s) not in this tab. ` +
+          `Saving will keep those quotes. Continue?`
+        );
+        if (!proceed) return;
+        mergedQuotes = [...quotes, ...cloudOnly];
+      }
+    }
+
+    // Save merged result
+    quotes = mergedQuotes;
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ quotes }));
-    // Then save to R2
     await saveToR2('quotes-data.json', { quotes });
   }
 
@@ -1800,6 +1819,25 @@ All findings and recommendations remain confidential.` },
   }
 
   async function saveSlideshows() {
+    // Load latest from R2 to merge (prevents multi-tab data loss)
+    const cloudData = await loadFromR2<{ slideshows: Slideshow[] }>('slideshows-data.json');
+
+    let mergedSlideshows = slideshows;
+    if (cloudData.status === 'success' && cloudData.data?.slideshows) {
+      const localIds = new Set(slideshows.map(s => s.id));
+      const cloudOnly = cloudData.data.slideshows.filter(s => !localIds.has(s.id));
+
+      if (cloudOnly.length > 0) {
+        const proceed = confirm(
+          `Cloud has ${cloudOnly.length} slideshow(s) not in this tab. ` +
+          `Saving will keep those slideshows. Continue?`
+        );
+        if (!proceed) return;
+        mergedSlideshows = [...slideshows, ...cloudOnly];
+      }
+    }
+
+    slideshows = mergedSlideshows;
     localStorage.setItem(SLIDESHOWS_STORAGE_KEY, JSON.stringify({ slideshows }));
     await saveToR2('slideshows-data.json', { slideshows });
   }
@@ -1869,6 +1907,25 @@ All findings and recommendations remain confidential.` },
   }
 
   async function saveAssets() {
+    // Load latest from R2 to merge (prevents multi-tab data loss)
+    const cloudData = await loadFromR2<{ assets: Asset[] }>('assets-data.json');
+
+    let mergedAssets = assets;
+    if (cloudData.status === 'success' && cloudData.data?.assets) {
+      const localIds = new Set(assets.map(a => a.id));
+      const cloudOnly = cloudData.data.assets.filter(a => !localIds.has(a.id));
+
+      if (cloudOnly.length > 0) {
+        const proceed = confirm(
+          `Cloud has ${cloudOnly.length} asset(s) not in this tab. ` +
+          `Saving will keep those assets. Continue?`
+        );
+        if (!proceed) return;
+        mergedAssets = [...assets, ...cloudOnly];
+      }
+    }
+
+    assets = mergedAssets;
     localStorage.setItem(ASSETS_STORAGE_KEY, JSON.stringify({ assets }));
     await saveToR2('assets-data.json', { assets });
   }
